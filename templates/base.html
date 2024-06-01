@@ -94,7 +94,8 @@
       <a href="#" class="brand-link">
 
         <!-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
-        <span class="brand-text font-weight-light">SISCOCA</span>
+        
+        <span class="brand-text font-weight-light"><i class="fas fa-users-cog"></i> SAV-C</span>
       </a>
 
       <!-- Sidebar -->
@@ -108,9 +109,9 @@
           </div>
           <div class="info md">
             {% if user.is_authenticated %}
-            <a href="#" class="d-block">Sesion iniciada <br> cómo: {{ user.username }}</a>
+            <a href="#" class="d-block" style="font-size: 14px;" >Sesion iniciada <br> cómo: {{ user.username }} </a>
             {% else %}
-            <a href="#" class="d-block">Usuario</a>
+            <a href="#" class="d-block" style="font-size: 14px;">Usuario </a>
             {% endif %}
           </div>
         </div>
@@ -137,9 +138,132 @@
 
             <li class="nav-item">
               <a href="#" class="nav-link">
+                <i class="fas fa-window-restore"></i>
+                <p>
+                  Catalogos
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Catalogos nivel 1
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Catalogos nivel 2</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Catalogos nivel 1</p>
+                  </a>
+                </li>
+
+              </ul>
+            </li>  
+            
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-window-close"></i>
+                <p>
+                  Producto no conforme
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Producto no conforme nivel 1
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Producto no conforme nivel 2</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Producto no conforme nivel 1</p>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-truck"></i>
+                <p>
+                  Distribución
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Distribucion nivel 1
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Distribucion nivel 2</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Distribucion nivel 1</p>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+
+            <!-- lABORATORIO DE CALIDAD -->
+            <li class="nav-header">Laboratorio de control de calidad</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
                 <i class="fas fa-vial"></i>
                 <p>
-                  Control de calidad de Laboratorio
+                  Laboratorio
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
@@ -155,19 +279,19 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="pages/examples/login-v2.html" class="nav-link">
+                      <a href="{% url 'laboratorio_control_calidad:grasas_aceites_vegetales' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Grasas y/o aceites vegetales v2</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/register-v2.html" class="nav-link">
+                      <a href="{% url 'laboratorio_control_calidad:mezcla_oleosa_vitaminas' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Mezcla oloeosa de Vitaminas A+D3</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/forgot-password-v2.html" class="nav-link">
+                      <a href="{% url 'laboratorio_control_calidad:pre_mezclas_vitaminas_minerales' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Pre mezclas en polvo de vitaminas y minerales</p>
                       </a>
@@ -178,16 +302,16 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
-                    <p>Leche en polvo F o FS</p>
+                    <p>Leche en polvo F o SF</p>
                   </a>
                 </li>
 
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:soluciones_valoradas_ts' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Soluciones valoradas, soluciones TS e indicadores</p>
                   </a>
@@ -196,7 +320,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:evaluacion_sensorial' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Evaluación sensorial</p>
                   </a>
@@ -205,7 +329,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:monitoreo_medio_ambiente' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Monitoreo del medio ambiente</p>
                   </a>
@@ -214,7 +338,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:limpieza_equipo_personal' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Limpieza de equipo y manos del personal</p>
                   </a>
@@ -223,7 +347,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:calibracion_verificacion_equipo' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Calibración y verificación de equipos de laboratorio</p>
                   </a>
@@ -232,7 +356,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/mailbox/mailbox.html" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:verificacion_documentos' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Verificación de documentos</p>
                   </a>
@@ -250,15 +374,15 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/examples/invoice.html" class="nav-link">
+                  <a href="{% url 'almacen:leche_polvo_fosf' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
-                    <p>Leche en polvo F o FS</p>
+                    <p>Leche en polvo F o SF</p>
                   </a>
                 </li>
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/examples/invoice.html" class="nav-link">
+                  <a href="{% url 'almacen:leche_cruda' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche cruda</p>
                   </a>
@@ -266,7 +390,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/examples/invoice.html" class="nav-link">
+                  <a href="{% url 'almacen:leche_frisia_pipa' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche frisia en pipa</p>
                   </a>
@@ -274,7 +398,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/examples/invoice.html" class="nav-link">
+                  <a href="{% url 'almacen:evaluacion_polietileno' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Evaluación del Polietileno</p>
                   </a>
@@ -292,19 +416,19 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="pages/examples/login-v2.html" class="nav-link">
+                      <a href="{% url 'almacen:solucion_alcalina' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Solución Alcalina</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/register-v2.html" class="nav-link">
+                      <a href="{% url 'almacen:solucion_acida' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Solución Acida</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/forgot-password-v2.html" class="nav-link">
+                      <a href="{% url 'almacen:hipoclorito_sodio' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Hipoclorito de sodio</p>
                       </a>
@@ -334,13 +458,13 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="pages/examples/login-v2.html" class="nav-link">
+                      <a href="{% url 'produccion:producto_silos' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Producto en Silos</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/register-v2.html" class="nav-link">
+                      <a href="{% url 'produccion:leche_fluida_salida_pasteurizador' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Leche fluida-producto a la salida del pasteurizador</p>
                       </a>
@@ -360,13 +484,13 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="pages/examples/login-v2.html" class="nav-link">
+                      <a href="{% url 'produccion:leche_fluida_envase_litros' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Leche fluida envase de 1 o 2 litros</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="pages/examples/register-v2.html" class="nav-link">
+                      <a href="{% url 'produccion:verificacion_contenido_neto' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Verificación de contenido Neto</p>
                       </a>
@@ -376,19 +500,19 @@
                   </ul>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/examples/lockscreen.html" class="nav-link">
+                  <a href="{% url 'produccion:leche_cruda' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche cruda</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/examples/legacy-user-menu.html" class="nav-link">
+                  <a href="{% url 'produccion:leche_frisia_pipa' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche Frisia en Pipa</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/examples/legacy-user-menu.html" class="nav-link">
+                  <a href="{% url 'produccion:concentracion_soluciones_materiales_limpieza'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Concentración de las soluciones y/o materiales de limpieza</p>
                   </a>
@@ -409,7 +533,7 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/search/simple.html" class="nav-link">
+                  <a href="{% url 'mantenimiento:agua_alimentacion_proceso' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Agua para alimentación al proceso</p>
                   </a>
@@ -417,6 +541,7 @@
 
               </ul>
             </li>
+            <!-- lABORATORIO DE CALIDAD -->
 
           </ul>
         </nav>
