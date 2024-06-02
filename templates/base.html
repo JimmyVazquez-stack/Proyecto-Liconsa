@@ -10,11 +10,14 @@
   {% block estaticos %}
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    href="{% static 'css/fonts-google.css'%}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
   <!-- Ionicons -->
   <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
+  <!-- No usa el ionicons.min.css, usa el cndjs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
   <!-- iCheck -->
@@ -53,7 +56,7 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link">Inicio</a>
+          <a href="{% url 'laboratorio_control_calidad:index' %}" class="nav-link">Inicio</a>
         </li>
 
       </ul>
@@ -91,7 +94,7 @@
     <!-- Main Sidebar Container -->
    <aside class="main-sidebar sidebar-dark-primary elevation-5 sidebar-no-expand">
       <!-- Brand Logo -->
-      <a href="#" class="brand-link">
+      <a href="{% url 'laboratorio_control_calidad:index'%}" class="brand-link">
 
         <!-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
         
@@ -1163,7 +1166,7 @@
     <!-- /.content-wrapper -->
     {% block footer%}
     <footer class="main-footer">
-      <strong>Copyright &copy; 2024 <a href="#">SISCOCA</a>.</strong>
+      <strong>Copyright &copy; 2024 <a href="{% url 'laboratorio_control_calidad:index'%}">SAV-C</a>.</strong>
       All rights reserved.
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 1.0.0
@@ -1180,10 +1183,9 @@
   <!-- ./wrapper -->
   {% block javascript%}
   <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="{% static 'js/jquery.min.js'%}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
   <!-- jQuery UI 1.11.4 -->
-  <script src="{% static 'js/jquery-ui.min.js'%}"></script>
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
 
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
