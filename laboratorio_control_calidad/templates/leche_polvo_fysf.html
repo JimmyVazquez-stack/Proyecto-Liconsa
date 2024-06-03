@@ -6,23 +6,43 @@
 {%block title %} Leche en polvo fortificada y sin fortificar {% endblock %}
 
 {% block principal %}
-<div class="container">
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Leche en polvo fortificada y sin fortificar</h5>
+                        <p>En esta sección se presentan los resultados de los análisis de leche en polvo FYFS.</p>
+                        <p>Para ver los resultados de un análisis, seleccione el análisis deseado en el menú de la
+                            izquierda.</p>
+
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+        
+    </div>
     <div class="row">
 
-        <div class="col-md-7 mt-3 p-3">
-            <div class="d-flex justify-content-between mb-3 ">
-                <div>
-                    <button class="btn btn-primary" id="crear">Crear</button>
-                    <button class="btn btn-secondary" id="actualizar">Actualizar</button>
-                    <button class="btn btn-danger" id="borrar">Borrar</button>
-                </div>
-                <div>
-                    <button class="btn btn-success" id="reporte">Generar reporte</button>
-                </div>
-            </div>
+        <div class="col-xl-12 mt-3 p-3">
+    
             <div class="table-responsive">
                 <table id="example" class="table  table-bordered bg-light table-hover" style="width:100%;">
-                    <thead class="thead-light">
+                    <thead class="thead-light" style="font-size: 14px;">
                         <tr>
                             <th>Name</th>
                             <th>Position</th>
@@ -30,9 +50,10 @@
                             <th>Age</th>
                             <th>Start date</th>
                             <th>Salary</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="font-size: 14px;">
                         <tr>
                             <td>Tiger Nixon</td>
                             <td>System Architect</td>
@@ -40,6 +61,7 @@
                             <td>61</td>
                             <td>2011-04-25</td>
                             <td>$320,800</td>
+                        
                         </tr>
                         <tr>
                             <td>Garrett Winters</td>
@@ -465,32 +487,8 @@
                             <td>2010-07-14</td>
                             <td>$86,500</td>
                         </tr>
-                        <tr>
-                            <td>Shad Decker</td>
-                            <td>Regional Director</td>
-                            <td>Edinburgh</td>
-                            <td>51</td>
-                            <td>2008-11-13</td>
-                            <td>$183,000</td>
-                        </tr>
-                        <tr>
-                            <td>Michael Bruce</td>
-                            <td>Javascript Developer</td>
-                            <td>Singapore</td>
-                            <td>29</td>
-                            <td>2011-06-27</td>
-                            <td>$183,000</td>
-                        </tr>
-                        <tr>
-                            <td>Donna Snider</td>
-                            <td>Customer Support</td>
-                            <td>New York</td>
-                            <td>27</td>
-                            <td>2011-01-25</td>
-                            <td>$112,000</td>
-                        </tr>
                     </tbody>
-                    <tfoot>
+                    <tfoot style="font-size: 14px;">
                         <tr>
                             <th>Name</th>
                             <th>Position</th>
@@ -498,6 +496,9 @@
                             <th>Age</th>
                             <th>Start date</th>
                             <th>Salary</th>
+                            <th>
+                            <button class="btn btn-success" style="font-size: 14px;" id="reporte">Generar reporte</button>
+                        </th>
                         </tr>
                     </tfoot>
                 </table>
@@ -505,31 +506,6 @@
         </div>
 
 
-        <div class="col-md-5 mt-3">
-            <div class="card card-default">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-bullhorn"></i>
-                        Información
-                    </h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-
-                    <div class="callout callout-info">
-                        <h5>Leche en polvo fortificada y sin fortificar</h5>
-                        <p>En esta sección se presentan los resultados de los análisis de leche en polvo FYFS.</p>
-                        <p>Para ver los resultados de un análisis, seleccione el análisis deseado en el menú de la
-                            izquierda.</p>
-
-                    </div>
-
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col -->
 
         
     </div>
