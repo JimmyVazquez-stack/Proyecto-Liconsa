@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-xl-12 mt-1">
             <div class="card card-default">
-                <div class="card-header">
+                <div class="card-header bg-gray-dark">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
                         Información
@@ -39,10 +39,25 @@
 </div>
 {% endblock %}
 
-{% block datatable %}
+{%block datatable%}
 <div class="container-fluid p-4">
-    <div class="row">
-        <div class="col-xl-12 mt-3 p-3">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-gray-dark">
+          <h3 class="card-title"></h3>
+        </div>
+        <div class="card-body bg-light">
+          <ul class="pagination pagination-month justify-content-center">
+            <li class="page-item"><a class="page-link" href="#">«</a></li>
+            <ul id="pagination" class="pagination pagination-month justify-content-center">
+                <li class="page-item"></li>
+                <!-- Los elementos de la lista para los meses se insertarán aquí -->
+                <li class="page-item"></li>
+            </ul>
+            <li class="page-item"><a class="page-link" href="#">»</a></li>
+          </ul>
+          <div class="col-xl-12 mt-3 p-3">
             <div class="table-responsive">
                 <div class="d-flex justify-content-between mb-3">
                     <button class="btn btn-primary" style="font-size: 14px;" onclick="location.href='#';">Crear <i
@@ -69,7 +84,7 @@
                             <td>61</td>
                             <td>2011-04-25</td>
                             <td>$320,800</td>
-
+    
                         </tr>
                         <tr>
                             <td>Gloria Little</td>
@@ -385,9 +400,18 @@
                 </table>
             </div>
         </div>
+        </div>
+      </div>
     </div>
-</div>
-{% endblock %}
+  </div>
+  <div class="row">
+      
+  </div>
+  </div>
+{%endblock%}
+
+
+
 {% endblock %}
 
 
@@ -396,4 +420,33 @@
 
 <!-- Script para inicializar DataTables -->
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+
+<script>
+    var date = new Date();
+    var year = date.getFullYear();
+    var monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    var pagination = document.getElementById('pagination');
+
+    monthNames.forEach(function(month) {
+        var li = document.createElement('li');
+        li.className = 'page-item';
+
+        var a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+
+        var pMonth = document.createElement('p');
+        pMonth.className = 'page-month';
+        pMonth.textContent = month;
+
+        var pYear = document.createElement('p');
+        pYear.className = 'page-year';
+        pYear.textContent = year;
+
+        a.appendChild(pMonth);
+        a.appendChild(pYear);
+        li.appendChild(a);
+        pagination.insertBefore(li, pagination.lastChild);
+    });
+</script>
 {% endblock %}
