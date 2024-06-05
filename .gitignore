@@ -1,2 +1,4 @@
 db.sqlite3
 entornoVirtual
+__pycache__/
+*.pycache
