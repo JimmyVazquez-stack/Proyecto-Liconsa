@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}Hipoclorito de Sodio{% endblock %}
 {% block principal %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Hipoclorito de Sodio</h1>
+{%block informacion%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Hipoclorito de Sodio</h5>
+                        <p>En esta sección se presentan resultados del Hipoclorito de Sodio.</p>
+                        <p>Para ver los resultados seleccione un documento deseado en el menú de la izquierda.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>>
+    {%endblock%}
 {% endblock %}
