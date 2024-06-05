@@ -8,7 +8,7 @@ $(document).ready(function() {
             info: "Mostrando entradas _START_ a _END_ de _TOTAL_",
             infoEmpty: "Mostrando entradas 0 a 0 de 0",
             infoFiltered: "(filtrado de _MAX_ entradas totales)",
-
+            
             search: "Buscar:",
             paginate: {
                 first: "Primero",
@@ -24,6 +24,7 @@ $(document).ready(function() {
                     orderable: false
                 }
             ]
+            
     });
 });
 
