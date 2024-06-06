@@ -13,7 +13,8 @@ class LecheriaDataView(View):
         lecherias = Lecheria.objects.annotate(
             municipio=F('poblacion__municipio'),
             numero_ruta=F('ruta__numero')
-        ).values(  'numero', 'nombre', 'responsable', 'municipio', 'telefono', 'direccion','numero_ruta')
+        ).values(  'numero_ruta', 'numero', 'nombre', 'responsable', 'municipio', 'telefono', 'direccion')
         
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
+
