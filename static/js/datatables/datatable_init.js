@@ -6,13 +6,13 @@ $(document).ready(function() {
         },
         
         columns: [
+            { data: 'numero_ruta' },
             { data: 'numero' },
             { data: 'nombre' },
             { data: 'responsable' },
             { data: 'telefono' },
             { data: 'direccion' },
             { data: 'municipio' },
-            { data: 'numero_ruta' },
             { data: 'opciones'},
         ],
 
@@ -35,8 +35,7 @@ $(document).ready(function() {
         columnDefs: [
             {
                 targets: -1,
-                defaultContent: "<div style='display: flex; justify-content: space-between;'><button class='btn btn-secondary' style='font-size: 14px; width:75px;'><i class='fas fa-pencil'></i></button><button class='btn btn-danger' style='font-size: 14px; width: 75px;' ><i class='fas fa-trash'></i></button></div>",                 
-                orderable: false
+                defaultContent: "<div style='display: flex; justify-content: space-between;'><a href='#' class='btn btn-secondary' style='font-size: 14px; width:75px;'><i class='fas fa-pencil'></i></a><a href='#' class='btn btn-danger' style='font-size: 14px; width: 75px;' ><i class='fas fa-trash'></i></a></div>",                orderable: false
             }
         ]
     });
