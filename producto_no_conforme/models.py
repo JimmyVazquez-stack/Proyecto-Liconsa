@@ -9,13 +9,12 @@ class Ruta(models.Model):
     
     
 class Poblacion(models.Model):
-    numero = models.IntegerField()
+    nombre = models.CharField(max_length=50)
     municipio = models.CharField(max_length=50)
     estado = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.municipio
-    
+        return self.nombre
     
 class Lecheria(models.Model):
     numero = models.IntegerField()
@@ -23,11 +22,11 @@ class Lecheria(models.Model):
     responsable = models.CharField(max_length=50)
     telefono = models.CharField(max_length=50)
     direccion = models.CharField(max_length=50)
-    poblacion = models.ForeignKey(Poblacion, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
+    poblacion = models.ForeignKey(Poblacion, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.numero)
+        return '%s - %s - %s - %s' % (self.numero, self.nombre, self.ruta, self.poblacion)
     
 class Rotos(models.Model):
     fecha_venta = models.DateField()
