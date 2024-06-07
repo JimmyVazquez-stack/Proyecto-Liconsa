@@ -133,9 +133,12 @@ $(document).ready(function() {
                 { data: 'numero_ruta' },
                 { data: 'nombre_poblacion' },
                 { data: 'rotos_reportados' },
-                { 
+                {
                     data: null,
-                    defaultContent: "<button>Click!</button>"
+                    defaultContent: `
+                        <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
+                        <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
+                    `
                 }
             ],
     
