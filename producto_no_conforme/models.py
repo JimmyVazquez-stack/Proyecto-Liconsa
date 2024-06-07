@@ -35,4 +35,4 @@ class Rotos(models.Model):
     rotos_reportados = models.IntegerField()
 
     def __str__(self):
-        return self.rotos_reportados
+        return '%s : %s' %(self.lecheria, self.rotos_reportados)
