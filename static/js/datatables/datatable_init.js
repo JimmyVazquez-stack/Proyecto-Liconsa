@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
-            url: '/producto_no_conforme/lecherias/data',
+            url: '/catalogos/lecherias/list/data/',
             dataSrc: ''
         },
         
@@ -13,7 +13,6 @@ $(document).ready(function() {
             { data: 'telefono' },
             { data: 'direccion' },
             { data: 'nombre_poblacion' },
-            { data: 'municipio' },
             { data: 'rotos_reportados' },
             { data: 'opciones'},
         ],
