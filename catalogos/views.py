@@ -18,7 +18,7 @@ class LecheriaListView(TemplateView):
 class AñadirLecheriaView(CreateView):
     template_name = 'añadir_lecheria.html'
     form_class = LecheriaForm
-    success_url = reverse_lazy('lecherias_list')
+    success_url = reverse_lazy('catalogos:lecherias_list')
 
     def form_valid(self, form):
         form.save()
