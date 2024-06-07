@@ -3,7 +3,7 @@
 
 
 
-{%block title %} Devolución de envases rotos {% endblock %}
+{%block title %} Lecherias {% endblock %}
 
 {% block principal %}
 {% block informacion% %}
@@ -21,10 +21,8 @@
                 <div class="card-body">
 
                     <div class="callout callout-info">
-                        <h5>Devolución de envases rotos</h5>
-                        <p>En esta sección se presentan los resultados de envases rotos.</p>
-                        <p>Para ver los resultados de un análisis, seleccione el análisis deseado en el menú de la
-                            izquierda.</p>
+                        <h5>Registro de lecherias</h5>
+                        <p>En esta sección se presenta el listado de lecherias.</p>
                     </div>
 
                 </div>
@@ -45,32 +43,29 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
-                    <h3 class="card-title">Envases rotos</h3>
+                    <h3 class="card-title">Listado de lecherias</h3>
                 </div>
                 <div class="card-body bg-light">
                     <!-- Paginacion mensual-->
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <ul class="pagination pagination-month">
-                            <li class="page-item"><a class="page-link" href="#">«</a></li>
-                            <ul id="pagination" class="pagination pagination-month">
-                                <li class="page-item"></li>
-                                <li class="page-item"></li>
-                            </ul>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    <!-- <ul class="pagination pagination-month justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                        <ul id="pagination" class="pagination pagination-month justify-content-center">
+                            <li class="page-item"></li>
+                            <li class="page-item"></li>
                         </ul>
-                    </div>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    </ul> -->
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
-                            <!-- <div class="d-flex justify-content-between mb-3">
+                            <div class="d-flex justify-content-between mb-3">
                                 <button class="btn btn-primary" style="font-size: 14px;"
-                                    onclick="location.href='{% url 'producto_no_conforme:muestreo_rotos' %}';">Crear
-                                    evaluación
+                                    onclick="location.href='{% url 'catalogos:añadir_lecheria'%}';">Añadir
+                                    lecheria
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <div id="example_filter"></div>
-                            </div> -->
-                            
-                            <table id="rotos" class="table  table-bordered bg-light table-hover" style="width:100%;">
+                            </div>
+                            <table id="catalogo_lecherias" class="table  table-bordered bg-light table-hover" style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
                                         <th>Ruta</th>
@@ -79,8 +74,10 @@
                                         <th>Responsable</th>
                                         <th>Teléfono</th>
                                         <th>Dirección</th>
+                                        <th>Número de ruta</th>
                                         <th>Poblacion</th>
                                         <th>Rotos reportados</th>
+                                        <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
@@ -91,8 +88,11 @@
                                         <th>Responsable</th>
                                         <th>Teléfono</th>
                                         <th>Dirección</th>
+                                        <th>Número de ruta</th>
                                         <th>Poblacion</th>
                                         <th>Rotos reportados</th>
+                                        <th>Opciones</th>
+                                     
                                     </tr>
                                 </tfoot>
                             </table>
@@ -102,6 +102,8 @@
             </div>
         </div>
     </div>
+    <div class="row">
+
     </div>
 </div>
 {%endblock%}
@@ -116,38 +118,5 @@
 
 <!-- Script para inicializar DataTables -->
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
-<!-- Script para paginacion mensual-->
-<script>
-    var date = new Date();
-    var year = date.getFullYear();
-    var monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    var pagination = document.getElementById('pagination');
 
-    monthNames.forEach(function (month) {
-        var li = document.createElement('li');
-        li.className = 'page-item';
-
-        var a = document.createElement('a');
-        a.className = 'page-link';
-        a.href = '#';
-
-        var pMonth = document.createElement('p');
-        pMonth.className = 'page-month';
-        pMonth.textContent = month;
-
-        var pYear = document.createElement('p');
-        pYear.className = 'page-year';
-        pYear.textContent = year;
-
-        a.appendChild(pMonth);
-        a.appendChild(pYear);
-        li.appendChild(a);
-        pagination.insertBefore(li, pagination.lastChild);
-    });
-</script>
 {% endblock %}

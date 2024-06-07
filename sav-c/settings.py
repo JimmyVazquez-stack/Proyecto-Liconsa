@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
 
     #Mis aplicaciones
     'laboratorio_control_calidad',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'produccion',
     'mantenimiento',
     'producto_no_conforme',
+    'catalogos',
 ]
 
 JAZZMIN_SETTINGS = {
