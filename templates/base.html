@@ -181,46 +181,28 @@
 
               </ul>
             </li>  
-            
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-window-close"></i>
-                <p>
-                  Producto no conforme
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-
+         
                 <li class="nav-item">
                   <a href="#" class="nav-link">
-                    <i class="fas fa-circle"></i>
+                    <i class="fas fa-ban"></i>
                     <p>
-                      Producto no conforme nivel 1
+                      Producto no conforme
                       <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Producto no conforme nivel 2</p>
+                      <a href="{% url 'home_producto_no_conforme' %}" class="nav-link">
+                        <i class="fas fa-ban"></i>
+                        <p>Producto no conforme List</p>
                       </a>
                     </li>
-
+           
                   </ul>
                 </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-circle-notch"></i>
-                    <p>Producto no conforme nivel 1</p>
-                  </a>
-                </li>
+              
 
-              </ul>
-            </li>
+            
 
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -1204,20 +1186,9 @@
           <h3 class="card-title"></h3>
         </div>
         <div class="card-body bg-light">
+          {% block TablaMeses %}
           <ul class="pagination pagination-month justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">«</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">
-                    <p class="page-month">Jan</p>
-                    <p class="page-year">2021</p>
-                </a>
-            </li>
-            <li class="page-item active">
-                <a class="page-link" href="#">
-                    <p class="page-month">Feb</p>
-                    <p class="page-year">2021</p>
-                </a>
-            </li>
+            
             <li class="page-item">
                 <a class="page-link" href="#">
                     <p class="page-month">Mar</p>
@@ -1280,6 +1251,7 @@
             </li>
             <li class="page-item"><a class="page-link" href="#">»</a></li>
           </ul>
+          {% endblock %}
           <div class="col-xl-12 mt-3 p-3">
             <div class="table-responsive">
                 <div class="d-flex justify-content-between mb-3">

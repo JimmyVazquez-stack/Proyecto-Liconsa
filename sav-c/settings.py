@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'almacen',
     'produccion',
     'mantenimiento',
+    'producto_no_conforme',
 ]
 
 JAZZMIN_SETTINGS = {

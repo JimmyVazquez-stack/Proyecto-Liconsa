@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Reg_Producto_No_Conforme{% endblock %}
+
+{% block principal %}
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Registro de Producto No Conforme</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+            <li class="breadcrumb-item active">Registro de Producto No Conforme</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- jquery validation -->
+          <div class="card card-primary">
+            <div class="card-header bg-gray-dark">
+              <h3 class="card-title">Quick Example <small>jQuery Validation</small></h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form id="quickForm">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleInputId">Id</label>
+                  <input type="number" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter Id">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputLote_Prod">Lote_Producción</label>
+                  <input type="number" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter Lote_Producción">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputLecheria">Lecheria</label>
+                  <input type="number" name="Lecheria" class="form-control" id="exampleInputEmail1" placeholder="Enter Lecheria">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputCanatidad">Canatidad</label>
+                  <input type="number" name="Canatidad" class="form-control" id="exampleInputEmail1" placeholder="Enter Canatidad">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputFecha_venta">Fecha_venta</label>
+                  <input type="date" name="Fecha_venta" class="form-control" id="exampleInputPassword1" placeholder="Fecha_venta">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputRuta_Id">Ruta_Id</label>
+                  <input type="number" name="Ruta_Id" class="form-control" id="exampleInputPassword1" placeholder="Ruta_Id">
+                </div>
+                <div class="form-group mb-0">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
+                    <label class="custom-control-label" for="exampleCheck1">I agree to the <a href="#">terms of service</a>.</label>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+          </div>
+        <!--/.col (left) -->
+        <!-- right column -->
+        <div class="col-md-6">
+
+        </div>
+        <!--/.col (right) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+{% endblock %}
