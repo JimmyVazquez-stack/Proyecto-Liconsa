@@ -7,6 +7,8 @@ from .models import Lecheria,  Rotos
 from django.http import JsonResponse
 from django.views import View
 from django.db.models import F
+from django.forms.models import model_to_dict
+import json
 
 
 # Create your views here.
@@ -34,3 +36,26 @@ class LecheriaDataView(View):
         ).values()  # Elimina los argumentos aquí
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
+    
+
+class ActualizarLecheriaView(View):
+    def post(self, request, *args, **kwargs):
+        form_data = json.loads(request.body)
+        lecheria = Lecheria.objects.get(id=form_data['id'])
+        
+        lecheria.numero = form_data.get('numero', lecheria.numero)
+        lecheria.nombre = form_data.get('nombre', lecheria.nombre)
+        lecheria.responsable = form_data.get('responsable', lecheria.responsable)
+        lecheria.telefono = form_data.get('telefono', lecheria.telefono)
+        lecheria.direccion = form_data.get('direccion', lecheria.direccion)
+        
+        ruta_id = form_data.get('ruta')
+        if ruta_id is not None:
+            lecheria.ruta = Ruta.objects.get(id=ruta_id)
+        
+        poblacion_id = form_data.get('poblacion')
+        if poblacion_id is not None:
+            lecheria.poblacion = Poblacion.objects.get(id=poblacion_id)
+        
+        lecheria.save()
+        return JsonResponse(model_to_dict(lecheria), safe=False)
