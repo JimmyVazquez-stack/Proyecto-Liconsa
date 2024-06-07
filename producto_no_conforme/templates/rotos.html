@@ -69,6 +69,7 @@
                                 </button>
                                 <div id="example_filter"></div>
                             </div> -->
+                            
                             <table id="rotos" class="table  table-bordered bg-light table-hover" style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
@@ -80,7 +81,6 @@
                                         <th>Dirección</th>
                                         <th>Poblacion</th>
                                         <th>Rotos reportados</th>
-                                        <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
@@ -93,11 +93,6 @@
                                         <th>Dirección</th>
                                         <th>Poblacion</th>
                                         <th>Rotos reportados</th>
-                                        <th style="display: flex; justify-content: center;">
-                                            <button class="btn btn-success" style="font-size: 14px;"
-                                                id="reporte">Generar
-                                                reporte</button>
-                                        </th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -107,8 +102,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-
     </div>
 </div>
 {%endblock%}
@@ -123,6 +116,11 @@
 
 <!-- Script para inicializar DataTables -->
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
 <!-- Script para paginacion mensual-->
 <script>
     var date = new Date();

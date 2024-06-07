@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from .models import Lecheria
+from catalogos.models import Lecheria
 from django.db.models import F
 from django.views.generic import TemplateView
 
@@ -10,7 +10,7 @@ class LecheriaListView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'rotos.html')
 
-class LecheriaDataView(View):
+class LecheriaRotosDataView(View):
     def get(self, request, *args, **kwargs):
         lecherias = Lecheria.objects.annotate(
             municipio=F('poblacion__municipio'),

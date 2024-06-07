@@ -4,7 +4,10 @@ $(document).ready(function() {
             url: '/catalogos/lecherias/list/data/',
             dataSrc: ''
         },
-        
+        dom : "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-right'f>>" +
+              "<'row'<'col-sm-12'tr>>" +
+              "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6 text-right'B>>" +
+              "<'row'<'col-sm-12'p>>",
         columns: [
             { data: 'numero_ruta' },
             { data: 'numero' },
@@ -14,7 +17,6 @@ $(document).ready(function() {
             { data: 'direccion' },
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
-            { data: 'opciones'},
         ],
 
         pageLength: 5,
@@ -38,7 +40,14 @@ $(document).ready(function() {
                 targets: -1,
                 defaultContent: "", 
             }
-        ]
+        ],
+        buttons: [
+            {
+                extend: 'pdf',
+                className: 'btn btn-success',
+                text: 'Generar PDF'
+            }
+        ],
     });
 });
 
@@ -164,5 +173,27 @@ $(document).ready(function() {
                     defaultContent: "<div style='display: flex; justify-content: space-between;'><a href='#' class='btn btn-secondary' style='font-size: 14px; width:75px;'><i class='fas fa-pencil'></i></a><a href='#' class='btn btn-danger' style='font-size: 14px; width: 75px;' ><i class='fas fa-trash'></i></a></div>",                orderable: false
                 }
             ]
+            
         });
     });
+
+
+// pdf
+document.getElementById('btn-exportar-pdf').addEventListener('click', function() {
+    var doc = new jsPDF();
+    doc.addImage('static/img/AdminLTELogo.png', 'PNG', 15, 40, 180, 160);
+    var table = $('#rotos').DataTable();
+    var data = table.buttons.exportData();
+
+    doc.autoTable({
+        head: data.header,
+        body: data.body,
+        foot: data.footer,
+        styles: { fillColor: [255, 255, 255] },
+        columnStyles: {
+            0: { fillColor: [255, 255, 255] },
+        },
+    });
+
+    doc.save('rotos.pdf');
+});
