@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import LecheriaForm
-from .models import Lecheria,  Rotos
+from .models import Lecheria, Ruta, Poblacion
 from django.http import JsonResponse
 from django.views import View
 from django.db.models import F
