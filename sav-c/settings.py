@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mantenimiento',
     'producto_no_conforme',
     'catalogos',
+    'usuarios',
 ]
 
 JAZZMIN_SETTINGS = {
