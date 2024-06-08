@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from usuarios.utils.mixins import GroupRequiredMixin
 
 # Create your views here.
-class index(TemplateView):
+class index(TemplateView, GroupRequiredMixin):
     template_name = 'index.html'
+    group_names = ['Coordinador', 'Jefe de Unidad']
 
 class grasas_aceites_vegetales(TemplateView):
     template_name = 'grasas_aceites_vegetales.html'
