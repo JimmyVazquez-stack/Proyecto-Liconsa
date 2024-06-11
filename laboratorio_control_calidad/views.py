@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from usuarios.utils.mixins import GroupRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
-class index(TemplateView, GroupRequiredMixin):
+class index(TemplateView, GroupRequiredMixin, LoginRequiredMixin):
     template_name = 'index.html'
     group_names = ['Coordinador', 'Jefe de Unidad']
 
