@@ -7,3 +7,4 @@ from django.views.generic import TemplateView
 class index(LoginRequiredMixin, TemplateView):
     template_name = 'iniciar_sesion.html'
     login_url = reverse_lazy('laboratorio_control_calidad:index') 
+    
