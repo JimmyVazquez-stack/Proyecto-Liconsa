@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,6 +29,8 @@ SECRET_KEY = 'django-insecure-s82_sls-p1ey(@y-n0(m7=&+qoq3jm%wk#x8p6+ukexq5j1$si
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 
 # Application definition
@@ -198,3 +202,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'laboratorio_control_calidad:index'
 LOGOUT_REDIRECT_URL = 'usuarios:login'
+
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_SECURE = False
