@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User, Group
 from .forms import UserChangeForm, UserCreationForm
-
+'''
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -46,7 +46,7 @@ class UserAdmin(BaseUserAdmin):
 #Registrar los modelos en el admin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-
+'''
 
 '''
 En este archivo se define la configuración del admin de Django para los modelos de usuarios y grupos.
