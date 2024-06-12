@@ -116,7 +116,7 @@
       <div class="sidebar">
 
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="container user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
             <img src="{% static 'img/usericon.png'%}" class="img-circle elevation-0" alt="User Image"
               style="filter: brightness(0) invert(1);">
@@ -128,6 +128,7 @@
             <a href="#" class="d-block">Usuario </a>
             {% endif %}
           </div>
+          
           <div class="info">
             <a href="{% url 'usuarios:logout' %}" class="d-block">Cerrar sesión</a>
           </div>
