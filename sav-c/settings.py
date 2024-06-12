@@ -203,5 +203,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'laboratorio_control_calidad:index'
 LOGOUT_REDIRECT_URL = 'usuarios:login'
 
+LOGIN_URL='usuarios:login'
+
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
