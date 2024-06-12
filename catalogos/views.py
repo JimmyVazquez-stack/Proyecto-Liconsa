@@ -23,7 +23,6 @@ class LecheriaListView(LoginRequiredMixin,TemplateView):
 class AñadirLecheriaView(LoginRequiredMixin, CreateView):
     template_name = 'añadir_lecheria.html'
     form_class = LecheriaForm
-    success_url = reverse_lazy('catalogos:lecherias_list')
     login_url = reverse_lazy('usuarios:login')
 
     def form_valid(self, form):
