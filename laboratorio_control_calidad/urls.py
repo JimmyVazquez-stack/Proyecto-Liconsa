@@ -9,7 +9,8 @@ from .views import (index,
                     monitoreo_medio_ambiente,
                     limpieza_equipo_personal,
                     calibracion_verificacion_equipo,
-                    verificacion_documentos,)
+                    verificacion_documentos,
+                    tabla_r49,crear_registror49,)   
 
 app_name = 'laboratorio_control_calidad'
 
@@ -25,6 +26,9 @@ urlpatterns = [
     path('limpieza_equipo_personal/', limpieza_equipo_personal.as_view(), name='limpieza_equipo_personal'),
     path('calibracion_verificacion_equipo/', calibracion_verificacion_equipo.as_view(), name='calibracion_verificacion_equipo'),    
     path('verificacion_documentos/', verificacion_documentos.as_view(), name='verificacion_documentos'),
+    path('tabla_r49', tabla_r49.as_view(), name='tabla_r49'),
+    path('crear_registror49',crear_registror49.as_view(), name='crear_registror49'),
+
 
 
 ]
