@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-s82_sls-p1ey(@y-n0(m7=&+qoq3jm%wk#x8p6+ukexq5j1$si
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mantenimiento',
     'producto_no_conforme',
     'catalogos',
+    'reportes',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -120,7 +121,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         #Directorio de plantillas
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 os.path.join(BASE_DIR, 'reportes/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -187,7 +189,8 @@ STATIC_URL = 'static/'
 SATTIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'reportes/static'),
 ]
 
 # Default primary key field type
