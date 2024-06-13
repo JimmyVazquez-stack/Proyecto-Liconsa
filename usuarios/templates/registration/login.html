@@ -1,0 +1,65 @@
+{% extends 'base_iniciar_sesion.html'%}
+{% load widget_tweaks %}
+{% block title %}
+<title>Ingreso de usuarios</title>
+  {% endblock %}
+
+
+
+{% block login%}
+<div class="login-box d-flex p-4" style="width: 500px;">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="{% url 'usuarios:login' %}" class="h1"><b>SAV</b>-C</a>
+    </div>
+    <div class="card-body ">
+      <p class="login-box-msg d-flex justify-content-center">Inicio de sesion</p>
+
+   <form method="post">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+    {{ form.username|add_class:"form-control"|attr:"placeholder:Nombre de usuario" }}
+    <div class="input-group-append">
+        <div class="input-group-text">
+            <span class="fas fa-user"></span>
+        </div>
+    </div>
+</div>
+    <div class="input-group mb-3">
+        {{ form.password|add_class:"form-control"|attr:"placeholder:Contraseña" }}
+        <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="fas fa-lock"></i>
+            </div>
+        </div>
+    </div>
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Usuario o contraseña incorrectos
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-8">
+            <div class="icheck-primary">
+                <input type="checkbox" id="remember">
+                <label for="remember">
+                    Recordar contraseña
+                </label>
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Iniciar sesion</button>
+        </div>
+        <!-- /.col -->
+    </div>
+</form>
+   
+
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+{% endblock %}

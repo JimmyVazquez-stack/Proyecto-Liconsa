@@ -108,88 +108,10 @@
     </div>
 </div>
 
-<!-- Ventana modal para editar -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Editar Lecheria</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="hidden" id="editLecheriaId" name="id">
-                            <div class="form-group">
-                                <label for="editRuta">Ruta</label>
-                                <input type="text" class="form-control" id="editRuta" name="ruta">
-                            </div>
-                            <div class="form-group">
-                                <label for="editNumeroLecheria">Número de lecheria</label>
-                                <input type="text" class="form-control" id="editNumeroLecheria" name="numero">
-                            </div>
-                            <div class="form-group">
-                                <label for="editNombreLecheria">Nombre de lecheria</label>
-                                <input type="text" class="form-control" id="editNombreLecheria" name="nombre">
-                            </div>
-                            <div class="form-group">
-                                <label for="editResponsable">Responsable</label>
-                                <input type="text" class="form-control" id="editResponsable" name="responsable">
-                            </div>
-                            <div class="form-group">
-                                <label for="editTelefono">Teléfono</label>
-                                <input type="text" class="form-control" id="editTelefono" name="telefono">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="editDireccion">Dirección</label>
-                                <input type="text" class="form-control" id="editDireccion" name="direccion">
-                            </div>
-                            <div class="form-group">
-                                <label for="editPoblacion">Población</label>
-                                <input type="text" class="form-control" id="editPoblacion" name="poblacion">
-                            </div>
-                            <div class="form-group">
-                                <label for="editRotosReportados">Rotos reportados</label>
-                                <input type="text" class="form-control" id="editRotosReportados" name="rotos_reportados">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="saveChangesButton">Guardar cambios</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<!-- Modal para eliminar -->
-<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar eliminación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>¿Estás seguro de que quieres eliminar la lechería <span id="deleteLecheriaName"></span>?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 {%endblock%}
 
 
@@ -203,67 +125,6 @@
 <!-- Script para inicializar DataTables -->
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
 
-<script>
-    $(document).ready(function() {
-        var table = $('#catalogo_lecherias').DataTable();
-        var rowToEdit;
 
-        // Cuando se hace clic en un botón de editar...
-        $(document).on('click', '.btn-edit', function () {
-            rowToEdit = table.row($(this).parents('tr'));
-            var data = rowToEdit.data();
-
-            // Llena el formulario con los datos actuales
-            $('#editLecheriaId').val(data.id);
-            $('#editRuta').val(data.ruta_id);  // Ajusta según los datos correctos
-            $('#editNumeroLecheria').val(data.numero);
-            $('#editNombreLecheria').val(data.nombre);
-            $('#editResponsable').val(data.responsable);
-            $('#editTelefono').val(data.telefono);
-            $('#editDireccion').val(data.direccion);
-            $('#editPoblacion').val(data.poblacion_id); // Ajusta según los datos correctos
-            $('#editRotosReportados').val(data.rotos_reportados);
-
-            // Abre la ventana modal
-            $('#editModal').modal('show');
-        });
-
-        // Cuando se hace clic en el botón de "Guardar cambios"...
-        $('#saveChangesButton').click(function () {
-            var formData = {
-                id: $('#editLecheriaId').val(),
-                ruta: $('#editRuta').val(),
-                numero: $('#editNumeroLecheria').val(),
-                nombre: $('#editNombreLecheria').val(),
-                responsable: $('#editResponsable').val(),
-                telefono: $('#editTelefono').val(),
-                direccion: $('#editDireccion').val(),
-                poblacion: $('#editPoblacion').val(),
-                rotos_reportados: $('#editRotosReportados').val()
-            };
-
-            $.ajax({
-                url: '{% url "catalogos:actualizar_lecheria" %}',
-                method: 'POST',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                success: function(response) {
-                    // Actualiza la fila en la tabla con los nuevos datos
-                    rowToEdit.data(response).draw(false);
-                    // Cierra la ventana modal
-                    $('#editModal').modal('hide');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error(textStatus, errorThrown);
-                }
-            });
-        });
-
-        // Funcionalidad para cerrar el modal con el botón o la "X"
-        $('[data-dismiss="modal"]').click(function () {
-            $('#editModal').modal('hide');
-        });
-    });
-</script>
 
 {% endblock %}

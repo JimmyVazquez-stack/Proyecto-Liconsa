@@ -4,32 +4,13 @@ from django.views import View
 from catalogos.models import Lecheria
 from django.db.models import F
 from django.views.generic import TemplateView
-#para generar pdfs 
-from django.http import FileResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from io import BytesIO
-from django.http import HttpResponse
-
-def render_pdf_view(request):
-    template_path = 'rotos/ver_reporte.html'
-    context = {}  # Añade aquí las variables de contexto que necesites
-    # Renderiza la plantilla con el contexto
-    response = get_template(template_path).render(context)
-    # Crea un archivo PDF en memoria
-    pdf = BytesIO()
-    pisa_status = pisa.CreatePDF(response, dest=pdf)
-    # Si ocurrió un error, devuelve un mensaje
-    if pisa_status.err:
-        return HttpResponse('Ocurrió un error al generar el PDF: ' + str(pisa_status.err))
-    # Si todo está bien, devuelve el PDF
-    pdf.seek(0)
-    return FileResponse(pdf, content_type='application/pdf')
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class LecheriaListView(View):
+class LecheriaListView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         return render(request, 'rotos.html')
+    login_url = 'usuarios:login'
 
 class LecheriaRotosDataView(View):
     def get(self, request, *args, **kwargs):
@@ -43,9 +24,6 @@ class LecheriaRotosDataView(View):
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
 
-class CrearMuestreoRotos(TemplateView):
+class CrearMuestreoRotos(LoginRequiredMixin,TemplateView):
     template_name = 'rotos/crear_muestreo_rotos.html'
-     
-class VerReporteView(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, 'rotos/ver_reporte.html')      
+    login_url = 'usuarios:login'

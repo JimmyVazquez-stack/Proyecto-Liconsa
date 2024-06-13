@@ -14,7 +14,7 @@ from .views import (index,
 app_name = 'laboratorio_control_calidad'
 
 urlpatterns = [
-    path('', index.as_view(), name='index'),
+    path('control_calidad/', index.as_view(), name='index'),
     path('grasas_aceites_vegetales/', grasas_aceites_vegetales.as_view(), name='grasas_aceites_vegetales'),
     path('mezcla_oleosa_vitaminas/', mezcla_oleosa_vitaminas.as_view(), name='mezcla_oleosa_vitaminas'),
     path('pre_mezclas_vitaminas_minerales/', pre_mezclas_vitaminas_minerales.as_view(), name='pre_mezclas_vitaminas_minerales'),
