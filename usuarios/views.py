@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView
 from .models import Usuario
+from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
 
 
 class LoginView(LoginView):
@@ -12,11 +14,10 @@ class LoginView(LoginView):
     success_url = reverse_lazy('laboratorio_control_calidad:index')
 
 
-class PerfilView(LoginRequiredMixin, ListView):
+
+class PerfilView(LoginRequiredMixin, DetailView):
     template_name = 'perfil.html'
     model = Usuario
-    
-    def get_queryset(self):
-        return Usuario.objects.filter(username=self.request.user)
-    
-    
+
+    def get_object(self):
+        return get_object_or_404(Usuario, username=self.request.user.username)
