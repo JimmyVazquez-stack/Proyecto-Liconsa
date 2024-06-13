@@ -4,11 +4,13 @@ from django.views import View
 from catalogos.models import Lecheria
 from django.db.models import F
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class LecheriaListView(View):
+class LecheriaListView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         return render(request, 'rotos.html')
+    login_url = 'usuarios:login'
 
 class LecheriaRotosDataView(View):
     def get(self, request, *args, **kwargs):
@@ -22,6 +24,6 @@ class LecheriaRotosDataView(View):
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
 
-class CrearMuestreoRotos(TemplateView):
+class CrearMuestreoRotos(LoginRequiredMixin,TemplateView):
     template_name = 'rotos/crear_muestreo_rotos.html'
-     
+    login_url = 'usuarios:login'
