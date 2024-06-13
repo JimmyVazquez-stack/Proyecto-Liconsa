@@ -115,34 +115,31 @@
       {%block Menu%}
       <div class="sidebar">
 
-        <!-- Sidebar user panel (optional) -->
-        <div class="container user-panel mt-3 pb-3 mb-3">
-          <div class="row">
-            <div class="col">
+         <!-- Sidebar user panel (optional) -->
+         <div class=" user-panel mt-3 pb-3 mb-2 d-flex">
               <div class="image">
                 <img src="{% static 'img/usericon.png'%}" class="img-circle elevation-0" alt="User Image"
                   style="filter: brightness(0) invert(1);">
-              </div>
-              <div class="info">
+          </div>
+              <div class="info " style="overflow-wrap: break-word;">
                 {% if user.is_authenticated %}
-                <a href="{% url 'usuarios:perfil'%}" class="d-block">{{ user.username }} </a>
+                <a href="{% url 'usuarios:perfil'%}" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{ user.username }} </a>
                 {% else %}
-                <a href="#" class="d-block">Usuario </a>
+                <a href="#" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Usuario </a>
                 {% endif %}
               </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col">
-              <div class="info">
-                <a href="{% url 'usuarios:logout' %}" class="d-block">Cerrar sesión</a>
+              <div class="info" style="overflow-wrap: break-word;">
+                <a href="{% url 'usuarios:logout' %}" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cerrar sesión</a>
               </div>
             </div>
           </div>
         </div>
 
+
         <!-- SidebarSearch Form -->
-        <div class="form-inline">
+        <div class="form-inline d-xxl-none">
           <div class="input-group" data-widget="sidebar-search">
             <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
