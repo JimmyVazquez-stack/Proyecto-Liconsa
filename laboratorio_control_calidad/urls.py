@@ -9,7 +9,13 @@ from .views import (index,
                     monitoreo_medio_ambiente,
                     limpieza_equipo_personal,
                     calibracion_verificacion_equipo,
-                    verificacion_documentos,)
+                    verificacion_documentos,
+                    producto_terminado_list,
+                    TerminadoCreate,
+                    TerminadoUpdate,
+                    TerminadoDelete,
+                    permisos
+                    )
 
 app_name = 'laboratorio_control_calidad'
 
@@ -25,6 +31,10 @@ urlpatterns = [
     path('limpieza_equipo_personal/', limpieza_equipo_personal.as_view(), name='limpieza_equipo_personal'),
     path('calibracion_verificacion_equipo/', calibracion_verificacion_equipo.as_view(), name='calibracion_verificacion_equipo'),    
     path('verificacion_documentos/', verificacion_documentos.as_view(), name='verificacion_documentos'),
-
+    path('producto_terminadoList/', producto_terminado_list.as_view(), name='TerminadoList'),
+    path('producto_terminadoCreate/', TerminadoCreate.as_view(), name='producto_terminadoCreate'),
+    path('TerminadoUpdate/<int:pk>', TerminadoUpdate.as_view(), name='TerminadoEdit'),
+    path('Terminadodelete/<int:pk>', TerminadoDelete.as_view(), name='terminadoDelete'),
+    path('permisos/<int:pk>', permisos.as_view(), name='permisos'),
 
 ]

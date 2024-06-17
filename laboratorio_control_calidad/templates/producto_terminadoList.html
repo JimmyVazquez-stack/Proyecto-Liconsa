@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{%block title %} Producto Terminado {% endblock %}
+
+{% block principal %}
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Producto Terminado</h5>
+                        <p>En esta sección se presenta los registros del formato TX-HP-910-01-R51.</p>
+                        <p>Para ver los registros en un formato, seleccione la opción que desee.</p>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+
+    </div>
+</div>
+{% endblock %}
+
+{%block datatable%}
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-gray-dark">
+          <h3 class="card-title"></h3>
+          
+        </div>
+        <div class="card-body bg-light">
+          <div class="card-tools">
+            <div class="input-group-append">
+                <a href="{% url 'laboratorio_control_calidad:producto_terminadoCreate'%}"><button class="btn btn-primary"><b>Crear +</b></button></a>
+                
+            </div>
+
+        </div>
+          <div class="col-xl-12 mt-3 p-3">
+            <div class="table-responsive">
+             
+                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                    <thead>
+                        <tr>
+                          <td><b>Opciones</b></td>
+                          <td><b>Permisos</b></td>
+                          <td><b>Hora de muestreo</b></td>
+                          <td><b>Producto</b></td>
+                          <td><b>Volumen (L)</b></td>
+                          <td><b>Aspecto</b></td>
+                          <td><b>Olor</b></td>
+                          <td><b>Temperatura</b></td>
+                          <td><b>Acidez</b></td>
+                          <td><b>Densidad</b></td>
+                          <td><b>S.G</b></td>
+                          <td><b>S.N.G</b></td>
+                          <td><b>S.T</b></td>
+                          <td><b>Proteina</b></td>                       
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in terminado %}
+                        <tr>
+                          {% if item.estatus %}
+                          <td>
+                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:TerminadoEdit' item.id %}"><i class="fas fa-pencil"></i></a>
+                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:terminadoDelete' item.id %}"><i class="fas fa-trash"></i></a>
+                          </td> 
+                          {%else%} 
+                          <td>
+                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:TerminadoList'%}"><i class="fas fa-pencil"></i></a>
+                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:TerminadoList'%}"><i class="fas fa-trash"></i></a>
+                          </td>
+                          {% endif %}
+
+                          {% if item.estatus %}
+                          <td> <a class="badge badge-success" href="{% url 'laboratorio_control_calidad:permisos' item.id %}" style="background-color:green">Editable</a> </td>
+                          {%else%}
+                          <td><a class="badge badge-warning" href="{% url 'laboratorio_control_calidad:permisos' item.id %}" role="button" style="background-color:red">Cerrado</a></td>
+                          {% endif %}
+
+                          <td>LOTE CAD {{item.lotCad}} {{item.planta}}{{item.turno}}{{item.silo}}{{item.maquina}} {{item.hora}}</td>
+                          <td>{{item.producto}}</td>
+                          <td>{{item.volumen}}</td>
+                          <td>{{item.aspecto}}</td>
+                          <td>{{item.olor}}</td>
+                          <td>{{item.temperatura}}</td>
+                          <td>{{item.acidez}}</td>
+                          <td>{{item.densidad}}</td>
+                          <td>{{item.sg}}</td>
+                          <td>{{item.sng}}</td>
+                          <td>{{item.st}}</td>
+                          <td>{{item.proteina}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      
+  </div>
+  </div>
+{%endblock%}
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+  <!-- extension responsive -->
+  <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+  <script type="application/javascript">
+      $(function() {
+          $('.btnTest').on('click', function() {
+              $.ajax({
+                  url: "{% url 'laboratorio_control_calidad:TerminadoList'%}" , 
+                  type: 'POST',
+                  data: {
+                      id: 1
+                  },
+                  dataType: 'json'
+              }).done(function(data) {
+                  console.log(data)
+              }).fail(function(data) {
+                  alert("error");
+              }).always(function(data) {
+  
+              })
+          });
+  
+      });
+  </script>
+    
+  
+        
+      <script>
+      $(document).ready(function() {
+          $('#example1').DataTable({
+              responsive: true,
+              retrieve: true,
+          });
+      } );  
+      
+      </script>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block title %}Producto terminado{% endblock %}
+{% block principal %}
+{% block informacion%}
+   
+
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Producto terminado</h5>
+                        <p>En esta sección se realiza el registro del formato TX-HP-910-01-R51.</p>
+                        <p>Llene los campos para generar el registro</p>
+                    </div>
+
+             {% block contenido %}
+             <form action="" method="post">
+                {% csrf_token %}
+                <h5>Datos de la muestra</h5>
+                  <div class="row">
+                    <br>
+                    <div class="col">
+                      <label for="exampleFormControlSelect1">Lote de caducidad</label>
+                      {{form.lotCad}}
+                    
+                    </div>
+                    <div class="col">
+                    <label for="exampleFormControlSelect1">Planta</label>
+                    {{form.planta}}
+                  </div>
+                  <div class="col">
+                    <label for="exampleFormControlSelect1">Turno</label>
+                    {{form.turno}}
+                  </div>
+                  <div class="col">
+                    <label for="exampleFormControlSelect1">Silo</label>
+                    {{form.silo}}
+                  </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <br>
+                    <div class="col">
+                      <label for="exampleFormControlSelect1">Maquina</label>
+                      {{form.maquina}}
+                    
+                    </div>
+                    <div class="col">
+                    <label for="exampleFormControlSelect1">Hora</label>
+                    {{form.hora}}
+                  </div>
+                  <div class="col">
+                    <label for="exampleFormControlSelect1">Producto</label>
+                    {{form.producto}}
+                  </div>
+                  <div class="col">
+                    <label for="exampleFormControlSelect1">Volumen (L)</label>
+                    {{form.volumen}}
+                  </div>
+                </div>
+                <br>
+                <br>
+
+                <h5>Evaluación sensorial</h5>
+                <div class="row">
+                  <br>
+                  <div class="col">
+                    <label for="exampleFormControlSelect1">Aspecto</label>
+                    {{form.aspecto}}
+                  </div>
+                  <div class="col">
+                  <label for="exampleFormControlSelect1">Sabor</label>
+                  {{form.sabor}}
+                </div>
+                <div class="col">
+                  <label for="exampleFormControlSelect1">Olor</label>
+                  {{form.olor}}
+                </div>
+              </div>
+              <br>
+              <br>
+
+              
+            <h5>Análisis Fisicoquimico</h5>
+              <div class="row">
+                <br>
+                <div class="col">
+                  <label for="exampleFormControlSelect1">Temperatura (°C)</label>
+                  {{form.temperatura}}
+                
+                </div>
+                <div class="col">
+                <label for="exampleFormControlSelect1">Ácidez g/l</label>
+                {{form.acidez}}
+              </div>
+              <div class="col">
+                <label for="exampleFormControlSelect1">Densidad g/ml</label>
+                {{form.densidad}}
+              </div>
+              <div class="col">
+                <label for="exampleFormControlSelect1">S.G. g/l</label>
+                {{form.sg}}
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <br>
+              <div class="col">
+                <label for="exampleFormControlSelect1">S.N.G. g/l</label>
+                {{form.sng}}
+              </div>
+              <div class="col">
+              <label for="exampleFormControlSelect1">S.T. g/l</label>
+              {{form.st}}
+            </div>
+            <div class="col">
+              <label for="exampleFormControlSelect1">Proteina g/l</label>
+              {{form.proteina}}
+            </div>
+          </div>
+          <br>
+
+
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <a href="{% url 'laboratorio_control_calidad:TerminadoList' %}" class="btn btn-danger">Cancelar</a>
+            </form>
+        {% endblock %}
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+        
+
+
+    </div>
+</div>
+    {%endblock%}
+
+   
+
+{% endblock %}
