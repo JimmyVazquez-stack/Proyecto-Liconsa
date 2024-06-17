@@ -1,7 +1,14 @@
+
+
+
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
+<<<<<<< HEAD
             url: '/catalogos/lecherias/list/data/',
+=======
+            url: '/producto_no_conforme/lecherias/data/',
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
             dataSrc: ''
         },
         dom : "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-right'f>>" +
@@ -18,7 +25,10 @@ $(document).ready(function() {
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
         ],
+<<<<<<< HEAD
 
+=======
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
         pageLength: 5,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         language: {
@@ -41,6 +51,7 @@ $(document).ready(function() {
                 defaultContent: "", 
             }
         ],
+<<<<<<< HEAD
         buttons: [
             {
                 extend: 'pdf',
@@ -48,6 +59,8 @@ $(document).ready(function() {
                 text: 'Generar PDF'
             }
         ],
+=======
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
     });
 });
 
@@ -56,6 +69,12 @@ $(document).ready(function() {
         $('#example').DataTable({
             pageLength: 5,
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+<<<<<<< HEAD
+=======
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
             language: {
                 lengthMenu: "Mostrar _MENU_ entradas",
                 zeroRecords: "No se encontraron resultados",
@@ -176,6 +195,7 @@ $(document).ready(function() {
             
         });
     });
+<<<<<<< HEAD
 
 
 // pdf
@@ -196,4 +216,17 @@ document.getElementById('btn-exportar-pdf').addEventListener('click', function()
     });
 
     doc.save('rotos.pdf');
+=======
+$(document).ready(function(){
+    $('#rotos1').DataTable ({
+        
+        ajax: {
+            url: '/producto_no_conforme/lecherias/data/',
+            dataSrc: ''
+        },
+        info: false,
+        ordering: false,
+        paging: false
+    });
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 });

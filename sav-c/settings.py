@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,9 @@ SECRET_KEY = 'django-insecure-s82_sls-p1ey(@y-n0(m7=&+qoq3jm%wk#x8p6+ukexq5j1$si
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+AUTH_USER_MODEL = 'usuarios.Usuario'
 
 
 # Application definition
@@ -48,6 +52,11 @@ INSTALLED_APPS = [
     'mantenimiento',
     'producto_no_conforme',
     'catalogos',
+<<<<<<< HEAD
+=======
+    'reportes',
+    'usuarios',
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 ]
 
 JAZZMIN_SETTINGS = {
@@ -90,7 +99,11 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
+<<<<<<< HEAD
     "theme": "cyborg",
+=======
+    "theme": "default", #cambiar a opcion default
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
@@ -120,7 +133,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         #Directorio de plantillas
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 os.path.join(BASE_DIR, 'reportes/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -187,10 +201,19 @@ STATIC_URL = 'static/'
 SATTIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'reportes/static'),
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'laboratorio_control_calidad:index'
+LOGOUT_REDIRECT_URL = 'usuarios:login'
+
+LOGIN_URL='usuarios:login'
+
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_SECURE = False

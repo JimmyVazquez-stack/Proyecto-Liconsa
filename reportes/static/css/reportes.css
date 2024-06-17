@@ -1,0 +1,80 @@
+body{
+    align-items: center;
+    width: auto;
+    margin-left: 100px; /* Centra el cuerpo en la página */
+}
+
+.header-container {
+    width: 50%; /* Ajusta este valor según tus necesidades */
+    margin: 20px auto; /* Margen externo */
+    display: flex; /* Utiliza flexbox para alinear los elementos */
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: flex-start; /* Alinea los elementos en la parte superior */
+    padding: 10px; /* Ajusta el padding según tus necesidades */
+    background-color: #f8f8f8; /* Color de fondo opcional */
+    border: 1px solid #ddd; /* Borde opcional */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
+
+.text-container {
+    max-width: 5%; /* Limita el ancho de los contenedores de texto */
+}
+
+.left-text, .center-text, .right-image {
+    font-size: 0.9em; /* Ajusta el tamaño de la letra */
+}
+
+/* Ajusta el tamaño de las letras individualmente si es necesario */
+.left-text {
+    align-self: flex-start; /* Asegura que este texto esté en la parte superior */
+}
+
+.center-text {
+    text-align: center;
+    flex-grow: 1; /* Permite que el texto central ocupe espacio adicional */
+}
+
+.right-image img {
+    max-width: 100px; /* Tamaño máximo de la imagen */
+    height: auto; /* Mantiene la proporción de la imagen */
+    align-self: flex-start; /* Asegura que la imagen esté en la parte superior */
+}
+
+.contenedor-tablas {
+    width: 100%;
+    font-size: 0.7em;
+    display: flex; /* Hace que las tablas se alineen en filas */
+    flex-wrap: wrap; /* Hace que las tablas se envuelvan en la siguiente línea si no hay suficiente espacio */
+    justify-content: space-between; /* Añade espacio entre las tablas */
+}
+.contenedor-tablas .table {
+    flex-grow: 1; /* Hace que las tablas crezcan para ocupar el espacio disponible */
+    max-height: 300px;
+    overflow: auto;
+    justify-content: center;
+    flex-basis: 200px; /* Establece el tamaño base de las tablas antes de que crezcan o se encojan */
+    margin-bottom: 50px; /* Añade espacio debajo de las tablas */
+    margin-left: 10px; /* Añade espacio a la izquierda de las tablas */
+    margin-right: 10px; /* Añade espacio a la derecha de las tablas */
+
+}
+
+.contenedor-autorizacion {
+    display: flex; /* Hace que las secciones se alineen en filas */
+    justify-content: space-between; /* Añade espacio entre las secciones */
+}
+.contenedor-autorizacion .seccion {
+    width: 45%; /* Ajusta el ancho de las secciones al 45% del ancho del contenedor */
+    text-align: center; /* Centra el texto */
+}
+.contenedor-autorizacion .seccion hr {
+    margin: 10px auto; /* Añade espacio entre la línea y el texto */
+    border: 0; /* Elimina el borde predeterminado */
+    border-top: 2px solid black; /* Añade una línea larga */
+    width: 50%; /* Ajusta el ancho de la línea */
+}
+
+.encabezado-tabla {
+    background-color: #000000; /* Color de fondo opcional */
+    color: #ddd;
+}

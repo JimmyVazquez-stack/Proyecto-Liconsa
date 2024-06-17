@@ -4,6 +4,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import LecheriaForm
 from .models import Lecheria,  Rotos
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from .forms import LecheriaForm
+from .models import Lecheria, Ruta, Poblacion
 from django.http import JsonResponse
 from django.views import View
 from django.db.models import F
@@ -21,13 +25,30 @@ class AñadirLecheriaView(CreateView):
     template_name = 'añadir_lecheria.html'
     form_class = LecheriaForm
     success_url = reverse_lazy('catalogos:lecherias_list')
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+
+# Create your views here.
+class LecheriaListView(LoginRequiredMixin,TemplateView):
+    template_name = 'lecherias_list.html'
+    login_url = reverse_lazy('usuarios:login')
+    
+
+
+class AñadirLecheriaView(LoginRequiredMixin, CreateView):
+    template_name = 'añadir_lecheria.html'
+    form_class = LecheriaForm
+    login_url = reverse_lazy('usuarios:login')
 
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
     
     
-class LecheriaDataView(View):
+
+class LecheriaDataView(LoginRequiredMixin,View):
+    login_url = reverse_lazy('usuarios:login')
     def get(self, request, *args, **kwargs):
         lecherias = Lecheria.objects.annotate(
             numero_ruta=F('ruta__numero'),
@@ -39,6 +60,7 @@ class LecheriaDataView(View):
     
 
 class ActualizarLecheriaView(View):
+    login_url = reverse_lazy('usuarios:login')
     def post(self, request, *args, **kwargs):
         form_data = json.loads(request.body)
         lecheria = Lecheria.objects.get(id=form_data['id'])

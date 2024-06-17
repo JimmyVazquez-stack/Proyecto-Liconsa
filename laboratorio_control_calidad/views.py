@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin 
@@ -9,40 +10,58 @@ from .forms import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView
 
+=======
+from django.shortcuts import render
+from django.views.generic import TemplateView
+from usuarios.utils.mixins import GroupRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 
 # Create your views here.
-class index(TemplateView):
+class index(LoginRequiredMixin,TemplateView, GroupRequiredMixin ):
     template_name = 'index.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class grasas_aceites_vegetales(TemplateView):
+class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
     template_name = 'grasas_aceites_vegetales.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class mezcla_oleosa_vitaminas(TemplateView):
+class mezcla_oleosa_vitaminas(LoginRequiredMixin,TemplateView):
     template_name = 'mezcla_oleosa_vitaminas.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class pre_mezclas_vitaminas_minerales(TemplateView):
+class pre_mezclas_vitaminas_minerales(LoginRequiredMixin,TemplateView):
     template_name = 'pre_mezclas_vitaminas_minerales.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class leche_polvo_fysf(TemplateView):
+class leche_polvo_fysf(LoginRequiredMixin, TemplateView):
     template_name = 'leche_polvo_fysf.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class soluciones_valoradas_ts(TemplateView):
+class soluciones_valoradas_ts(LoginRequiredMixin, TemplateView):
     template_name = 'soluciones_valoradas_ts.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class evaluacion_sensorial(TemplateView):
+class evaluacion_sensorial(LoginRequiredMixin, TemplateView):
     template_name = 'evaluacion_sensorial.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class monitoreo_medio_ambiente(TemplateView):
+class monitoreo_medio_ambiente(LoginRequiredMixin, TemplateView):
     template_name = 'monitoreo_medio_ambiente.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class limpieza_equipo_personal(TemplateView):
+class limpieza_equipo_personal(LoginRequiredMixin, TemplateView):
     template_name = 'limpieza_equipo_personal.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class calibracion_verificacion_equipo(TemplateView):
+class calibracion_verificacion_equipo(LoginRequiredMixin, TemplateView):
     template_name = 'calibracion_verificacion_equipo.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class verificacion_documentos(TemplateView):
+class verificacion_documentos(LoginRequiredMixin, TemplateView):
     template_name = 'verificacion_documentos.html'
+<<<<<<< HEAD
 
 
 
@@ -172,4 +191,7 @@ class LecheReconsSilosDelete(generic.DeleteView):
 
 
 #==========================[End] Leche Reconstituida por silos [End] ===============================#
+=======
+    login_url = reverse_lazy('usuarios:login')
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
     
