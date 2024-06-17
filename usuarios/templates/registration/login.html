@@ -7,7 +7,7 @@
 
 
 {% block login%}
-<div class="login-box d-flex p-4" style="width: 500px;">
+<div class="login-box d-flex p-4  d-flex justify-content-center ">
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
         <div class="card-header text-center">
@@ -39,21 +39,12 @@
                     Usuario o contraseña incorrectos
                 </div>
                 {% endif %}
-                <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">
-                                Recordar contraseña
-                            </label>
-                        </div>
+                  
+                    <!-- /.col -->
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary btn-block"> Iniciar sesion  <i class="fas fa-sign-in-alt"></i></button>
                     </div>
                     <!-- /.col -->
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">Iniciar sesion</button>
-                    </div>
-                    <!-- /.col -->
-                </div>
             </form>
 
 
