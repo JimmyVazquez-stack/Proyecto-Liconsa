@@ -12,3 +12,34 @@ class Producto_no_Conforme_Home(generic.TemplateView):
 class Producto_no_Conforme_Registro(generic.TemplateView):
     template_name = 'Reg_Prod_No_Conforme.html'
     #login_url = 'login'
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views import View
+from catalogos.models import Lecheria
+from django.db.models import F
+from django.views.generic import TemplateView
+
+
+class LecheriaListView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'rotos.html')
+
+class LecheriaRotosDataView(View):
+    def get(self, request, *args, **kwargs):
+        lecherias = Lecheria.objects.annotate(
+            municipio=F('poblacion__municipio'),
+            numero_ruta=F('ruta__numero'),
+            nombre_poblacion=F('poblacion__nombre'),
+            rotos_reportados=F('rotos__rotos_reportados')
+        ).values('numero_ruta', 'numero', 'nombre', 'responsable', 'municipio', 'telefono', 'direccion', 'nombre_poblacion', 'rotos_reportados')
+        
+        lecherias_list = list(lecherias)
+        return JsonResponse(lecherias_list, safe=False)
+
+class CrearMuestreoRotos(TemplateView):
+    template_name = 'rotos/crear_muestreo_rotos.html'
+     
+
+class Producto_no_Conforme_Registro(generic.TemplateView):
+    template_name = 'Reg_Prod_No_Conforme.html'
+    #login_url = 'login'

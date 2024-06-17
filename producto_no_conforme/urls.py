@@ -1,10 +1,12 @@
 from django.urls import path
-from producto_no_conforme.views import * 
+from .views import LecheriaListView, LecheriaRotosDataView, CrearMuestreoRotos
+
+app_name = 'producto_no_conforme'
 
 urlpatterns = [
-    # path('', views.home, name='home'),
     
-    path('',Producto_no_Conforme_Home.as_view(), name='home_producto_no_conforme'),
-    path('Registrar/',Producto_no_Conforme_Registro.as_view(), name='registro_producto_no_conforme'),
-    
+
+    path('lecherias/', LecheriaListView.as_view(), name='lecherias'),
+    path('lecherias/data/', LecheriaRotosDataView.as_view(), name='lecherias_data'),
+    path('lecherias/muestreo_rotos/', CrearMuestreoRotos.as_view(), name='muestreo_rotos'),
 ]

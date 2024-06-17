@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2>Seguro de eliminar el Registro del: {{ LecheReconstituidaPorSilos.fecha_Hora}}?</h2>
+        <button type="submit" class="btn btn-danger">Si, eliminar</button>
+        <a href="{% url 'laboratorio_control_calidad:Leche_Recons_List' %}" class="btn btn-success">No, Cancelar</a>
+    </form>
+{% endblock %}

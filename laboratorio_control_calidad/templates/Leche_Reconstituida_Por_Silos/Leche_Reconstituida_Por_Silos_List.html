@@ -1,0 +1,144 @@
+{% extends 'base.html' %} {% load static %} {%block title %} Leche Reonstituida
+Por Silos {% endblock %} {% block principal %} {% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Leche Reonstituida Por Silos</h5>
+                        <p>
+                            En esta sección se presentan los resultados de los análisis Leche
+                            Reonstituida Por Silos.
+                        </p>
+                        <p>
+                            Para ver los resultados de un análisis, seleccione el análisis
+                            deseado en el menú de la izquierda.
+                        </p>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+{% endblock %} {%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title"></h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Create' %}" class="btn btn-primary">Nuevo
+                                    Registro</a>
+                                <div id="example_filter"></div>
+                            </div>
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                                <thead class="thead-light" style="font-size: 14px">
+                                    <tr>
+                                        <th>Encabezado</th>
+                                        <th>Hora</th>
+                                        <th>Tipo de Producto</th>
+                                        <th>Aspecto</th>
+                                        <th>Sabor</th>
+                                        <th>Olor</th>
+                                        <th>Ttemperatura</th>
+                                        <th>PH</th>
+                                        <th>Acidez</th>
+                                        <th>Densidad</th>
+                                        <th>s_g_w_v</th>
+                                        <th>s_n_g_Stsg_wv</th>
+                                        <th>st_wv</th>
+                                        <th>Proteina</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px">
+                                    {% for item in LecheReconsSilos %}
+                                    <tr>
+                                        <td>{{item.encabezado}}</td>
+                                        <td>{{item.fecha_Hora}}</td>
+                                        <td>{{item.producto}}</td>
+                                        <td>{{item.aspecto}}</td>
+                                        <td>{{item.sabor}}</td>
+                                        <td>{{item.olor}}</td>
+                                        <td>{{item.temperatura}}°</td>
+                                        <td>{{item.ph}}</td>
+                                        <td>{{item.acidez}}</td>
+                                        <td>{{item.densidad}}</td>
+                                        <td>{{item.s_g_w_v}}</td>
+                                        <td>{{item.s_n_g_Stsg_wv}}</td>
+                                        <td>{{item.st_wv}}</td>
+                                        <td>{{item.proteina}}</td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
+{%endblock%} {% endblock %} {% block javascript %} {{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+<script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+<script type="application/javascript">
+    $(function() {
+        $('.btnTest').on('click', function() {
+            $.ajax({
+                url: "{% url 'laboratorio_control_calidad:Leche_Recons_Silos_List'%}" , 
+                type: 'POST',
+                data: {
+                    id: 1
+                },
+                dataType: 'json'
+            }).done(function(data) {
+                console.log(data)
+            }).fail(function(data) {
+                alert("error");
+            }).always(function(data) {
+
+            })
+        });
+
+    });
+</script>
+  
+
+      
+    <script>
+    $(document).ready(function() {
+        $('#example1').DataTable({
+            responsive: true,
+            retrieve: true,
+        });
+    } );  
+    
+    </script>
+    
+{% endblock %}
