@@ -81,9 +81,9 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <button id="add-form-btn" class="btn btn-primary">Agregar Formulario De Registro</button>
+                    
                     <button type="submit" class="btn btn-success">Guardar</button>
-                    <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_List' %}" class="btn btn-danger">Cancelar</a>
+                    <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="btn btn-danger">Cancelar</a>
                 </form>
                 </div>
               </div>
@@ -95,60 +95,7 @@
   </div>
 </section>
 
-<script>
-  // El código JavaScript que agregará los formularios dinámicamente
-  document.addEventListener('DOMContentLoaded', function() {
-    const addFormBtn = document.getElementById('add-form-btn');
-    const formContainer = document.getElementById('formularios-body');
-    const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
 
-    let formIndex = formContainer.querySelectorAll('tr').length;
-
-    addFormBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        const newForm = formContainer.querySelector('tr:last-child').cloneNode(true);
-        const regex = new RegExp(`form-(\\d+)-`, 'g');
-        newForm.innerHTML = newForm.innerHTML.replace(regex, `form-${formIndex}-`);
-        const inputs = newForm.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            if (input.type !== 'hidden') {
-                input.value = '';
-            }
-        });
-        formContainer.appendChild(newForm);
-        formIndex++;
-        totalForms.value = formIndex;
-    });
-});
-
-</script>
 
 {% endblock %}
 
-<script>
-  // El código JavaScript que agregará los formularios dinámicamente
-  document.addEventListener('DOMContentLoaded', function() {
-    const addFormBtn = document.getElementById('add-form-btn');
-    const formContainer = document.getElementById('formularios-body');
-    const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
-
-    let formIndex = formContainer.querySelectorAll('tr').length;
-
-    addFormBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-        const newForm = formContainer.querySelector('tr:last-child').cloneNode(true);
-        const regex = new RegExp(`form-(\\d+)-`, 'g');
-        newForm.innerHTML = newForm.innerHTML.replace(regex, `form-${formIndex}-`);
-        const inputs = newForm.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            if (input.type !== 'hidden') {
-                input.value = '';
-            }
-        });
-        formContainer.appendChild(newForm);
-        formIndex++;
-        totalForms.value = formIndex;
-    });
-});
-
-</script>

@@ -7,6 +7,7 @@ class LecheReconsSilosEncab(models.Model):
     folio = models.IntegerField()
     periodo_Ini = models.DateField(default=timezone.now)
     periodo_Fin = models.DateField(default=timezone.now)
+    observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
 
     def __str__(self):
        return f"ID: {self.id}, Folio: {self.folio}"
@@ -17,7 +18,7 @@ class LecheReconsSilos(models.Model):
     TIPO_PRODUCTO = [('LPD', 'LPD'),('MLGVRG', 'MLGVRG'),('FRISIA', 'FRISIA'),]
     encabezado = models.ForeignKey(LecheReconsSilosEncab,on_delete=models.CASCADE,)
     fecha_Hora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
-    silo_Numero = models.IntegerField(choices=NO_SILO,verbose_name="No. Silo")
+    silo_Numero = models.IntegerField(choices=NO_SILO,verbose_name="No. Silo" )
     producto = models.CharField(choices=TIPO_PRODUCTO,verbose_name="Tipo de Producto",max_length=10)
     volumen = models.FloatField(default=0.0,verbose_name=" Volumen")
     aspecto = models.IntegerField(choices=OPCIONES,verbose_name="Aspecto")

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.views.generic import TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin 
@@ -10,13 +9,11 @@ from .forms import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView
 
-=======
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from usuarios.utils.mixins import GroupRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
->>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, GroupRequiredMixin ):
@@ -61,7 +58,6 @@ class calibracion_verificacion_equipo(LoginRequiredMixin, TemplateView):
 
 class verificacion_documentos(LoginRequiredMixin, TemplateView):
     template_name = 'verificacion_documentos.html'
-<<<<<<< HEAD
 
 
 
@@ -73,7 +69,7 @@ class LecheReconsSilosEncabView(generic.ListView):
     queryset = LecheReconsSilosEncab.objects.all()
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_List.html'
     context_object_name = 'LecheReconsSilosEncab'
-
+ 
 
 
 class LecheReconsSilosEncabCreate(View):
@@ -91,23 +87,39 @@ class LecheReconsSilosEncabCreate(View):
         encab_form = LecheReconsSilosEncabForm(request.POST)
         silos_formset = LecheReconsSilosFormSet(request.POST)
 
-        if encab_form.is_valid() and silos_formset.is_valid():
+        if encab_form.is_valid():
             encab_instance = encab_form.save()
+            silos_valid = True
             for form in silos_formset:
-                silo = form.save(commit=False)
-                silo.encabezado = encab_instance
-                silo.save()
-            return redirect(self.success_url)
-        else:
-            if not encab_form.is_valid():
-                messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
-            if not silos_formset.is_valid():
+                if form.is_valid() and self._has_data(form.cleaned_data):
+                    silo = form.save(commit=False)
+                    silo.encabezado = encab_instance
+                    silo.save()
+                elif not form.is_valid() and self._has_data(form.cleaned_data):
+                    silos_valid = False
+                    break
+
+            if silos_valid:
+                return redirect(self.success_url)
+            else:
                 messages.error(request, f'Error en el formulario de Silos: {silos_formset.errors}')
+        else:
+            messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
 
         return render(request, 'Leche_Reconstituida_por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Create.html', {
             'encab_form': encab_form,
             'silos_formset': silos_formset,
         })
+
+    def _has_data(self, cleaned_data):
+        # Verificar si el formulario tiene datos significativos
+        default_datetime = timezone.now()
+        for key, value in cleaned_data.items():
+            if key == 'fecha_Hora' and value == default_datetime:
+                continue
+            if key != 'id' and value not in (None, '', 0.0, 0):
+                return True
+        return False
 
 
 class LecheReconsSilosEncabUpdate(View):
@@ -132,7 +144,7 @@ class LecheReconsSilosEncabUpdate(View):
             return redirect(self.success_url)
         else:
             if not encab_form.is_valid():
-                messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
+                messages.error(request, f'Error en el formulario de Encabezado: {encab_form.errors}')
             if not silos_formset.is_valid():
                 messages.error(request, f'Error en el formulario de Silos: {silos_formset.errors}')
 
@@ -140,9 +152,8 @@ class LecheReconsSilosEncabUpdate(View):
             'encab_form': encab_form,
             'silos_formset': silos_formset,
         })
+
    
-
-
 
 
 class LecheReconsSilosEncabDelete(DeleteView):
@@ -155,43 +166,3 @@ class LecheReconsSilosEncabDelete(DeleteView):
 
 #==========================[End] Leche Reconstituida por silos encab [End]==============================#
 
-
-
-
-#=========================[Start] Leche Reconstituida por silos [Start]==============================#
-
-
-
-class LecheReconsSilosView(generic.ListView): 
-    model =  LecheReconsSilos
-    queryset = LecheReconsSilos.objects.all()
-    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Reconstituida_Por_Silos_List.html'
-    context_object_name = 'LecheReconsSilos'
-
-class LecheReconsSilosCreate(generic.CreateView):
-    model = LecheReconsSilos
-    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Reconstituida_Por_Silos_Create.html'
-    context_object_name = 'LecheReconsSilos'
-    form_class = LecheReconsSilosForm
-    success_url = reverse_lazy("Leche_Recons_Silos_List")
-    
-class LecheReconsSilosUpdate(generic.UpdateView):
-    model = LecheReconsSilos
-    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Reconstituida_Por_Silos_Create.html'
-    context_object_name = 'LecheReconsSilos'
-    form_class = LecheReconsSilosForm
-    success_url = reverse_lazy('Leche_Recons_Silos_List')
-
-class LecheReconsSilosDelete(generic.DeleteView):
-    model = LecheReconsSilos
-    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Reconstituida_Por_Silos_Delete.html'
-    context_object_name = 'LecheReconsSilos'
-    success_url = reverse_lazy('Leche_Recons_Silos_List')
-    
-
-
-#==========================[End] Leche Reconstituida por silos [End] ===============================#
-=======
-    login_url = reverse_lazy('usuarios:login')
->>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
-    
