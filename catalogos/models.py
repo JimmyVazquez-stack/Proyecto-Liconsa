@@ -52,9 +52,7 @@ class Rotos(models.Model):
     
     class Meta:
         verbose_name_plural = "Roto"
-<<<<<<< HEAD
         verbose_name_plural = "Rotos"
-=======
         verbose_name_plural = "Rotos"
         
 class Area(models.Model):
@@ -66,4 +64,3 @@ class Area(models.Model):
     
     class Meta:
         verbose_name_plural = "Areas"
->>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6

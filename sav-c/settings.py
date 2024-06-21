@@ -52,11 +52,8 @@ INSTALLED_APPS = [
     'mantenimiento',
     'producto_no_conforme',
     'catalogos',
-<<<<<<< HEAD
-=======
     'reportes',
     'usuarios',
->>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 ]
 
 JAZZMIN_SETTINGS = {
@@ -99,11 +96,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-<<<<<<< HEAD
-    "theme": "cyborg",
-=======
     "theme": "default", #cambiar a opcion default
->>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
