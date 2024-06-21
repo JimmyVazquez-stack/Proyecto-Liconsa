@@ -62,6 +62,7 @@
                     <thead>
                         <tr>
                           <td><b>Opciones</b></td>
+                          <td><b>encabezado</b></td>
                           <td><b>Permisos</b></td>
                           <td><b>Hora de muestreo</b></td>
                           <td><b>Producto</b></td>
@@ -91,6 +92,8 @@
                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:TerminadoList'%}"><i class="fas fa-trash"></i></a>
                           </td>
                           {% endif %}
+
+                          <td>{{item.encabezado}}</td>
 
                           {% if item.estatus %}
                           <td> <a class="badge badge-success" href="{% url 'laboratorio_control_calidad:permisos' item.id %}" style="background-color:green">Editable</a> </td>

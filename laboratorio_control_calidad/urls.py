@@ -1,22 +1,5 @@
 from django.urls import path
-from .views import (index, 
-                    grasas_aceites_vegetales,
-                    mezcla_oleosa_vitaminas,
-                    pre_mezclas_vitaminas_minerales,
-                    leche_polvo_fysf,
-                    soluciones_valoradas_ts,
-                    evaluacion_sensorial,
-                    monitoreo_medio_ambiente,
-                    limpieza_equipo_personal,
-                    calibracion_verificacion_equipo,
-                    verificacion_documentos,
-                    producto_terminado_list,
-                    TerminadoCreate,
-                    TerminadoUpdate,
-                    TerminadoDelete,
-                    permisos
-                    )
-
+from .views import *
 app_name = 'laboratorio_control_calidad'
 
 urlpatterns = [
@@ -31,10 +14,11 @@ urlpatterns = [
     path('limpieza_equipo_personal/', limpieza_equipo_personal.as_view(), name='limpieza_equipo_personal'),
     path('calibracion_verificacion_equipo/', calibracion_verificacion_equipo.as_view(), name='calibracion_verificacion_equipo'),    
     path('verificacion_documentos/', verificacion_documentos.as_view(), name='verificacion_documentos'),
-    path('producto_terminadoList/', producto_terminado_list.as_view(), name='TerminadoList'),
-    path('producto_terminadoCreate/', TerminadoCreate.as_view(), name='producto_terminadoCreate'),
-    path('TerminadoUpdate/<int:pk>', TerminadoUpdate.as_view(), name='TerminadoEdit'),
-    path('Terminadodelete/<int:pk>', TerminadoDelete.as_view(), name='terminadoDelete'),
+    path('producto_terminadoList/', TerminadoEncabView.as_view(), name='TerminadoList'),
+    path('producto_terminadoCreate/', TerminadoEncabCreate.as_view(), name='producto_terminadoCreate'),
+    path('encab_update/<int:pk>',TerminadoEncabUpdate.as_view(), name='encab_update'),
+    path('Terminado_delete/<int:pk>', TerminadoDelete.as_view(), name='Terminado_delete'),
     path('permisos/<int:pk>', permisos.as_view(), name='permisos'),
-
+    path('modificar/<int:pk>', permisos.as_view(), name='modificar'),
 ]
+  
