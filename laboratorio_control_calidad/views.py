@@ -1,14 +1,26 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from usuarios.utils.mixins import GroupRequiredMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
+from usuarios.models import Usuario
+from django.contrib.auth import get_user_model
+
 
 # Create your views here.
-class index(LoginRequiredMixin,TemplateView, GroupRequiredMixin ):
+class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
+    model = get_user_model()
     template_name = 'index.html'
     login_url = reverse_lazy('usuarios:login')
-
+    
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['total_usuarios'] = self.model.objects.count()
+            context['puede_agregar_usuario'] = self.request.user.has_perm('usuario.add_usuario')
+            print (context)
+            return context
+    
+    
 class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
     template_name = 'grasas_aceites_vegetales.html'
     login_url = reverse_lazy('usuarios:login')
