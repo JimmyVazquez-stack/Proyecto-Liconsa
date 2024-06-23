@@ -57,20 +57,23 @@ Inicio
         </div>
       </div>
       <!-- ./col -->
-      <div class="col-lg-3 col-6">
-        <!-- small box -->
-        <div class="small-box bg-warning">
-          <div class="inner">
-            <h3>44</h3>
+{% if not puede_agregar_usuario %}
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>{{total_usuarios}} </h3>
 
-            <p>Registrar usuario</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-person-add"></i>
-          </div>
-          <a href="#" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
+        <p>Usuarios registrados</p>
       </div>
+      <div class="icon">
+        <i class="ion ion-person-add"></i>
+      </div>
+      <a href="{% url 'usuarios:crear_usuario'%}" class="small-box-footer">Registrar un usuario <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+{% endif %}
+      
       <!-- ./col -->
       <div class="col-lg-3 col-6">
         <!-- small box -->
