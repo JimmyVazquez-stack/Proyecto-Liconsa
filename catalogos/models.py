@@ -11,7 +11,6 @@ class Ruta(models.Model):
         return self.nombre
     
     class Meta:
-        verbose_name_plural = "Ruta"
         verbose_name_plural = "Rutas"
     
     
@@ -24,7 +23,6 @@ class Poblacion(models.Model):
         return self.nombre
     
     class Meta:
-        verbose_name_plural = "Poblacion"
         verbose_name_plural = "Poblaciones"
     
 class Lecheria(models.Model):
@@ -40,7 +38,6 @@ class Lecheria(models.Model):
         return '%s - %s - %s - %s' % (self.numero, self.nombre, self.ruta, self.poblacion)
     
     class Meta:
-        verbose_name_plural = "Lecheria"
         verbose_name_plural = "Lecherias"
 
     
@@ -54,7 +51,6 @@ class Rotos(models.Model):
         return '%s : %s' %(self.lecheria, self.rotos_reportados)
     
     class Meta:
-        verbose_name_plural = "Roto"
         verbose_name_plural = "Rotos"
 
 #Modelo usado en usuarios
@@ -83,7 +79,6 @@ class Planta(models.Model):
         return self.nombre
     
     class Meta:
-        verbose_name_plural = "Planta"
         verbose_name_plural = "Plantas"
 
 class Proveedor(models.Model):
@@ -98,54 +93,67 @@ class Proveedor(models.Model):
         return self.nombre
 
     class Meta:
-        verbose_name_plural = "Proveedor"
         verbose_name_plural = "Proveedores"
 class Maquina(models.Model):
-    nombre = models.CharField(max_length=100)
+    numero = models.IntegerField()
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
     
 
     def __str__(self):
-        return self.nombre
+        return f"Maquina {self.numero} "
     
     class Meta:
-        verbose_name_plural = "Maquina"
         verbose_name_plural = "Maquinas"
 
 class Cabezal(models.Model):
-    codigo = models.CharField(max_length=100)
-    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=100)
+    maquina = models.OneToOneField(Maquina, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.codigo
+        return f"{self.nombre} - {self.maquina}"
     
     class Meta:
-        verbose_name_plural = "Cabezal"
         verbose_name_plural = "Cabezales"
 
-class Producto(models.Model):
+    
+ 
+class TipoProducto(models.Model):
     nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=100)
+    
 
     def __str__(self):
         return self.nombre
+    
+    class Meta:
+        verbose_name_plural = "Tipos de productos"
+    
+class Producto(models.Model):
+    nombre = models.CharField(max_length=100)
+    tipo_producto = models.ForeignKey(TipoProducto, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.nombre} - {self.tipo_producto}"
 
     class Meta:
-        verbose_name_plural = "Producto"
         verbose_name_plural = "Productos"
+        
 class Turno(models.Model):
+    nombre = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=100)
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
+    activo = models.BooleanField(default=True)
+    
 
     def __str__(self):
-        return self.descripcion
+        return f"{self.nombre} - {self.descripcion}"
     
     class Meta:
-        verbose_name_plural = "Turno"
         verbose_name_plural = "Turnos"
 
 class Silo(models.Model):
-    numero = models.IntegerField()
+    numero = models.IntegerField(unique=True) #Numero de silo unico
     capacidad = models.DecimalField(max_digits=10, decimal_places=2)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
@@ -155,5 +163,4 @@ class Silo(models.Model):
         return f"Silo {self.numero}"
     
     class Meta:
-        verbose_name_plural = "Silo"
         verbose_name_plural = "Silos"
