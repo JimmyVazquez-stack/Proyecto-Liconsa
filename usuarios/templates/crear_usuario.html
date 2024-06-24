@@ -3,7 +3,12 @@
 
 {% block principal %}
 <div class="container p-5">
-    <div class="card ">
+    <div class="card">
+        <!-- Inicio del Card Header -->
+        <div class="card-header bg-dark">
+            Crear Usuario
+        </div>
+        <!-- Fin del Card Header -->
         <div class="card-body">
             <div class="table-responsive">
                 <form method="post">
@@ -19,6 +24,7 @@
                         </tbody>
                     </table>
                     <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary">Regresar</a
                 </form>
             </div>
         </div>
