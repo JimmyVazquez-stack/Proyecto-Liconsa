@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.urls import reverse_lazy
 from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
-
+from django.contrib.auth.models import Permission #Importamos el modelo Permission
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
@@ -14,11 +14,16 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
     login_url = reverse_lazy('usuarios:login')
     
     def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            context['total_usuarios'] = self.model.objects.count()
-            context['puede_agregar_usuario'] = self.request.user.has_perm('usuario.add_usuario')
-            print (context)
-            return context
+        context = super().get_context_data(**kwargs)
+        context['total_usuarios'] = self.model.objects.count()
+        
+        # Verifica si el usuario tiene el permiso directamente o a través de sus grupos
+        permiso_nombre = 'usuario.add_usuario'
+        tiene_permiso = self.request.user.has_perm(permiso_nombre) or \
+                        self.request.user.groups.filter(permissions__codename=permiso_nombre.split('.')[1]).exists()
+        context['puede_agregar_usuario'] = tiene_permiso
+        
+        return context
     
     
 class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
