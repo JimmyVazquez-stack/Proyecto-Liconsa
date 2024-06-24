@@ -62,7 +62,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "SAV-C",
     "welcome_sign": "Bienvenido a SAV-C",
     "user_avatar": None,
-    "show_ui_builder": True,
+    "show_ui_builder": False,
     "navigation_expanded": True,
 
     "topmenu_links": [
@@ -178,7 +178,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-mx'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
