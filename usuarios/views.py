@@ -26,11 +26,11 @@ class PerfilView(LoginRequiredMixin, DetailView):
     
     
 class CrearUsuarioView(CreateView, PermissionRequiredMixin):
-    forms_class = UserCreationForm
+    form_class = UserCreationForm
     model = Usuario
     permission_required = 'usuarios.add_usuario'
     
     def get(self, request):
-        form = self.forms_class()
+        form = self.form_class()
         return render(request, 'crear_usuario.html', {'form': form})
     
