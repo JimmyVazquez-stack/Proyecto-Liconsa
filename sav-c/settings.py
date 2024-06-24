@@ -62,7 +62,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "SAV-C",
     "welcome_sign": "Bienvenido a SAV-C",
     "user_avatar": None,
-    "show_ui_builder": True,
+    "show_ui_builder": False,
     "navigation_expanded": True,
 
     "topmenu_links": [
