@@ -8,8 +8,7 @@ from django.views.generic import ListView
 from .models import Usuario
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView
-from django.contrib.auth.forms import UserCreationForm
-
+from .forms import UserCreationForm
 
 class LoginView(LoginView):
     template_name = 'registration/login.html'
@@ -29,8 +28,5 @@ class CrearUsuarioView(CreateView, PermissionRequiredMixin):
     form_class = UserCreationForm
     model = Usuario
     permission_required = 'usuarios.add_usuario'
-    
-    def get(self, request):
-        form = self.form_class()
-        return render(request, 'crear_usuario.html', {'form': form})
-    
+    template_name = 'crear_usuario.html'
+    success_url = reverse_lazy('laboratorio_control_calidad:index')
