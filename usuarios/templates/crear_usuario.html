@@ -20,19 +20,55 @@
                             {% for field in form %}
                             <tr>
                                 <th style="width: 20%;">{{ field.label }}</th>
-                                <td>{{ field }}</td>
+                                <td>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {% for error in field.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary">Regresar</a
+                    <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary">Regresar</a>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<!-- Modal de Éxito para ususario registrado -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Registro Exitoso</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                El usuario ha sido registrado correctamente.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<script src="{% static 'js/modal_success.js' %}">
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
 
- <script src="{% static 'js/keydown_registrar_usuario.js' %}"></script>
+<script src="{% static 'js/keydown_registrar_usuario.js' %}"></script>
 
 {% endblock %}
