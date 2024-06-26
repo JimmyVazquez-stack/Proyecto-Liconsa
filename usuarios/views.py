@@ -9,6 +9,9 @@ from .models import Usuario
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView
 from .forms import UserCreationForm
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
+
 
 class LoginView(LoginView):
     template_name = 'registration/login.html'
@@ -29,4 +32,15 @@ class CrearUsuarioView(CreateView, PermissionRequiredMixin):
     model = Usuario
     permission_required = 'usuarios.add_usuario'
     template_name = 'crear_usuario.html'
-    success_url = reverse_lazy('laboratorio_control_calidad:index')
+    success_url = reverse_lazy('usuarios:crear_usuario')
+    success_message = 'Usuario creado exitosamente'
+    
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        if Usuario.objects.filter(username=username).exists():
+            form.add_error('username', 'El nombre de usuario ya existe')
+            return self.form_invalid(form)
+        else:
+            response = super().form_valid(form)
+            messages.success(self.request, self.success_message)
+            return response
