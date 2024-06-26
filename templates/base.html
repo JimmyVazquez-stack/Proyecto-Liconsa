@@ -98,14 +98,15 @@
       </ul>
     </nav>
     <!-- /.navbar -->
-    
+
     <!-- Main Sidebar Container -->
-   <aside class="main-sidebar sidebar-dark-primary elevation-5">
+    <aside class="main-sidebar sidebar-dark-primary elevation-5">
       <!-- Brand Logo -->
       <a href="{% url 'laboratorio_control_calidad:index'%}" class="brand-link">
 
-        <img src="/static/vendor/adminlte/img/AdminLTELogo.png" alt="SAV-C Logo" class="img-circle brand-image elevation-3" style="opacity: .8">
-        
+        <img src="/static/vendor/adminlte/img/AdminLTELogo.png" alt="SAV-C Logo"
+          class="img-circle brand-image elevation-3" style="opacity: .8">
+
         <span class="brand-text font-weight-light"> SAV-C</span>
 
       </a>
@@ -113,24 +114,32 @@
       <!-- Sidebar -->
       {%block Menu%}
       <div class="sidebar">
-        
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="image">
-            <img src="{% static 'img/usericon.png'%}" class="img-circle elevation-0" alt="User Image"
-              style="filter: brightness(0) invert(1);">
+
+         <!-- Sidebar user panel (optional) -->
+         <div class=" user-panel mt-3 pb-3 mb-2 d-flex">
+              <div class="image">
+                <img src="{% static 'img/usericon.png'%}" class="img-circle elevation-0" alt="User Image"
+                  style="filter: brightness(0) invert(1);">
           </div>
-          <div class="info">
-            {% if user.is_authenticated %}
-            <a href="#" class="d-block" >{{ user.username }} </a>
-            {% else %}
-            <a href="#" class="d-block" >Usuario </a>
-            {% endif %}
+              <div class="info " style="overflow-wrap: break-word;">
+                {% if user.is_authenticated %}
+                <a href="{% url 'usuarios:perfil'%}" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"> {{ user.username }} </a>
+                {% else %}
+                <a href="#" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Usuario </a>
+                {% endif %}
+              </div>
+          <div class="row">
+            <div class="col">
+              <div class="info" style="overflow-wrap: break-word;">
+                <a href="{% url 'usuarios:logout' %}" class="d-block" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cerrar sesión</a>
+              </div>
+            </div>
           </div>
         </div>
 
+
         <!-- SidebarSearch Form -->
-        <div class="form-inline">
+        <div class="form-inline d-xxl-none">
           <div class="input-group" data-widget="sidebar-search">
             <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
@@ -292,6 +301,7 @@
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
+                
                     <li class="nav-item">
                       <a href="{% url 'laboratorio_control_calidad:grasas_aceites_vegetales' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
@@ -1699,8 +1709,8 @@
     <!-- /.content-wrapper -->
     {% block footer%}
     <footer class="main-footer">
-      <strong>Copyright &copy; 2024 <a href="{% url 'laboratorio_control_calidad:index'%}">SAV-C</a>.</strong>
-      All rights reserved.
+      <strong> &copy; <a href="{% url 'laboratorio_control_calidad:index'%}">SAV-C</a>.</strong>
+    
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 1.0.0
       </div>

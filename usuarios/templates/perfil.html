@@ -1,0 +1,81 @@
+{% extends 'base.html'%}
+{% block title%}
+
+Perfil
+{%endblock%}
+
+{%block principal%}
+<div class="container p-5">
+  <div class="col-md-9">
+    <div class="card">
+      <div class="card-header p-2 bg-gray-dark ">
+        <h3 class="card-title">
+          <i class="fas fa-exclamation"></i>
+          Información de Usuario
+        </h3>
+      </div><!-- /.card-header -->
+      <div class="card-body">
+
+        <form class="form-horizontal">
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-2 col-form-label">Nombre</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputName" placeholder="Nombre"
+                value="{{ object.first_name }}" readonly>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputApellidos" class="col-sm-2 col-form-label">Apellidos</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputApellidos" placeholder="Apellidos"
+                value="{{ object.last_name }}" readonly>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputCorreo" class="col-sm-2 col-form-label">Correo</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="inputCorreo" placeholder="Correo" value="{{ object.email }}"
+                readonly>
+            </div>
+          </div>
+         
+          <div class="form-group row">
+            <label for="inputUsuario" class="col-sm-2 col-form-label">Nombre de usuario</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control " id="inputUsuario" placeholder="Nombre de usuario"
+                value="{{ object.username }}" readonly>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputArea" class="col-sm-2 col-form-label">Área</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputArea" placeholder="Área" value="{{ object.area|default:'' }}" readonly>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputTelefono" class="col-sm-2 col-form-label">Teléfono</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputTelefono" placeholder="Telefono" value="{{ object.telefono|default:'' }}" readonly>
+            </div>
+        </div>
+    
+          <!--BOTON A EDITAR PARA ACCION DEL USUARIO-->
+          <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10">
+              <a href="{% url 'laboratorio_control_calidad:index'%}" class="btn btn-secondary">Regresar</a>
+            </div>
+          </div>
+          
+          
+
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+    <!-- /.tab-content -->
+  </div><!-- /.card-body -->
+</div>
+<!-- /.card -->
+</div>
+</div>
+{%endblock %}

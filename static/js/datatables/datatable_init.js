@@ -1,7 +1,10 @@
+
+
+
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
-            url: '/catalogos/lecherias/list/data/',
+            url: '/producto_no_conforme/lecherias/data/',
             dataSrc: ''
         },
         dom : "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-right'f>>" +
@@ -18,7 +21,6 @@ $(document).ready(function() {
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
         ],
-
         pageLength: 5,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         language: {
@@ -41,13 +43,6 @@ $(document).ready(function() {
                 defaultContent: "", 
             }
         ],
-        buttons: [
-            {
-                extend: 'pdf',
-                className: 'btn btn-success',
-                text: 'Generar PDF'
-            }
-        ],
     });
 });
 
@@ -56,6 +51,9 @@ $(document).ready(function() {
         $('#example').DataTable({
             pageLength: 5,
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             language: {
                 lengthMenu: "Mostrar _MENU_ entradas",
                 zeroRecords: "No se encontraron resultados",
@@ -176,24 +174,15 @@ $(document).ready(function() {
             
         });
     });
-
-
-// pdf
-document.getElementById('btn-exportar-pdf').addEventListener('click', function() {
-    var doc = new jsPDF();
-    doc.addImage('static/img/AdminLTELogo.png', 'PNG', 15, 40, 180, 160);
-    var table = $('#rotos').DataTable();
-    var data = table.buttons.exportData();
-
-    doc.autoTable({
-        head: data.header,
-        body: data.body,
-        foot: data.footer,
-        styles: { fillColor: [255, 255, 255] },
-        columnStyles: {
-            0: { fillColor: [255, 255, 255] },
+$(document).ready(function(){
+    $('#rotos1').DataTable ({
+        
+        ajax: {
+            url: '/producto_no_conforme/lecherias/data/',
+            dataSrc: ''
         },
+        info: false,
+        ordering: false,
+        paging: false
     });
-
-    doc.save('rotos.pdf');
 });
