@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Borrar registro R49{% endblock %}
+{% block principal %}
+
+{% block contenido %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2>Seguro de eliminar el registro : {{ densidadr49.densidad}}?</h2>
+        <button type="submit" class="btn btn-danger">Si, eliminar</button>
+        <a href="{% url 'laboratorio_control_calidad:pesobrutor49_list' %}" class="btn btn-success">No, Cancelar</a>
+    </form>
+{% endblock %}
+{% endblock %}
