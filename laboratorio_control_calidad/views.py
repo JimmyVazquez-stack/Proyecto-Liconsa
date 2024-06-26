@@ -88,26 +88,26 @@ class registror49_delete(generic.DeleteView):
 class densidadr49_list(generic.ListView):
      model = Densidadpt
      queryset = Densidadpt.objects.all ()
-     template_name = 'densidadr49_list.html'
+     template_name = 'complementariasR49/densidadr49_list.html'
      context_object_name = 'densidadr49'
 
 class densidadr49_create(generic.CreateView):
     model = Densidadpt
-    template_name = 'densidadr49_create.html'
+    template_name = 'complementariasR49/densidadr49_create.html'
     context_object_name = 'densidadr49'
     form_class = DensidadptForm
     success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_list")
 
 class densidadr49_update(generic.UpdateView):
     model = Densidadpt
-    template_name = 'densidadr49_create.html' 
+    template_name = 'complementariasR49/densidadr49_create.html' 
     form_class = DensidadptForm
     success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
     context_object_name = 'densidadr49'
 
 class densidadr49_delete(generic.DeleteView):
     model = Densidadpt
-    template_name = 'densidadr49_delete.html'
+    template_name = 'complementariasR49/densidadr49_delete.html'
     context_object_name = 'densidadr49'
     success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
 
