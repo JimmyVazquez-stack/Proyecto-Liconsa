@@ -35,10 +35,11 @@ class UserCreationForm(forms.ModelForm):
     last_name = forms.CharField(label='Apellido', max_length=30, required=False)
     email = forms.EmailField(label='Correo', required=False)
     area = forms.ModelChoiceField(queryset=Area.objects.all(), required=False, label='Área')
+    telefono = forms.CharField(label='Teléfono', max_length=10, required=False)
 
     class Meta:
         model = Usuario
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'grupo', 'area']
+        fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'password1', 'password2', 'grupo', 'area']
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
