@@ -1,73 +1,168 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from laboratorio_control_calidad.forms import TablaR49Form
-from laboratorio_control_calidad.models import TablaR49
-from .forms import TablaR49Form
-from django.views.generic.edit import CreateView
+from laboratorio_control_calidad.forms import TablaR49Form, DensidadptForm, PesoenvvacioForm, PesobrutoForm #PesonetoForm
+from .models import TablaR49, Densidadpt, Pesoenvvacio, Pesobruto #Pesoneto
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views import generic 
 
 # Create your views here.
-class index(TemplateView):
-    template_name = 'index.html'
+# class index(LoginRequiredMixin,TemplateView, GroupRequiredMixin ):
+#     template_name = 'index.html'
+#     login_url = reverse_lazy('usuarios:login')
 
-class grasas_aceites_vegetales(TemplateView):
+class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
     template_name = 'grasas_aceites_vegetales.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class mezcla_oleosa_vitaminas(TemplateView):
+class mezcla_oleosa_vitaminas(LoginRequiredMixin,TemplateView):
     template_name = 'mezcla_oleosa_vitaminas.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class pre_mezclas_vitaminas_minerales(TemplateView):
+class pre_mezclas_vitaminas_minerales(LoginRequiredMixin,TemplateView):
     template_name = 'pre_mezclas_vitaminas_minerales.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class leche_polvo_fysf(TemplateView):
+class leche_polvo_fysf(LoginRequiredMixin, TemplateView):
     template_name = 'leche_polvo_fysf.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class soluciones_valoradas_ts(TemplateView):
+class soluciones_valoradas_ts(LoginRequiredMixin, TemplateView):
     template_name = 'soluciones_valoradas_ts.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class evaluacion_sensorial(TemplateView):
+class evaluacion_sensorial(LoginRequiredMixin, TemplateView):
     template_name = 'evaluacion_sensorial.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class monitoreo_medio_ambiente(TemplateView):
+class monitoreo_medio_ambiente(LoginRequiredMixin, TemplateView):
     template_name = 'monitoreo_medio_ambiente.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class limpieza_equipo_personal(TemplateView):
+class limpieza_equipo_personal(LoginRequiredMixin, TemplateView):
     template_name = 'limpieza_equipo_personal.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class calibracion_verificacion_equipo(TemplateView):
+class calibracion_verificacion_equipo(LoginRequiredMixin, TemplateView):
     template_name = 'calibracion_verificacion_equipo.html'
+    login_url = reverse_lazy('usuarios:login')
 
-class verificacion_documentos(TemplateView):
+class verificacion_documentos(LoginRequiredMixin, TemplateView):
     template_name = 'verificacion_documentos.html'
-    
-
-class tabla_r49(TemplateView): 
-    template_name = 'tabla_r49.html' 
 
 
-class crear_registror49(CreateView):
-    template_name = 'crear_registror49.html'
-    form_class = TablaR49
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
 
 
-    # 
-    # get(self, request, *args, **kwargs): 
+## CRUD FormatoR49 Juan Carlos M.
 
-    #     form = TablaR49Form(request.POST) 
-    #     if form.is_valid():
-    #         num_maquina = formulario.cleaned_data['num_maquina']
-    #         num_datos = formulario.cleaned_data['num_datos']
-    #         promedio = formulario.cleaned_data['promedio']
-    #         desv_std = formulario.cleaned_data['desv_std']
-    #         maximo = formulario.cleaned_data['maximo']
-    #         minimo = formulario.cleaned_data['minimo']
-    #         form.save() 
-    #     return render(request, 'tabla_r49.html', {'form': form})
-    
-        #return self.render_to_response({'form': form}) 
-    
+class registror49_list(generic.ListView):
+     model = TablaR49
+     queryset = TablaR49.objects.all ()
+     template_name = 'registror49_list.html'
+     context_object_name = 'tablar49'
+
+class registror49_create(generic.CreateView):
+    model = TablaR49
+    template_name = 'registror49_create.html'
+    context_object_name = 'tablar49'
+    form_class = TablaR49Form
+    success_url = reverse_lazy("laboratorio_control_calidad:registror49_list")
+
+class registror49_update(generic.UpdateView):
+    model = TablaR49
+    template_name = 'registror49_create.html' 
+    form_class = TablaR49Form
+    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
+    context_object_name = 'tablar49'
+
+class registror49_delete(generic.DeleteView):
+    model = TablaR49
+    template_name = 'registror49_delete.html'
+    context_object_name = 'tablar49'
+    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
+
+### complementarias a formato R49 DENSIDAD
+
+class densidadr49_list(generic.ListView):
+     model = Densidadpt
+     queryset = Densidadpt.objects.all ()
+     template_name = 'densidadr49_list.html'
+     context_object_name = 'densidadr49'
+
+class densidadr49_create(generic.CreateView):
+    model = Densidadpt
+    template_name = 'densidadr49_create.html'
+    context_object_name = 'densidadr49'
+    form_class = DensidadptForm
+    success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_list")
+
+class densidadr49_update(generic.UpdateView):
+    model = Densidadpt
+    template_name = 'densidadr49_create.html' 
+    form_class = DensidadptForm
+    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
+    context_object_name = 'densidadr49'
+
+class densidadr49_delete(generic.DeleteView):
+    model = Densidadpt
+    template_name = 'densidadr49_delete.html'
+    context_object_name = 'densidadr49'
+    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
 
 
-     
+### complementarias a formato R49 PESO ENVASE VACIO
+class pesoenvvacior49_list(generic.ListView):
+     model = Pesoenvvacio
+     queryset = Pesoenvvacio.objects.all ()
+     template_name = 'complementariasR49/pesoenvvacior49_list.html'
+     context_object_name = 'pesoenvvacior49'
+
+class pesoenvvacior49_create(generic.CreateView):
+    model = Pesoenvvacio
+    template_name = 'complementariasR49/pesoenvvacior49_create.html'
+    context_object_name = 'pesoenvvacior49'
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
+
+class pesoenvvacior49_update(generic.UpdateView):
+    model = Pesoenvvacio
+    template_name = 'complementariasR49/pesoenvvacior49_create.html' 
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
+    context_object_name = 'pesoenvvacior49'
+
+class pesoenvvacior49_delete(generic.DeleteView):
+    model = Pesoenvvacio
+    template_name = 'complementariasR49/pesoenvvacior49_delete.html'
+    context_object_name = 'densidadr49'
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
+
+### complementarias a formato R49 PESO BRUTO
+class pesobrutor49_list(generic.ListView):
+     model = Pesobruto
+     queryset = Pesobruto.objects.all ()
+     template_name = 'complementariasR49/pesobrutor49_list.html'
+     context_object_name = 'pesobrutor49'
+
+class pesobrutor49_create(generic.CreateView):
+    model = Pesobruto
+    template_name = 'complementariasR49/pesobrutor49_create.html'
+    context_object_name = 'pesobrutor49'
+    form_class = PesobrutoForm
+    success_url = reverse_lazy("laboratorio_control_calidad:pesobrutor49_list")
+
+class pesobrutor49_update(generic.UpdateView):
+    model = Pesobruto
+    template_name = 'complementariasR49/pesobrutor49_create.html' 
+    form_class = PesobrutoForm
+    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
+    context_object_name = 'pesobrutor49'
+
+class pesobrutor49_delete(generic.DeleteView):
+    model = Pesobruto
+    template_name = 'complementariasR49/pesobrutor49_delete.html'
+    context_object_name = 'pesobrutor49'
+    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
+
