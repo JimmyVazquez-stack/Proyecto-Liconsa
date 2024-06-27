@@ -22,9 +22,9 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
         tiene_permiso = self.request.user.has_perm(permiso_nombre) or \
                         self.request.user.groups.filter(permissions__codename=permiso_nombre.split('.')[1]).exists()
         context['puede_agregar_usuario'] = tiene_permiso
-        
         return context
-    
+
+
     
 class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
     template_name = 'grasas_aceites_vegetales.html'
