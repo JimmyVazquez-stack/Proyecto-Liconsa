@@ -7,7 +7,6 @@ Inicio
 
 
 
-
 {%block principal%}
 <!-- Content Header (Page header) -->
 <div class="content-header ">
@@ -60,7 +59,7 @@ Inicio
 {% if  puede_agregar_usuario %}
   <div class="col-lg-3 col-6">
     <!-- small box -->
-    <div class="small-box bg-warning">
+    <div class="small-box bg-warning" id="smallBoxClickable">
       <div class="inner">
         <h3>{{total_usuarios}} </h3>
 
@@ -69,8 +68,10 @@ Inicio
       <div class="icon">
         <i class="ion ion-person-add"></i>
       </div>
+ 
       <a href="{% url 'usuarios:crear_usuario'%}" class="small-box-footer">Registrar un usuario <i class="fas fa-arrow-circle-right"></i></a>
     </div>
+
   </div>
 {% endif %}
       
@@ -118,4 +119,13 @@ Inicio
   </div><!-- /.container-fluid -->
 </section>
 <!-- /.content -->
+
+<script>
+  var urlListarUsuarios = '{% url "usuarios:listar_usuarios" %}';
+</script>
+<script>
+  document.getElementById('smallBoxClickable').addEventListener('click', function() {
+    window.location.href = urlListarUsuarios;
+  });
+</script>
 {%endblock%}
