@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from laboratorio_control_calidad.forms import TablaR49Form, DensidadptForm, PesoenvvacioForm, PesobrutoForm #PesonetoForm
-from .models import TablaR49, Densidadpt, Pesoenvvacio, Pesobruto #Pesoneto
+from laboratorio_control_calidad.forms import *
+from .models import *
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -189,3 +189,62 @@ class pesobrutor49_delete(generic.DeleteView):
 
     login_url = reverse_lazy('usuarios:login')
     
+#VISTA ENCABEZADO TRES FORMULARIOS START
+
+class LecheReconsSilosEncabCreate(View):
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_List')
+
+    def get(self, request, *args, **kwargs):
+        encab_form = EncabTablaR49Form()
+        Densidadpt_formset = DensidadptFormSet(queryset=Densidadpt.objects.none())
+        Pesoenvvacio_formset = PesoenvvacioFormSet(queryset=Pesoenvvacio.objects.none())
+        Pesobruto_formset = PesobrutoFormSet(queryset=Pesobruto.objects.none())
+        return render(request, 'encabezador49_Create.html', {
+            'encab_form': encab_form,
+            'Densidadpt_formset': Densidadpt_formset,
+            'Pesoenvvacio_formset': Pesoenvvacio_formset,
+            'Pesobruto_formset': Pesobruto_formset,
+        })
+
+#     def post(self, request, *args, **kwargs):
+#         encab_form = EncabTablaR49Form(request.POST)
+#         silos_formset = LecheReconsSilosFormSet(request.POST)
+
+#         if encab_form.is_valid():
+#             encab_instance = encab_form.save()
+#             silos_valid = True
+#             for form in silos_formset:
+#                 if form.is_valid() and self._has_data(form.cleaned_data):
+#                     silo = form.save(commit=False)
+#                     silo.encabezado = encab_instance
+#                     silo.save()
+#                 elif not form.is_valid() and self._has_data(form.cleaned_data):
+#                     silos_valid = False
+#                     break
+
+#             if silos_valid:
+#                 return redirect(self.success_url)
+#             else:
+#                 messages.error(request, f'Error en el formulario de Silos: {silos_formset.errors}')
+#         else:
+#             messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
+
+#         return render(request, 'Leche_Reconstituida_por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Create.html', {
+#             'encab_form': encab_form,
+#             'silos_formset': silos_formset,
+#         })
+
+#     def _has_data(self, cleaned_data):
+#         # Verificar si el formulario tiene datos significativos
+#         default_datetime = timezone.now()
+#         for key, value in cleaned_data.items():
+#             if key == 'fecha_Hora' and value == default_datetime:
+#                 continue
+#             if key != 'id' and value not in (None, '', 0.0, 0):
+#                 return True
+#         return False
+
+
+
+
+# #VISTA ENCABEZADO TRES FORMULARIOS END 

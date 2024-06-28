@@ -2,6 +2,14 @@ from django.db import models
 from django.utils import timezone
 
 # Create your models here.
+class EncabTablaR49(models.Model):
+    fecha = models.DateField(default=timezone.now)
+    observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
+
+    def __str__(self):
+       return f"ID: {self.id}, fecha: {self.fecha}"
+
+
 
 class TablaR49(models.Model):
     numMaquina = models.CharField(max_length=2)
@@ -26,9 +34,8 @@ class Densidadpt(models.Model):
     linea = models.CharField( max_length=20, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
     densidad = models.DecimalField(default=0, max_digits=5, decimal_places=4)
     volumen = models.IntegerField(default=0, verbose_name=" Volumen")
+    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 
- 
-    
     def save(self, *args, **kwargs):
         # Concatenar los campos y asignar el resultado a 'linea'
         self.linea = f"{self.planta} {self.turno} {self.silo} {self.cabezal}"
@@ -46,6 +53,7 @@ class Pesoenvvacio(models.Model):
     # producto = models.ForeignKey(producto,on_delete=models.CASCADE, null=True) #colocar cuando lalo cree los modelos de producto
     proveedor = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
     peso = models.DecimalField(default=0, max_digits=3, decimal_places=2)
+    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 
     def __str__(self):
         pass
@@ -58,6 +66,7 @@ class Pesobruto(models.Model):
     # producto = models.ForeignKey(producto,on_delete=models.CASCADE, null=True) #colocar cuando lalo cree los modelos de producto
     analista = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
     valor = models.IntegerField(default=0)
+    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 
     def __str__(self):
         pass
