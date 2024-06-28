@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .forms import LecheriaForm
+from .models import Lecheria,  Rotos
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import LecheriaForm
@@ -9,6 +13,18 @@ from django.views import View
 from django.db.models import F
 from django.forms.models import model_to_dict
 import json
+
+
+# Create your views here.
+class LecheriaListView(TemplateView):
+    template_name = 'lecherias_list.html'
+    
+
+
+class AñadirLecheriaView(CreateView):
+    template_name = 'añadir_lecheria.html'
+    form_class = LecheriaForm
+    success_url = reverse_lazy('catalogos:lecherias_list')
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -30,6 +46,7 @@ class AñadirLecheriaView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
     
+
 class LecheriaDataView(LoginRequiredMixin,View):
     login_url = reverse_lazy('usuarios:login')
     def get(self, request, *args, **kwargs):

@@ -4,7 +4,11 @@
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
+<<<<<<< HEAD
+            url: '/catalogos/lecherias/list/data/',
+=======
             url: '/producto_no_conforme/lecherias/data/',
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
             dataSrc: ''
         },
         dom : "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-right'f>>" +
@@ -21,6 +25,10 @@ $(document).ready(function() {
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
         ],
+<<<<<<< HEAD
+
+=======
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
         pageLength: 5,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         language: {
@@ -43,6 +51,16 @@ $(document).ready(function() {
                 defaultContent: "", 
             }
         ],
+<<<<<<< HEAD
+        buttons: [
+            {
+                extend: 'pdf',
+                className: 'btn btn-success',
+                text: 'Generar PDF'
+            }
+        ],
+=======
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
     });
 });
 
@@ -51,9 +69,12 @@ $(document).ready(function() {
         $('#example').DataTable({
             pageLength: 5,
             lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+<<<<<<< HEAD
+=======
             headers: {
                 'X-CSRFToken': csrftoken
             },
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
             language: {
                 lengthMenu: "Mostrar _MENU_ entradas",
                 zeroRecords: "No se encontraron resultados",
@@ -174,6 +195,28 @@ $(document).ready(function() {
             
         });
     });
+<<<<<<< HEAD
+
+
+// pdf
+document.getElementById('btn-exportar-pdf').addEventListener('click', function() {
+    var doc = new jsPDF();
+    doc.addImage('static/img/AdminLTELogo.png', 'PNG', 15, 40, 180, 160);
+    var table = $('#rotos').DataTable();
+    var data = table.buttons.exportData();
+
+    doc.autoTable({
+        head: data.header,
+        body: data.body,
+        foot: data.footer,
+        styles: { fillColor: [255, 255, 255] },
+        columnStyles: {
+            0: { fillColor: [255, 255, 255] },
+        },
+    });
+
+    doc.save('rotos.pdf');
+=======
 $(document).ready(function(){
     $('#rotos1').DataTable ({
         
@@ -185,4 +228,5 @@ $(document).ready(function(){
         ordering: false,
         paging: false
     });
+>>>>>>> d2087161ed664a5d99d597d283d3efa8089d7dc6
 });

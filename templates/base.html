@@ -37,6 +37,11 @@
   <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
   <!-- Datatables bootstrap 4 CSS -->
   <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+  
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 
   <script src="https://unpkg.com/feather-icons"></script>
   {%endblock%}
@@ -169,6 +174,7 @@
                 </p>
               </a>
               <!-- <ul class="nav nav-treeview">
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -247,7 +253,35 @@
 
               </ul>
             </li>
+            <!-- menu lateral apartado producto_no_conforme -->
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-ban"></i>
+                <p>
+                  Producto no conforme
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
 
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <i class="fas fa-ban"></i>
+                    <p>Producto no conforme List</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'producto_no_conforme:lecherias' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Envases rotos</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- menu lateral apartado Distribucion -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-truck"></i>
@@ -289,7 +323,7 @@
             </li>
 
 
-            <!-- lABORATORIO DE CALIDAD -->
+            <!-- menu lateral laboratorio de calidad -->
             <li class="nav-header">Laboratorio de control de calidad</li>
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -300,7 +334,6 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -334,6 +367,17 @@
                   </ul>
                 </li>
               </ul>
+              
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Leche Reconstituida Por Silos</p>
+                  </a>
+                </li>
+              </ul>
+
+
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
@@ -341,8 +385,9 @@
                     <p>Leche en polvo fortificada o Sin fortificar</p>
                   </a>
                 </li>
-
               </ul>
+
+              
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:soluciones_valoradas_ts' %}" class="nav-link">
@@ -448,6 +493,9 @@
 
               </ul>
             </li>
+
+
+            <!-- menu lateral Almacen -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-box"></i>
@@ -522,6 +570,8 @@
                 </li>
               </ul>
             </li>
+
+            <!-- menu lateral Produccion-->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-cog"></i>
@@ -607,6 +657,7 @@
               </ul>
             </li>
 
+            <!-- menu lateral Mantenimiento -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-wrench"></i>
@@ -625,8 +676,6 @@
 
               </ul>
             </li>
-            <!-- lABORATORIO DE CALIDAD -->
-
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -636,6 +685,7 @@
       <!-- /.sidebar -->
     </aside>
     {%endblock%}
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       {%block principal%}
@@ -1743,6 +1793,18 @@
   <script src="{% static 'js/datatables/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/datatables/dataTables.js' %}"></script>
   <script src="{% static 'js/datatables/dataTables.bootstrap4.js' %}"></script>
+  <script src="{% static 'plugins/datatables/jquery.dataTables.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/jszip/jszip.min.js'%}"></script>
+  <script src="{% static 'plugins/pdfmake/pdfmake.min.js'%}"></script>
+  <script src="{% static 'plugins/pdfmake/vfs_fonts.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
 
   <!-- Script para el sidebar de opcion elegida-->
   <script>
@@ -1788,11 +1850,77 @@
   <script src="{% static 'js/adminlte.js'%}"></script>
   <!-- AdminLTE for demo purposes -->
   <!-- <script src="{% static 'js/demo.js'%}"></script> -->
+  
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 
   <script>
     feather.replace()
   </script>
+  <script>
+    // El código JavaScript que agregará los formularios dinámicamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const addFormBtn = document.getElementById('add-form-btn');
+      const formContainer = document.getElementById('formularios-body');
+      const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
+  
+      let formIndex = formContainer.querySelectorAll('tr').length;
+  
+      addFormBtn.addEventListener('click', function(event) {
+          event.preventDefault();
+          const newForm = formContainer.querySelector('tr:last-child').cloneNode(true);
+          const regex = new RegExp(`form-(\\d+)-`, 'g');
+          newForm.innerHTML = newForm.innerHTML.replace(regex, `form-${formIndex}-`);
+          const inputs = newForm.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+              if (input.type !== 'hidden') {
+                  input.value = '';
+              }
+          });
+          formContainer.appendChild(newForm);
+          formIndex++;
+          totalForms.value = formIndex;
+      });
+  });
+  
+  </script>
+
+<script>  
+  $(function() {
+      $("#example1").DataTable({
+          "responsive": true,
+          "lengthChange": false,
+          "autoWidth": false,
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+      });
+      $('#example3').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+      });
+  });
+</script>
+
+<script>
+  if (screen.width > 800) {
+      document.getElementById('example2').id = '';
+      document.getElementById('example3').id = '';
+      console.log("cx")
+  }
+</script>
+
 </body>
 {%endblock%}
 

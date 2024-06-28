@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Genera Un Nuevo Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="col-xl-12 mt-3 p-3">
+          <div class="table-responsive">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <form id="formulario" action="" method="post">
+                    {% csrf_token %}
+                    {{ encab_form.as_p }}
+                    
+                    <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
+                        <thead class="thead-light" style="font-size: 14px">
+                            <tr>
+                                <th>Id</th>
+                                <th>Hora</th>
+                                <th>Numero de Silo</th>
+                                <th>Tipo de Producto</th>
+                                <th>Volumen</th>
+                                <th>Aspecto</th>
+                                <th>Sabor</th>
+                                <th>Olor</th>
+                                <th>Temperatura</th>
+                                <th>PH</th>
+                                <th>Acidez</th>
+                                <th>Densidad</th>
+                                <th>sgwv</th>
+                                <th>s_n_g_Stsg_wv</th>
+                                <th>st_wv</th>
+                                <th>proteina</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formularios-body" style="font-size: 14px">
+                            {{ silos_formset.management_form }}
+                            {% for form in silos_formset %}
+                            <tr>
+                                <td>{{ form.id }}</td>
+                                <td>{{ form.fecha_Hora }}</td>
+                                <td>{{ form.silo_Numero }}</td>
+                                <td>{{ form.producto }}</td>
+                                <td>{{ form.volumen }}</td>
+                                <td>{{ form.aspecto }}</td>
+                                <td>{{ form.sabor }}</td>
+                                <td>{{ form.olor }}</td>
+                                <td>{{ form.temperatura }}</td>
+                                <td>{{ form.ph }}</td>
+                                <td>{{ form.acidez }}</td>
+                                <td>{{ form.densidad }}</td>
+                                <td>{{ form.s_g_w_v }}</td>
+                                <td>{{ form.s_n_g_Stsg_wv }}</td>
+                                <td>{{ form.st_wv }}</td>
+                                <td>{{ form.proteina }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="btn btn-danger">Cancelar</a>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+{% endblock %}
+

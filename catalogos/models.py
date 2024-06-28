@@ -54,6 +54,8 @@ class Rotos(models.Model):
         verbose_name_plural = "Rotos"
 
 #Modelo usado en usuarios
+        verbose_name_plural = "Rotos"
+        
 class Area(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=50)

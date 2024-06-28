@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *  
+from .views import *
 
 app_name = 'laboratorio_control_calidad'
 
@@ -36,4 +36,14 @@ urlpatterns = [
     path('pesobrutor49_list/', pesobrutor49_list.as_view(), name='pesobrutor49_list'),
     path('pesobrutor49_delete/<int:pk>', pesobrutor49_delete.as_view(), name='pesobrutor49_delete'),
     path('pesobrutor49_update/<int:pk>', pesobrutor49_update.as_view(), name='pesobrutor49_update'),
+    # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilosEncab - [Start] - #
+
+    path('Leche_Reconstituida_Por_Silos_Encab/list', LecheReconsSilosEncabView.as_view(), name='Leche_Recons_Silos_Encab_List'),
+    path('Leche_Reconstituida_Por_Silos_Encab/create', LecheReconsSilosEncabCreate.as_view(), name='Leche_Recons_Silos_Encab_Create'),
+    path('Leche_Reconstituida_Por_Silos_Encab/delete/<int:pk>', LecheReconsSilosEncabDelete.as_view(), name='Leche_Recons_Silos_Encab_Delete'),
+    path('Leche_Reconstituida_Por_Silos_Encab/update/<int:pk>', LecheReconsSilosEncabUpdate.as_view(), name='Leche_Recons_Silos_Encab_Update'),
+    
+    # - [End] - rutas para el CRUD de LecheReconstituidaPorSilos - [End] - #
+
+
 ]

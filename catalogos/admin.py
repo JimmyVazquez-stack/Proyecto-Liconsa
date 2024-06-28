@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Lecheria, Ruta, Poblacion, Rotos
 from laboratorio_control_calidad.models import TablaR49, Densidadpt, Pesoenvvacio, Pesobruto #Pesoneto
 from .models import Lecheria, Ruta, Poblacion, Rotos, Area, Producto, Planta, Proveedor, Maquina, Cabezal, Turno, Silo, TipoProducto
+from .models import Lecheria, Ruta, Poblacion, Rotos, Area
 
 # Register your models here.
 admin.site.register(Lecheria)
