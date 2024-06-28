@@ -158,7 +158,8 @@
                with font-awesome or any other icon font library -->
 
             <li class="nav-header">Panel General</li>
-
+            {% if  es_coordinador %}
+            {% block catalogos%}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-restore"></i>
@@ -167,8 +168,7 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-
+              <!-- <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -184,10 +184,9 @@
                         <p>Catalogos nivel 2</p>
                       </a>
                     </li>
-
                   </ul>
                 </li>
-              </ul>
+              </ul> -->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'catalogos:lecherias_list'%}" class="nav-link">
@@ -197,8 +196,18 @@
                 </li>
 
               </ul>
-            </li>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Maquinas</p>
+                  </a>
+                </li>
 
+              </ul>
+            </li>
+            {% endblock%}
+            {% endif %}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-close"></i>

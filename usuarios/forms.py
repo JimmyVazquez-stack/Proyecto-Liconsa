@@ -1,12 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User, Group
+from .models import Usuario
+from catalogos.models import Area
 
 class UserChangeForm(forms.ModelForm):
     grupo = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, label='Grupo')
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser', 'grupo']
+        model = Usuario
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser', 'grupo', 'area']
 
     def __init__(self, *args, **kwargs):
         super(UserChangeForm, self).__init__(*args, **kwargs)
@@ -32,10 +34,12 @@ class UserCreationForm(forms.ModelForm):
     first_name = forms.CharField(label='Nombre(s)', max_length=30, required=False)
     last_name = forms.CharField(label='Apellido', max_length=30, required=False)
     email = forms.EmailField(label='Correo', required=False)
+    area = forms.ModelChoiceField(queryset=Area.objects.all(), required=False, label='Área')
+    telefono = forms.CharField(label='Teléfono', max_length=10, required=False)
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'grupo']
+        model = Usuario
+        fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'password1', 'password2', 'grupo', 'area']
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -58,5 +62,3 @@ class UserCreationForm(forms.ModelForm):
 '''
 En este archivo se definen los formularios que se utilizarán para la creación y modificación de usuarios en el sistema.
 '''
-
-
