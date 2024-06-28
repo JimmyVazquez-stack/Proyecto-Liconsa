@@ -11,7 +11,7 @@
 <body>
 
 <div class="header-container">
-        <table>
+        <table class="table table-bordered bg-light table-hover">
             <tr>
                 <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
             </tr>
@@ -77,30 +77,32 @@
             </thead>
     
             <tbody>
+                {% for dato in datos %}
                 <tr>
-                    <td>{{ punto_evaluacion }}</td>
-                    <td>{{ numero_muestras }}</td>
-                    <td>{{ densidad_promedio|floatformat:2 }}</td>
-                    <td>{{ densidad_fle }}</td>
-                    <td>{{ densidad_maximo }}</td>
-                    <td>{{ densidad_minimo }}</td>
-                    <td>{{ grasas_promedio|floatformat:2 }}</td>
-                    <td>{{ grasas_fle }}</td>
-                    <td>{{ grasas_maximo }}</td>
-                    <td>{{ grasas_minimo }}</td>
-                    <td>{{ sng_promedio }}</td>
-                    <td>{{ sng_fle }}</td>
-                    <td>{{ sng_maximo }}</td>
-                    <td>{{ sng_minimo }}</td>
-                    <td>{{ proteina_promedio|floatformat:2 }}</td>
-                    <td>{{ proteina_fle }}</td>
-                    <td>{{ proteina_maximo }}</td>
-                    <td>{{ proteina_minimo }}</td>
-                    <td>{{ temperatura_promedio|floatformat:2 }}</td>
-                    <td>{{ temperatura_fle }}</td>
-                    <td>{{ temperatura_maximo }}</td>
-                    <td>{{ temperatura_minimo }}</td>
+                    <td>{{ dato.nombre }}</td>
+                    <td>{{ dato.numero_muestras }}</td>
+                    <td>{{ dato.densidad_promedio|floatformat:2 }}</td>
+                    <td>{{ dato.densidad_fle }}</td>
+                    <td>{{ dato.densidad_maximo }}</td>
+                    <td>{{ dato.densidad_minimo }}</td>
+                    <td>{{ dato.grasas_promedio|floatformat:2 }}</td>
+                    <td>{{ dato.grasas_fle }}</td>
+                    <td>{{ dato.grasas_maximo }}</td>
+                    <td>{{ dato.grasas_minimo }}</td>
+                    <td>{{ dato.sng_promedio|floatformat:2 }}</td>
+                    <td>{{ dato.sng_fle }}</td>
+                    <td>{{ dato.sng_maximo }}</td>
+                    <td>{{ dato.sng_minimo }}</td>
+                    <td>{{ dato.proteina_promedio|floatformat:2 }}</td>
+                    <td>{{ dato.proteina_fle }}</td>
+                    <td>{{ dato.proteina_maximo }}</td>
+                    <td>{{ dato.proteina_minimo }}</td>
+                    <td>{{ dato.temperatura_promedio|floatformat:2 }}</td>
+                    <td>{{ dato.temperatura_fle }}</td>
+                    <td>{{ dato.temperatura_maximo }}</td>
+                    <td>{{ dato.temperatura_minimo }}</td>
                 </tr>
+                {% endfor %}
             </tbody>
     </table>
 
