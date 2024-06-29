@@ -14,6 +14,18 @@
                     </h3>
                 </div>
                 <!-- /.card-header -->
+                 <!-- Script autocompletar campo Linea -->
+                <script>
+                    function updateLinea() {
+                        var planta = document.getElementById("id_planta").value;
+                        var turno = document.getElementById("id_turno").value;
+                        var silo = document.getElementById("id_silo").value;
+                        var cabezal = document.getElementById("id_cabezal").value
+                        var linea = planta + turno + silo + cabezal;
+                        document.getElementById("id_linea").value = linea;
+                    }
+                </script>
+                <!-- END -->
                 <div class="card-body">
 
                     
@@ -115,9 +127,21 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+
+                        <!-- SCRIPT CALCULAR CAMPO LINEA -->
+                        <input type="hidden" id="id_linea" name="linea"> <!-- END -->
+
                         <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="btn btn-danger">Cancelar</a>
+                        <a href="{% url 'laboratorio_control_calidad:encabezador49_List' %}" class="btn btn-danger">Cancelar</a>
                     </form> 
+                    <!-- SCRIPT CALCULAR CAMPO LINEA -->
+                    <script>
+                        document.getElementById("id_planta").addEventListener("input", updateLinea);
+                        document.getElementById("id_turno").addEventListener("input", updateLinea);
+                        document.getElementById("id_silo").addEventListener("input", updateLinea);
+                        document.getElementById("id_cabezal").addEventListener("input", updateLinea);
+                    </script>
+                    <!-- END -->
                 </div>    
                 <div class="callout callout-info">
                       

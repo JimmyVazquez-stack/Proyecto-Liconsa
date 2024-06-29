@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views import generic 
+from django.views import generic, View
 
 from usuarios.utils.mixins import GroupRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -191,7 +191,13 @@ class pesobrutor49_delete(generic.DeleteView):
     
 #VISTA ENCABEZADO TRES FORMULARIOS START
 
-class LecheReconsSilosEncabCreate(View):
+class Encabezador49View(generic.ListView):
+    model = EncabTablaR49
+    queryset = EncabTablaR49.objects.all()
+    template_name = 'encabezador49_List.html'
+    context_object_name = 'EncabTablaR49'
+
+class Encabezador49Create(View):
     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_List')
 
     def get(self, request, *args, **kwargs):
@@ -206,45 +212,167 @@ class LecheReconsSilosEncabCreate(View):
             'Pesobruto_formset': Pesobruto_formset,
         })
 
-#     def post(self, request, *args, **kwargs):
-#         encab_form = EncabTablaR49Form(request.POST)
-#         silos_formset = LecheReconsSilosFormSet(request.POST)
+    def post(self, request, *args, **kwargs):
+        encab_form = EncabTablaR49Form(request.POST)
+        Densidadpt_formset = DensidadptFormSet(request.POST)
+        Pesoenvvacio_formset = PesoenvvacioFormSet(request.POST)
+        Pesobruto_formset = PesobrutoFormSet(request.POST)
 
-#         if encab_form.is_valid():
-#             encab_instance = encab_form.save()
-#             silos_valid = True
-#             for form in silos_formset:
-#                 if form.is_valid() and self._has_data(form.cleaned_data):
-#                     silo = form.save(commit=False)
-#                     silo.encabezado = encab_instance
-#                     silo.save()
-#                 elif not form.is_valid() and self._has_data(form.cleaned_data):
-#                     silos_valid = False
-#                     break
+        if encab_form.is_valid():
+            encab_instance = encab_form.save()
 
-#             if silos_valid:
-#                 return redirect(self.success_url)
-#             else:
-#                 messages.error(request, f'Error en el formulario de Silos: {silos_formset.errors}')
-#         else:
-#             messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
+              #PARA FORMSET1
+            silos_valid = True
+            for form in Densidadpt_formset:
+                if form.is_valid() and self._has_data(form.cleaned_data):
+                    silo = form.save(commit=False)
+                    silo.encabezado = encab_instance
+                    silo.save()
+                elif not form.is_valid() and self._has_data(form.cleaned_data):
+                    silos_valid = False
+                    break
 
-#         return render(request, 'Leche_Reconstituida_por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Create.html', {
-#             'encab_form': encab_form,
-#             'silos_formset': silos_formset,
-#         })
+            if silos_valid:
+                return redirect(self.success_url)
+            else:
+                messages.error(request, f'Error en el formulario de Densidad: {Densidadpt_formset.errors}')
+            #END FORMSET1
 
-#     def _has_data(self, cleaned_data):
-#         # Verificar si el formulario tiene datos significativos
-#         default_datetime = timezone.now()
-#         for key, value in cleaned_data.items():
-#             if key == 'fecha_Hora' and value == default_datetime:
-#                 continue
-#             if key != 'id' and value not in (None, '', 0.0, 0):
-#                 return True
-#         return False
+            #PARA FORMSET2
+            silos_valid = True
+            for form in Pesoenvvacio_formset:
+                if form.is_valid() and self._has_data(form.cleaned_data):
+                    silo = form.save(commit=False)
+                    silo.encabezado = encab_instance
+                    silo.save()
+                elif not form.is_valid() and self._has_data(form.cleaned_data):
+                    silos_valid = False
+                    break
+
+            if silos_valid:
+                return redirect(self.success_url)
+            else:
+                messages.error(request, f'Error en el formulario de Peso envase vacio: {Pesoenvvacio_formset.errors}')  
+            #END FORMSET2
+
+            #PARA FORMSET3
+            silos_valid = True
+            for form in Pesobruto_formset:
+                if form.is_valid() and self._has_data(form.cleaned_data):
+                    silo = form.save(commit=False)
+                    silo.encabezado = encab_instance
+                    silo.save()
+                elif not form.is_valid() and self._has_data(form.cleaned_data):
+                    silos_valid = False
+                    break
+
+            if silos_valid:
+                return redirect(self.success_url)
+            else:
+                messages.error(request, f'Error en el formulario de Silos: {Pesobruto_formset.errors}')
+              #END FORMSET3
 
 
+        else:
+            messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
+
+        return render(request, 'encabezador49_Create.html', {
+            'encab_form': encab_form,
+            'Densidadpt_formset': Densidadpt_formset,
+            'Pesoenvvacio_formset': Pesoenvvacio_formset,
+            'Pesobruto_formset': Pesobruto_formset,
 
 
-# #VISTA ENCABEZADO TRES FORMULARIOS END 
+        })
+
+    def _has_data(self, cleaned_data):
+        # Verificar si el formulario tiene datos significativos
+        default_datetime = timezone.now()
+        for key, value in cleaned_data.items():
+            if key == 'fecha_Hora' and value == default_datetime:
+                continue
+            if key != 'id' and value not in (None, '', 0.0, 0):
+                return True
+        return False
+    
+
+class Encabezador49Update(View):
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_List')
+
+    def get(self, request, *args, **kwargs):
+        encab = get_object_or_404(EncabTablaR49, pk=kwargs['pk'])
+        encab_form = EncabTablaR49Form(instance=encab)
+        Densidadpt_formset = DensidadptFormSet(instance=encab)
+        Pesoenvvacio_formset = PesoenvvacioFormSet(instance=encab)
+        Pesobruto_formset = PesobrutoFormSet(instance=encab)
+        return render(request, 'encabezador49_Create.html', {
+            'encab_form': encab_form,
+            'Densidadpt_formset': Densidadpt_formset,
+            'Pesoenvvacio_formset': Pesoenvvacio_formset,
+            'Pesobruto_formset': Pesobruto_formset,
+        })
+
+    def post(self, request, *args, **kwargs):
+        encab = get_object_or_404(EncabTablaR49, pk=kwargs['pk'])
+        encab_form = EncabTablaR49Form(request.POST, instance=encab)
+        Densidadpt_formset = DensidadptFormSet(request.POST, instance=encab)
+        Pesoenvvacio_formset = PesoenvvacioFormSet(request.POST, instance=encab)
+        Pesobruto_formset = PesobrutoFormSet(request.POST, instance=encab)
+        
+        #PARA FORMSET1
+        if encab_form.is_valid() and Densidadpt_formset.is_valid():
+            encab = encab_form.save()
+            Densidadpt_formset.save()  # Guarda el formset con la instancia adecuada
+        
+            
+            return redirect(self.success_url)
+        else:
+            if not encab_form.is_valid():
+                messages.error(request, f'Error en el formulario de Encabezado: {encab_form.errors}')
+            if not Densidadpt_formset.is_valid():
+                messages.error(request, f'Error en el formulario de Densidad: {Densidadpt_formset.errors}')
+        #END FORMSET1
+    
+        #PARA FORMSET2
+        if encab_form.is_valid() and Pesoenvvacio_formset.is_valid():
+            encab = encab_form.save()
+            Pesoenvvacio_formset.save()  # Guarda el formset con la instancia adecuada
+        
+            
+            return redirect(self.success_url)
+        else:
+            if not encab_form.is_valid():
+                messages.error(request, f'Error en el formulario de Encabezado: {encab_form.errors}')
+            if not Pesoenvvacio_formset.is_valid():
+                messages.error(request, f'Error en el formulario de Peso vacio: {Pesoenvvacio_formset.errors}')
+        #END FORMSET2
+
+        #PARA FORMSET3
+        if encab_form.is_valid() and Pesobruto_formset.is_valid():
+            encab = encab_form.save()
+            Pesobruto_formset.save()  # Guarda el formset con la instancia adecuada
+        
+            
+            return redirect(self.success_url)
+        else:
+            if not encab_form.is_valid():
+                messages.error(request, f'Error en el formulario de Encabezado: {encab_form.errors}')
+            if not Pesobruto_formset.is_valid():
+                messages.error(request, f'Error en el formulario de Peso bruto: {Pesobruto_formset.errors}')
+        #END FORMSET3
+
+        return render(request, 'encabezador49_Create.html', {
+            'encab_form': encab_form,
+            'Densidadpt_formset': Densidadpt_formset,
+            'Pesoenvvacio_formset': Pesoenvvacio_formset,
+            'Pesobruto_formset': Pesobruto_formset,
+        })
+
+   
+class Encabezador49Delete(DeleteView):
+    model = EncabTablaR49
+    template_name = 'encabezador49_Delete.html'
+    context_object_name = 'EncabTablaR49'
+    success_url = reverse_lazy('encabezador49_List')
+    
+# VISTA ENCABEZADO TRES FORMULARIOS END 

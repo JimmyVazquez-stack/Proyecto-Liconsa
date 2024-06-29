@@ -36,4 +36,11 @@ urlpatterns = [
     path('pesobrutor49_list/', pesobrutor49_list.as_view(), name='pesobrutor49_list'),
     path('pesobrutor49_delete/<int:pk>', pesobrutor49_delete.as_view(), name='pesobrutor49_delete'),
     path('pesobrutor49_update/<int:pk>', pesobrutor49_update.as_view(), name='pesobrutor49_update'),
+
+    #Formato con encabezado
+    path('encabezador49_create/', Encabezador49Create.as_view(), name='encabezador49_create'),
+    path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
+    path('encabezado49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
+    path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
+
 ]

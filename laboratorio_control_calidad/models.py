@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from catalogos.models import Cabezal, Planta, Turno, Producto, Proveedor, Silo, Maquina
 
 # Create your models here.
 class EncabTablaR49(models.Model):
@@ -23,14 +24,13 @@ class TablaR49(models.Model):
         return '%s - %s' % (self.numMaquina, self.promedio)
     
 class Densidadpt(models.Model):
-    NO_SILO = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),]
-    TURNOS = [('X', 'X matutino'),('Y', 'Y vespertino'),]
+    #NO_SILO = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),]
     fechaHora = models.DateTimeField (default=timezone.now,verbose_name="Hora")
-    cabezal = models.CharField(default=0, verbose_name="Cabezal", max_length=2) #cambiar a modelos lalo
-    planta = models.CharField(default=0, max_length=4) #cambiar a modelos lalo
-    # producto = models.ForeignKey(producto,on_delete=models.CASCADE, null=True) #colocar cuando lalo cree los modelos de producto
-    silo = models.IntegerField(default=0,choices=NO_SILO,verbose_name="No. Silo")
-    turno = models.CharField(default=0,choices=TURNOS,verbose_name='Turno', max_length=20)
+    cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE)
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
+    silo = models.ForeignKey(Silo, on_delete=models.CASCADE)
+    turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
     linea = models.CharField( max_length=20, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
     densidad = models.DecimalField(default=0, max_digits=5, decimal_places=4)
     volumen = models.IntegerField(default=0, verbose_name=" Volumen")
@@ -47,11 +47,11 @@ class Densidadpt(models.Model):
 
 class Pesoenvvacio(models.Model):
     fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
-    cabezal = models.CharField(default=0, verbose_name="Cabezal",max_length=2) #cambiar a modelos lalo
-    maquina = models.IntegerField() #cambiar a modelos lalo
-    planta = models.CharField(default=0, max_length=4) #cambiar a modelos lalo
-    # producto = models.ForeignKey(producto,on_delete=models.CASCADE, null=True) #colocar cuando lalo cree los modelos de producto
-    proveedor = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
+    cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE)
+    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE) 
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE) 
+    producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     peso = models.DecimalField(default=0, max_digits=3, decimal_places=2)
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 
@@ -60,11 +60,11 @@ class Pesoenvvacio(models.Model):
     
 class Pesobruto(models.Model):
     fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
-    cabezal = models.CharField(default=0, max_length=2) #cambiar a modelos lalo
-    maquina = models.IntegerField(default=0) #cambiar a modelos lalo
-    planta = models.CharField(default=0, max_length=4) #cambiar a modelos lalo
-    # producto = models.ForeignKey(producto,on_delete=models.CASCADE, null=True) #colocar cuando lalo cree los modelos de producto
-    analista = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
+    cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE)
+    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE) 
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
+    #analista = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
     valor = models.IntegerField(default=0)
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 

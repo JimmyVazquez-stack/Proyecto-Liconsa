@@ -1,6 +1,6 @@
 {% extends 'base.html' %} 
 {% load static %} 
-{%block title %} Leche Reonstituida Por Silos {% endblock %}
+{%block title %} Formatos R49 {% endblock %}
 {% block principal %} 
 {% block informacion% %}
 <div class="container-fluid p-4">
@@ -67,13 +67,13 @@
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: 14px">
-                                    {% for item in LecheReconsSilosEncab %}
+                                    {% for item in EncabTablaR49 %}
                                     <tr>
                                         <td>{{item.id}}</td>
                                         <td>{{item.fecha}}</td>
                                         <td>{{item.observaciones}}</td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-warning" href="{% url '#' item.id %}"><i class="fa fa-pencil"></i></a>
                                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_Delete' item.id %}"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -137,7 +137,7 @@
     $(function() {
         $('.btnTest').on('click', function() {
             $.ajax({
-                url: "{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List'%}" , 
+                url: "{% url 'laboratorio_control_calidad:encabezador49_List'%}" , 
                 type: 'POST',
                 data: {
                     id: 1
@@ -153,57 +153,4 @@
         });
 
     });
-</script>  
-<script>
-    $(document).ready(function() {
-        $('#example1').DataTable({
-            responsive: true,
-            retrieve: true,
-        });
-    } );  
-</script>
-
-<!-- Page specific script alerts -->
-<script>
-    $(function() {
-      var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-  
-      $('.swalDefaultSuccess').click(function() {
-        Toast.fire({
-          icon: 'success',
-          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        })
-      });
-      $('.swalDefaultInfo').click(function() {
-        Toast.fire({
-          icon: 'info',
-          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        })
-      });
-      $('.swalDefaultError').click(function() {
-        Toast.fire({
-          icon: 'error',
-          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        })
-      });
-      $('.swalDefaultWarning').click(function() {
-        Toast.fire({
-          icon: 'warning',
-          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        })
-      });
-      $('.swalDefaultQuestion').click(function() {
-        Toast.fire({
-          icon: 'question',
-          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        })
-      });
-  
-    });
-</script>
-  
+</script> 
