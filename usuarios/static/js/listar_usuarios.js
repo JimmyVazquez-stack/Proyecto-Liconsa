@@ -1,16 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('cargarUsuarios').addEventListener('click', function() {
-        fetch('usuarios:listar_usuarios')  // Asegúrate de reemplazar esto con la URL correcta
-            .then(response => response.json())
-            .then(data => {
-                const lista = document.getElementById('listaUsuarios');
-                lista.innerHTML = '';  // Limpiar la lista actual
-                data.data.forEach(usuario => {
-                    const elemento = document.createElement('div');
-                    elemento.textContent = `ID: ${usuario.id}, Nombre: ${usuario.nombre}, Email: ${usuario.email}`;
-                    lista.appendChild(elemento);
-                });
-            })
-            .catch(error => console.error('Error:', error));
+$(document).ready(function(){
+$('#listar_usuarios').DataTable({
+        ajax: {
+            url: '/usuarios/listar/usuarios/data/',
+            dataSrc: ''
+        },
+        columns: [
+            { data: 'username' },
+            { data: 'first_name' },
+            { data: 'last_name' },
+            { data: 'email' },
+            { data: 'telefono' },
+            { data: 'area' },
+            { data: 'grupo' },
+            {
+                data: null,
+                defaultContent: `
+                    <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
+                    <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
+                `
+            }
+        ],
     });
 });
