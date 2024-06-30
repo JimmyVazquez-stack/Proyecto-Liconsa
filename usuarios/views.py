@@ -11,7 +11,7 @@ from django.views.generic import DetailView, CreateView, ListView
 from .forms import UserCreationForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-
+from django.http import JsonResponse
 
 class LoginView(LoginView):
     template_name = 'registration/login.html'
@@ -53,6 +53,14 @@ class ListarUsuariosView(LoginRequiredMixin,ListView, PermissionRequiredMixin):
     template_name = 'listar_usuarios.html'
     permission_required = 'usuarios.view_usuario'
     login_url = reverse_lazy('usuarios:login')
+    
+    def render_to_response(self, context, **response_kwargs):
+        # Verificar si la solicitud es AJAX
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            data = list(self.model.objects.values('id', 'nombre', 'email'))  # Asegúrate de ajustar los campos según tu modelo
+            return JsonResponse({'data': data})
+        else:
+            return super().render_to_response(context, **response_kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

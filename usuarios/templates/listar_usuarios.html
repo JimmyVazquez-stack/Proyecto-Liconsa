@@ -1,15 +1,41 @@
-{% extends 'base.html   '%}
+{% extends 'base.html '%}
+
+{% load static %}
+
 
 {% block title %}
+Listado de usuarios
 {% endblock %}
-
-{% block catalogos %}
-  {{ block.super }}  <!-- Esto incluirá el contenido original del bloque catalogos de base.html -->
-  <!-- Aquí puedes añadir contenido adicional específico para esta vista, si es necesario -->
-{% endblock catalogos %}
 
 
 {% block principal %}
+{% block datatables %}
+
+
+<body>
+    <div class="container p-5">
+        <h4>Listado de Usuarios</h4>
+        <table id="usersTable" class="display">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <!-- Agrega más columnas según sea necesario -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuarios in usuarios %}
+                <tr>
+                    <td>{{ usuarios.username }}</td> 
+                    <td>{{ usuarios.first_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="{% static 'js/listar_usuarios.js'%}"></script>
+</body>
+
+</html>
 {% endblock %}
-
-
+{% endblock %}
