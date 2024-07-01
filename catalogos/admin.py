@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Lecheria, Ruta, Poblacion, Rotos
-from laboratorio_control_calidad.models import TablaR49, Densidadpt, Pesoenvvacio, Pesobruto #Pesoneto
+from laboratorio_control_calidad.models import Densidadpt, Pesoenvvacio, Pesobruto #Pesoneto
 from .models import Lecheria, Ruta, Poblacion, Rotos, Area, Producto, Planta, Proveedor, Maquina, Cabezal, Turno, Silo, TipoProducto
 
 # Register your models here.
@@ -10,7 +10,6 @@ admin.site.register(Poblacion)
 admin.site.register(Rotos)
 
 #Modelos FormatoR49
-admin.site.register(TablaR49)
 admin.site.register(Densidadpt)
 admin.site.register(Pesoenvvacio)
 admin.site.register(Pesobruto)
