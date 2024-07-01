@@ -61,13 +61,13 @@ class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
         context['total_usuarios'] = self.model.objects.count()
         return context
 
-
 class UsuariosDataView(LoginRequiredMixin, View, PermissionRequiredMixin):
     model = Usuario
     login_url = reverse_lazy('usuarios:login')
 
     def get(self, request, *args, **kwargs):
-        usuarios_queryset = self.model.objects.all().select_related('area').prefetch_related('groups')
+        # Filtrar para excluir usuarios que son staff
+        usuarios_queryset = self.model.objects.filter(is_staff=False).select_related('area').prefetch_related('groups')
         usuarios_list = []
 
         for usuario in usuarios_queryset:

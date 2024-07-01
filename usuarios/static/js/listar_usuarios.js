@@ -1,7 +1,7 @@
 $(document).ready(function(){
 $('#listar_usuarios').DataTable({
         ajax: {
-            url: '/usuarios/listar/usuarios/data/',
+            url: '/usuarios/data/',
             dataSrc: ''
         },
         columns: [

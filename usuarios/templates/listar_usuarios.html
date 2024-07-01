@@ -3,7 +3,7 @@
   {%block title %} Listado de usuarios {% endblock %}
 
   {% block principal %}
-  {%block datatable%}
+  {% block datatable %}
   <div class="container-fluid p-5">
     <div class="row">
       <div class="col-12">
@@ -13,8 +13,9 @@
           </div>
           <div class="card-body bg-light">
             <div class="col-xl-12 mt-3 p-3">
+              <!-- Mantener este div table-responsive aquí -->
               <div class="table-responsive">
-                <table id="listar_usuarios" class="table  table-bordered bg-light table-hover" style="width:100%;">
+                <table id="listar_usuarios" class="table table-bordered bg-light table-hover" style="width:100%;">
                   <thead class="thead-light" style="font-size: 14px;">
                     <tr>
                       <th>Usuario</th>
@@ -27,6 +28,9 @@
                       <th>Opciones</th>
                     </tr>
                   </thead>
+                  <tbody>
+
+                  </tbody>
                   <tfoot style="font-size: 14px;">
                     <tr>
                       <th>Usuario</th>
@@ -41,7 +45,7 @@
                   </tfoot>
                 </table>
               </div>
-              <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary  mt-3">Regresar</a>
+              <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary mt-3">Regresar</a>
             </div>
           </div>
         </div>
