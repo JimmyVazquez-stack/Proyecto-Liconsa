@@ -12,16 +12,16 @@ class EncabTablaR49(models.Model):
 
 
 
-class TablaR49(models.Model):
-    numMaquina = models.CharField(max_length=2)
-    numDatos = models.IntegerField()
-    promedio = models.IntegerField()
-    desvStd = models.IntegerField()
-    maximo = models.IntegerField()
-    minimo = models.IntegerField()
+# class TablaR49(models.Model):
+#     numMaquina = models.CharField(max_length=2)
+#     numDatos = models.IntegerField()
+#     promedio = models.IntegerField()
+#     desvStd = models.IntegerField()
+#     maximo = models.IntegerField()
+#     minimo = models.IntegerField()
 
-    def __str__(self):
-        return '%s - %s' % (self.numMaquina, self.promedio)
+#     def __str__(self):
+#         return '%s - %s' % (self.numMaquina, self.promedio)
     
 class Densidadpt(models.Model):
     #NO_SILO = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),]
@@ -31,7 +31,7 @@ class Densidadpt(models.Model):
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
     silo = models.ForeignKey(Silo, on_delete=models.CASCADE)
     turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
-    linea = models.CharField( max_length=20, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
+    linea = models.CharField( max_length=4, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
     densidad = models.DecimalField(default=0, max_digits=5, decimal_places=4)
     volumen = models.IntegerField(default=0, verbose_name=" Volumen")
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)

@@ -80,31 +80,31 @@ class verificacion_documentos(LoginRequiredMixin, TemplateView):
 
 ## CRUD FormatoR49 Juan Carlos M.
 
-class registror49_list(generic.ListView):
-     model = TablaR49
-     queryset = TablaR49.objects.all ()
-     template_name = 'registror49_list.html'
-     context_object_name = 'tablar49'
+# class registror49_list(generic.ListView):
+#      model = TablaR49
+#      queryset = TablaR49.objects.all ()
+#      template_name = 'registror49_list.html'
+#      context_object_name = 'tablar49'
 
-class registror49_create(generic.CreateView):
-    model = TablaR49
-    template_name = 'registror49_create.html'
-    context_object_name = 'tablar49'
-    form_class = TablaR49Form
-    success_url = reverse_lazy("laboratorio_control_calidad:registror49_list")
+# class registror49_create(generic.CreateView):
+#     model = TablaR49
+#     template_name = 'registror49_create.html'
+#     context_object_name = 'tablar49'
+#     form_class = TablaR49Form
+#     success_url = reverse_lazy("laboratorio_control_calidad:registror49_list")
 
-class registror49_update(generic.UpdateView):
-    model = TablaR49
-    template_name = 'registror49_create.html' 
-    form_class = TablaR49Form
-    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
-    context_object_name = 'tablar49'
+# class registror49_update(generic.UpdateView):
+#     model = TablaR49
+#     template_name = 'registror49_create.html' 
+#     form_class = TablaR49Form
+#     success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
+#     context_object_name = 'tablar49'
 
-class registror49_delete(generic.DeleteView):
-    model = TablaR49
-    template_name = 'registror49_delete.html'
-    context_object_name = 'tablar49'
-    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
+# class registror49_delete(generic.DeleteView):
+#     model = TablaR49
+#     template_name = 'registror49_delete.html'
+#     context_object_name = 'tablar49'
+#     success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
 
 ### complementarias a formato R49 DENSIDAD
 
