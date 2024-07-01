@@ -10,7 +10,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-info"></i>
-                        ENCABEZADO R49
+                        Tablas de registro R49
                     </h3>
                 </div>
                 <!-- /.card-header -->
@@ -32,8 +32,9 @@
                     <form id="formulario" action="" method="post">
                         {% csrf_token %}
                         {{ encab_form.as_p }}
-                        
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
+
+                        <h4>Tabla 1: Registro de Datos para Tabla Densidad</h4>
+                        <table id="tabla1" class="table table-bordered bg-light table-hover" style="width: 100%">
                             <thead class="thead-light" style="font-size: 14px">
                                 <tr>
                                     <th>Id</th>
@@ -45,11 +46,10 @@
                                     <th>turno</th>
                                     <th>linea</th>
                                     <th>densidad</th>
-                                    <th>volumen</th>
-                                    <th>encabezado</th>                             
+                                    <th>volumen</th>                             
                                 </tr>
                             </thead>
-                            <tbody id="formularios-body" style="font-size: 14px">
+                            <tbody id="formulario-densidad" style="font-size: 14px">
                                 {{ Densidadpt_formset.management_form }}
                                 {% for form in Densidadpt_formset %}
                                 <tr>
@@ -60,16 +60,15 @@
                                     <td>{{ form.producto }}</td>
                                     <td>{{ form.silo }}</td>
                                     <td>{{ form.turno }}</td>
-                                    <td>{{ form.linea }}</td>
-                                    <td>{{ form.densidad }}</td>
+                                    <td style="max-width: 10px;">{{ form.linea }}</td>
+                                    <td style="max-width: 10px;">{{ form.densidad }}</td>
                                     <td>{{ form.volumen }}</td>
-                                    <td>{{ form.encabezado }}</td>
-                                  
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
+                        <h4>Tabla 2: Registro de Datos para Tabla Peso envase vacio</h4>
+                        <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
                             <thead class="thead-light" style="font-size: 14px">
                                 <tr>
                                     <th>Id</th>
@@ -98,7 +97,8 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
+                        <h4>Tabla 3: Registro de Datos para Tabla Peso bruto</h4>
+                        <table id="tabla3" class="table table-bordered bg-light table-hover" style="width: 100%">
                             <thead class="thead-light" style="font-size: 14px">
                                 <tr>
                                     <th>Id</th>
@@ -132,7 +132,7 @@
                         <input type="hidden" id="id_linea" name="linea"> <!-- END -->
 
                         <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="{% url 'laboratorio_control_calidad:encabezador49_List' %}" class="btn btn-danger">Cancelar</a>
+                        <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
                     </form> 
                     <!-- SCRIPT CALCULAR CAMPO LINEA -->
                     <script>
