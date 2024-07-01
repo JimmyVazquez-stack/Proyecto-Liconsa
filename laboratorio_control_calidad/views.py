@@ -14,6 +14,8 @@ from django.urls import reverse_lazy
 from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
+from django.shortcuts import get_object_or_404 #calculos para Formator49
+from django.db.models import Avg, Sum #calculos para Formator49
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
@@ -376,3 +378,28 @@ class Encabezador49Delete(DeleteView):
     success_url = reverse_lazy('encabezador49_List')
     
 # VISTA ENCABEZADO TRES FORMULARIOS END 
+
+
+#CALCULOS PARA OBTENER PESO NETO
+def calcular_peso_neto():
+    # Obtener el valor del peso bruto
+    peso_bruto = get_object_or_404(Pesobruto, pk=6)  # Suponiendo que queremos el objeto con id=6
+    valor_peso_bruto = peso_bruto.valor
+    
+    # Calcular el promedio del peso del envase vacío
+    promedio_envase_vacio = Pesoenvvacio.objects.aggregate(promedio=Avg('peso'))['promedio']
+    
+    # Calcular la densidad ponderada
+    total_volumen = Densidadpt.objects.aggregate(total=Sum('volumen'))['total']
+    if total_volumen:
+        densidad_ponderada = Densidadpt.objects.aggregate(
+            densidad_ponderada=Sum('densidad' * models.F('volumen')) / total_volumen
+        )['densidad_ponderada']
+    else:
+        densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
+    
+    # Calcular el peso neto
+    peso_neto = (valor_peso_bruto - promedio_envase_vacio) / densidad_ponderada
+    
+    return peso_neto
+#Fin de calculos peso Neto
