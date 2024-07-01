@@ -1,0 +1,8 @@
+
+    
+    /* Ajuste de ancho máximo para las celdas de la primera tabla */
+    
+    #formulario-densidad td {
+        max-width: 5%;
+        /* Ajusta el valor según sea necesario */
+    }
