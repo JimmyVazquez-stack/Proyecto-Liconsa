@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $("#listar_usuarios").DataTable({
+  var table = $("#listar_usuarios").DataTable({
     ajax: {
       url: "/usuarios/data/",
       dataSrc: "data",
@@ -15,7 +15,7 @@ $(document).ready(function () {
       {
         data: null,
         defaultContent: `
-                    <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
+                    <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
                 `,
       },
@@ -39,5 +39,20 @@ $(document).ready(function () {
         sortDescending: ": activar para ordenar la columna descendente"
       }
     }
+  });
+
+  // Manejar clic en botón editar
+  $('#listar_usuarios tbody').on('click', 'button.btn-edit', function() {
+    var data = table.row($(this).parents('tr')).data();
+    // Aquí puedes llenar el formulario en el modal de edición con los datos del usuario
+    // Por ejemplo: $('#editUserField').val(data.first_name);
+    $('#editModal').modal('show');
+  });
+
+  // Manejar clic en botón eliminar
+  $('#listar_usuarios tbody').on('click', 'button.btn-delete', function() {
+    var data = table.row($(this).parents('tr')).data();
+    // Aquí puedes establecer datos o identificadores en el modal de eliminación si es necesario
+    $('#deleteModal').modal('show');
   });
 });
