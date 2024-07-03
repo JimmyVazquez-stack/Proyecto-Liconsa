@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from catalogos.models import Cabezal, Planta, Turno, Producto, Proveedor, Silo, Maquina
+from catalogos.models import Cabezal, Planta, Turno, Producto, Proveedor, Silo, Maquina, Area
 
 # Create your models here.
 class EncabTablaR49(models.Model):
@@ -64,7 +64,7 @@ class Pesobruto(models.Model):
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE) 
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
-    #analista = models.CharField(default=0, max_length=30) #cambiar a modelos lalo
+    analista = models.ForeignKey(Area, on_delete=models.CASCADE)
     valor = models.IntegerField(default=0)
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE)
 
