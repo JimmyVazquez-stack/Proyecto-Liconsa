@@ -14,10 +14,12 @@ $(document).ready(function () {
       { data: "grupo" },
       {
         data: null,
-        defaultContent: `
-                    <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
-                `,
+        render: function (data, type, row) {
+          return `
+            <button onclick="cargarFormularioEdicion(${row.id})" class="btn btn-sm btn-primary" data-id="${row.id}">Editar</button>
+            <button class="btn btn-delete" data-id="${row.id}"><i class="fas fa-trash text-red"></i></button>
+          `;
+        },
       },
     ],
     language: {
@@ -41,14 +43,27 @@ $(document).ready(function () {
     }
   });
 
-  // Manejar clic en botón editar
-  $('#listar_usuarios tbody').on('click', 'button.btn-edit', function() {
-    var data = table.row($(this).parents('tr')).data();
-    // Aquí puedes llenar el formulario en el modal de edición con los datos del usuario
-    // Por ejemplo: $('#editUserField').val(data.first_name);
-    $('#editModal').modal('show');
-  });
+// Manejar clic en botón editar
+$('#listar_usuarios tbody').on('click', 'button.btn-edit', function() {
+  var data = table.row($(this).parents('tr')).data();
+  var userId = data.id; // Asegúrate de que 'id' corresponde al nombre de la propiedad que contiene el ID del usuario
 
+  // Realizar solicitud AJAX para obtener el formulario de edición
+  $.ajax({
+    url: '/ruta/a/vista/editar/usuario/' + userId, // Asegúrate de reemplazar esto con la URL correcta
+    method: 'GET',
+    success: function(formHtml) {
+      // Insertar el formulario en el modal
+      $('#editModal .modal-body').html(formHtml);
+      // Mostrar el modal
+      $('#editModal').modal('show');
+    },
+    error: function(xhr, status, error) {
+      // Manejar errores (opcional)
+      console.error("Error al cargar el formulario de edición:", error);
+    }
+  });
+});
   // Manejar clic en botón eliminar
   $('#listar_usuarios tbody').on('click', 'button.btn-delete', function() {
     var data = table.row($(this).parents('tr')).data();
