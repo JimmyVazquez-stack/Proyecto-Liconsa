@@ -7,7 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import ListView
 from .models import Usuario
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView, CreateView, ListView, View
+from django.views.generic import DetailView, CreateView, ListView, View, UpdateView
 from .forms import UserCreationForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
@@ -16,6 +16,8 @@ from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from django.db.models import F
 from django.forms.models import model_to_dict
+
+
 
 class LoginView(LoginView):
     template_name = 'registration/login.html'
@@ -49,8 +51,21 @@ class CrearUsuarioView(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
             response = super().form_valid(form)
             messages.success(self.request, self.success_message)
             return response
+        
+class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    form_class = UserCreationForm  # Puede que necesites un formulario diferente para la edición.
+    model = Usuario
+    permission_required = 'usuarios.change_usuario'  # Permiso para editar usuarios.
+    template_name = 'editar_usuario.html'  # Asegúrate de tener este template.
+    success_url = reverse_lazy('usuarios:listar_usuarios')  # Ajusta según tus necesidades.
+    success_message = 'Usuario actualizado exitosamente'
+    login_url = reverse_lazy('usuarios:login')
 
-
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+        return response
+        
 class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     model = Usuario
     template_name = 'listar_usuarios.html'
