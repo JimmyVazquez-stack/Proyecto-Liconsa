@@ -14,8 +14,10 @@ from django.urls import reverse_lazy
 from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
-from django.shortcuts import get_object_or_404 #calculos para Formator49
+from django.shortcuts import get_object_or_404, redirect #calculos para Formator49
 from django.db.models import Avg, Sum #calculos para Formator49
+from django.contrib import messages 
+
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
@@ -106,90 +108,6 @@ class verificacion_documentos(LoginRequiredMixin, TemplateView):
 #     context_object_name = 'tablar49'
 #     success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
 
-### complementarias a formato R49 DENSIDAD
-
-class densidadr49_list(generic.ListView):
-     model = Densidadpt
-     queryset = Densidadpt.objects.all ()
-     template_name = 'complementariasR49/densidadr49_list.html'
-     context_object_name = 'densidadr49'
-
-class densidadr49_create(generic.CreateView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html'
-    context_object_name = 'densidadr49'
-    form_class = DensidadptForm
-    success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_list")
-
-class densidadr49_update(generic.UpdateView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html' 
-    form_class = DensidadptForm
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
-    context_object_name = 'densidadr49'
-
-class densidadr49_delete(generic.DeleteView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_delete.html'
-    context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
-
-
-### complementarias a formato R49 PESO ENVASE VACIO
-class pesoenvvacior49_list(generic.ListView):
-     model = Pesoenvvacio
-     queryset = Pesoenvvacio.objects.all ()
-     template_name = 'complementariasR49/pesoenvvacior49_list.html'
-     context_object_name = 'pesoenvvacior49'
-
-class pesoenvvacior49_create(generic.CreateView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html'
-    context_object_name = 'pesoenvvacior49'
-    form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-
-class pesoenvvacior49_update(generic.UpdateView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html' 
-    form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-    context_object_name = 'pesoenvvacior49'
-
-class pesoenvvacior49_delete(generic.DeleteView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_delete.html'
-    context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-
-### complementarias a formato R49 PESO BRUTO
-class pesobrutor49_list(generic.ListView):
-     model = Pesobruto
-     queryset = Pesobruto.objects.all ()
-     template_name = 'complementariasR49/pesobrutor49_list.html'
-     context_object_name = 'pesobrutor49'
-
-class pesobrutor49_create(generic.CreateView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html'
-    context_object_name = 'pesobrutor49'
-    form_class = PesobrutoForm
-    success_url = reverse_lazy("laboratorio_control_calidad:pesobrutor49_list")
-
-class pesobrutor49_update(generic.UpdateView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html' 
-    form_class = PesobrutoForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
-    context_object_name = 'pesobrutor49'
-
-class pesobrutor49_delete(generic.DeleteView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_delete.html'
-    context_object_name = 'pesobrutor49'
-    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
-
-    login_url = reverse_lazy('usuarios:login')
     
 #VISTA ENCABEZADO TRES FORMULARIOS START
 
@@ -200,7 +118,7 @@ class Encabezador49View(generic.ListView):
     context_object_name = 'EncabTablaR49'
 
 class Encabezador49Create(View):
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_List')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 
     def get(self, request, *args, **kwargs):
         encab_form = EncabTablaR49Form()
@@ -224,51 +142,51 @@ class Encabezador49Create(View):
             encab_instance = encab_form.save()
 
               #PARA FORMSET1
-            silos_valid = True
+            densidad_valid = True
             for form in Densidadpt_formset:
                 if form.is_valid() and self._has_data(form.cleaned_data):
-                    silo = form.save(commit=False)
-                    silo.encabezado = encab_instance
-                    silo.save()
+                    densidad = form.save(commit=False)
+                    densidad.encabezado = encab_instance
+                    densidad.save()
                 elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    silos_valid = False
+                    densidad_valid = False
                     break
 
-            if silos_valid:
+            if densidad_valid:
                 return redirect(self.success_url)
             else:
                 messages.error(request, f'Error en el formulario de Densidad: {Densidadpt_formset.errors}')
             #END FORMSET1
 
             #PARA FORMSET2
-            silos_valid = True
+            pesoenvVacio_valid = True
             for form in Pesoenvvacio_formset:
                 if form.is_valid() and self._has_data(form.cleaned_data):
-                    silo = form.save(commit=False)
-                    silo.encabezado = encab_instance
-                    silo.save()
+                    pesoenvVacio = form.save(commit=False)
+                    pesoenvVacio.encabezado = encab_instance
+                    pesoenvVacio.save()
                 elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    silos_valid = False
+                    pesoenvVacio_valid = False
                     break
 
-            if silos_valid:
+            if pesoenvVacio_valid:
                 return redirect(self.success_url)
             else:
                 messages.error(request, f'Error en el formulario de Peso envase vacio: {Pesoenvvacio_formset.errors}')  
             #END FORMSET2
 
             #PARA FORMSET3
-            silos_valid = True
+            pesobruto_valid = True
             for form in Pesobruto_formset:
                 if form.is_valid() and self._has_data(form.cleaned_data):
-                    silo = form.save(commit=False)
-                    silo.encabezado = encab_instance
-                    silo.save()
+                    pesoBruto = form.save(commit=False)
+                    pesoBruto.encabezado = encab_instance
+                    pesoBruto.save()
                 elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    silos_valid = False
+                    pesoBruto_valid = False
                     break
 
-            if silos_valid:
+            if pesoBruto_valid:
                 return redirect(self.success_url)
             else:
                 messages.error(request, f'Error en el formulario de Silos: {Pesobruto_formset.errors}')
@@ -299,7 +217,7 @@ class Encabezador49Create(View):
     
 
 class Encabezador49Update(View):
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_List')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 
     def get(self, request, *args, **kwargs):
         encab = get_object_or_404(EncabTablaR49, pk=kwargs['pk'])
@@ -375,7 +293,7 @@ class Encabezador49Delete(DeleteView):
     model = EncabTablaR49
     template_name = 'encabezador49_Delete.html'
     context_object_name = 'EncabTablaR49'
-    success_url = reverse_lazy('encabezador49_List')
+    success_url = reverse_lazy('encabezador49_list')
     
 # VISTA ENCABEZADO TRES FORMULARIOS END 
 
