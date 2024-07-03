@@ -78,6 +78,7 @@
                                         <td>
                                             <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Update' item.id %}"><i class="fa fa-pencil"></i></a>
                                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-info" href="{% url 'reportes:reporte_Rx50' item.id %}"><i class="far fa-file-pdf"></i></a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -102,7 +103,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="{% url 'reportes:reporte_mensual' %}">
+        <form method="get" action="#">
         <div class="modal-body">
             {% csrf_token %}
             <div class="form-group">

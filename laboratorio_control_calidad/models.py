@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from catalogos.models import *
 
 # Create your models here.
 
@@ -14,12 +15,10 @@ class LecheReconsSilosEncab(models.Model):
     
 class LecheReconsSilos(models.Model):
     OPCIONES = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),]
-    NO_SILO = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),(6, '6'),(7, '7'),(8, '8'),]
-    TIPO_PRODUCTO = [('LPD', 'LPD'),('MLGVRG', 'MLGVRG'),('FRISIA', 'FRISIA'),]
-    encabezado = models.ForeignKey(LecheReconsSilosEncab,on_delete=models.CASCADE,)
+    encabezado = models.ForeignKey(LecheReconsSilosEncab,on_delete=models.CASCADE,null=True)
     fecha_Hora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
-    silo_Numero = models.IntegerField(choices=NO_SILO,verbose_name="No. Silo" )
-    producto = models.CharField(choices=TIPO_PRODUCTO,verbose_name="Tipo de Producto",max_length=10)
+    silo = models.ForeignKey(Silo,on_delete=models.CASCADE,verbose_name="No. Silo",null=True)
+    producto = models.ForeignKey(Producto,on_delete=models.CASCADE,verbose_name="Tipo de Producto", null=True)
     volumen = models.FloatField(default=0.0,verbose_name=" Volumen")
     aspecto = models.IntegerField(choices=OPCIONES,verbose_name="Aspecto")
     sabor = models.IntegerField(choices=OPCIONES,verbose_name="Sabor")
