@@ -15,7 +15,7 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total_usuarios'] = self.model.objects.count()
+        context['total_usuarios'] = self.model.objects.exclude(is_staff=True).count()
         
         # Verifica si el usuario tiene el permiso directamente o a través de sus grupos
         permiso_nombre = 'usuario.add_usuario'
