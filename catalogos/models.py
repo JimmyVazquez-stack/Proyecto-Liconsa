@@ -94,6 +94,7 @@ class Proveedor(models.Model):
 
     class Meta:
         verbose_name_plural = "Proveedores"
+
 class Maquina(models.Model):
     numero = models.IntegerField()
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
@@ -164,3 +165,16 @@ class Silo(models.Model):
     
     class Meta:
         verbose_name_plural = "Silos"
+
+class Analista(models.Model):
+    nombre = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=100)
+    correo = models.EmailField(max_length=100)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name_plural = "Analistas"
