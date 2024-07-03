@@ -38,7 +38,7 @@ class CrearUsuarioView(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
     model = Usuario
     permission_required = 'usuarios.add_usuario'
     template_name = 'crear_usuario.html'
-    success_url = reverse_lazy('usuarios:crear_usuario')
+    success_url = reverse_lazy('usuarios:listar_usuarios')
     success_message = 'Usuario creado exitosamente'
     login_url = reverse_lazy('usuarios:login')
 
@@ -52,30 +52,20 @@ class CrearUsuarioView(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
             messages.success(self.request, self.success_message)
             return response
         
-class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
-    form_class = UserCreationForm  # Puede que necesites un formulario diferente para la edición.
-    model = Usuario
-    permission_required = 'usuarios.change_usuario'  # Permiso para editar usuarios.
-    template_name = 'editar_usuario.html'  # Asegúrate de tener este template.
-    success_url = reverse_lazy('usuarios:listar_usuarios')  # Ajusta según tus necesidades.
-    success_message = 'Usuario actualizado exitosamente'
-    login_url = reverse_lazy('usuarios:login')
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, self.success_message)
-        return response
         
 class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     model = Usuario
     template_name = 'listar_usuarios.html'
     permission_required = 'usuarios.view_usuario'
     login_url = reverse_lazy('usuarios:login')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total_usuarios'] = self.model.objects.count()
+        # Excluir usuarios staff al contar
+        context['total_usuarios'] = self.model.objects.exclude(is_staff=True).count()
         return context
-
+        
 class UsuariosDataView(LoginRequiredMixin, View, PermissionRequiredMixin):
     model = Usuario
     login_url = reverse_lazy('usuarios:login')
