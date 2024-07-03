@@ -64,6 +64,7 @@
                                         <th>ID</th>
                                         <th>Fecha Hora</th>
                                         <th>Observaciones</th>
+                                        <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: 14px">
@@ -73,8 +74,8 @@
                                         <td>{{item.fecha}}</td>
                                         <td>{{item.observaciones}}</td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url '#' item.id %}"><i class="fa fa-pencil"></i></a>
-                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49_update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_delete' item.id %}"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -137,7 +138,7 @@
     $(function() {
         $('.btnTest').on('click', function() {
             $.ajax({
-                url: "{% url 'laboratorio_control_calidad:encabezador49_List'%}" , 
+                url: "{% url 'laboratorio_control_calidad:encabezador49_list'%}" , 
                 type: 'POST',
                 data: {
                     id: 1
