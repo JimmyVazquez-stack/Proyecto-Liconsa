@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  // Inicialización del DataTable
   var table = $("#listar_usuarios").DataTable({
     ajax: {
       url: "/usuarios/data/",
@@ -16,7 +17,7 @@ $(document).ready(function () {
         data: null,
         render: function (data, type, row) {
           return `
-            <button onclick="cargarFormularioEdicion(${row.id})" class="btn btn-sm btn-primary" data-id="${row.id}">Editar</button>
+            <button class="btn " data-id="${row.id}"><i class="fas fa-pencil-alt"></i></button>
             <button class="btn btn-delete" data-id="${row.id}"><i class="fas fa-trash text-red"></i></button>
           `;
         },
@@ -28,7 +29,7 @@ $(document).ready(function () {
         first: "Primero",
         last: "Último",
         next: "Siguiente",
-        previous: "Anterior"
+        previous: "Anterior",
       },
       lengthMenu: "Mostrar _MENU_ entradas",
       info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
@@ -38,36 +39,60 @@ $(document).ready(function () {
       emptyTable: "No hay datos disponibles en la tabla",
       aria: {
         sortAscending: ": activar para ordenar la columna ascendente",
-        sortDescending: ": activar para ordenar la columna descendente"
-      }
-    }
-  });
-
-// Manejar clic en botón editar
-$('#listar_usuarios tbody').on('click', 'button.btn-edit', function() {
-  var data = table.row($(this).parents('tr')).data();
-  var userId = data.id; // Asegúrate de que 'id' corresponde al nombre de la propiedad que contiene el ID del usuario
-
-  // Realizar solicitud AJAX para obtener el formulario de edición
-  $.ajax({
-    url: '/ruta/a/vista/editar/usuario/' + userId, // Asegúrate de reemplazar esto con la URL correcta
-    method: 'GET',
-    success: function(formHtml) {
-      // Insertar el formulario en el modal
-      $('#editModal .modal-body').html(formHtml);
-      // Mostrar el modal
-      $('#editModal').modal('show');
+        sortDescending: ": activar para ordenar la columna descendente",
+      },
     },
-    error: function(xhr, status, error) {
-      // Manejar errores (opcional)
-      console.error("Error al cargar el formulario de edición:", error);
-    }
   });
-});
-  // Manejar clic en botón eliminar
-  $('#listar_usuarios tbody').on('click', 'button.btn-delete', function() {
+
+  // Manejar clic en botón editar
+  $("#listar_usuarios tbody").on("click", "button.btn-edit", function () {
+    var data = table.row($(this).parents("tr")).data();
+    var userId = data.id;
+    // Código para manejar la edición...
+  });
+
+  // Manejar clic en botón de eliminar
+  $('#listar_usuarios tbody').on('click', '.btn-delete', function() {
     var data = table.row($(this).parents('tr')).data();
-    // Aquí puedes establecer datos o identificadores en el modal de eliminación si es necesario
+    var userId = data.id; // Asume que `id` es la propiedad que contiene el ID del usuario
+    var userName = data.username; // Asume que `username` es la propiedad que contiene el nombre del usuario
+
+    // Actualiza el modal con la información del usuario
+    $('#userNameToDelete').text(userName);
+    $('#confirmDelete').data('userid', userId); // Guarda el ID en el botón de confirmar del modal
+
+    // Muestra el modal
     $('#deleteModal').modal('show');
   });
+
+  // Manejar la confirmación de eliminación
+  $('#confirmDelete').on('click', function() {
+    var userId = $(this).data('userid');
+
+    // Envía una solicitud AJAX al servidor para eliminar el usuario
+    $.ajax({
+      url: '/usuarios/eliminar_usuario/' + userId,
+      type: 'DELETE',
+      success: function(result) {
+        // Cerrar el modal
+        $('#deleteModal').modal('hide');
+
+        // Actualizar el DataTable o mostrar un mensaje de éxito
+        table.row($('.btn-delete[data-id="' + userId + '"]').parents('tr')).remove().draw();
+      },
+      error: function(xhr, status, error) {
+        // Manejar errores
+        console.error("Error al eliminar el usuario:", error);
+      }
+    });
+  });
+  // Para el botón de cerrar (X)
+$('.close').click(function() {
+  $('#deleteModal').modal('hide');
+});
+
+// Para el botón de cancelar
+$('.btn-secondary').click(function() {
+  $('#deleteModal').modal('hide');
+});
 });
