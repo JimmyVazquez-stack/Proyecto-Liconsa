@@ -62,7 +62,7 @@ class PesobrutoForm(forms.ModelForm):
 #FORMSET PAR LA TABLA R49 START
 DensidadptFormSet = inlineformset_factory(EncabTablaR49, Densidadpt, fields='__all__', extra=6, can_delete=False)
 PesoenvvacioFormSet = inlineformset_factory(EncabTablaR49, Pesoenvvacio, fields='__all__', extra=6, can_delete=False)
-PesobrutoFormSet = inlineformset_factory(EncabTablaR49, Pesobruto, fields='__all__', extra=120, can_delete=False)
+PesobrutoFormSet = inlineformset_factory(EncabTablaR49, Pesobruto, fields='__all__', extra=3, can_delete=False)
 
 #FORMSET PAR LA TABLA R49 END
 
