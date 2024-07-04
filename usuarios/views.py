@@ -72,10 +72,16 @@ class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin)
     template_name = 'editar_usuario.html'
     success_url = reverse_lazy('usuarios:listar_usuarios')
     
+    def get_object(self, queryset=None):
+        # Usa 'id' en lugar de 'pk'
+        id_ = self.kwargs.get("id")
+        return get_object_or_404(Usuario, id=id_)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['action'] = reverse_lazy('usuarios:editar_usuario', kwargs={'pk': self.object().pk})
-        return context    
+        # Asegúrate de usar 'id' en lugar de 'pk' para generar la URL de acción
+        context['action'] = reverse_lazy('usuarios:editar_usuario', kwargs={'id': self.object.id})
+        return context   
 
 class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     model = Usuario
