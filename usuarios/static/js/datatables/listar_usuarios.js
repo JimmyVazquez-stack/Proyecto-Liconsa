@@ -1,5 +1,4 @@
 $(document).ready(function () {
-  // Inicialización del DataTable
   var table = $("#listar_usuarios").DataTable({
     ajax: {
       url: "/usuarios/data/",
@@ -16,12 +15,15 @@ $(document).ready(function () {
       {
         data: null,
         render: function (data, type, row) {
-          return `
-            <button class="btn " data-id="${row.id}"><i class="fas fa-pencil-alt"></i></button>
-            <button class="btn btn-delete" data-id="${row.id}"><i class="fas fa-trash text-red"></i></button>
-          `;
-        },
-      },
+          var botones = `<button class="btn btn-editar" data-id="${row.id}"><i class="fas fa-pencil-alt"></i></button>`;
+          
+          if (row.username !== usuarioAutenticadoUsername) {
+            botones += `<button class="btn btn-delete" data-id="${row.id}"><i class="fas fa-trash text-red"></i></button>`;
+          }
+          
+          return botones;
+        }
+      }
     ],
     language: {
       search: "Buscar:",
@@ -44,12 +46,27 @@ $(document).ready(function () {
     },
   });
 
-  // Manejar clic en botón editar
-  $("#listar_usuarios tbody").on("click", "button.btn-edit", function () {
-    var data = table.row($(this).parents("tr")).data();
-    var userId = data.id;
-    // Código para manejar la edición...
+// Manejar clic en botón de editar
+$('.btn-editar').on('click', function() {
+  var userId = $(this).data('id');
+  $.ajax({
+    url: '/usuarios/editar_usuario/' + userId,
+    success: function(data) {
+      $('#editModal .modal-body').html(data);
+      $('#editModal').modal('show');
+    }
   });
+});
+
+// Para el botón de cerrar (X) en el modal de editar
+$('#editModal .close').click(function() {
+  $('#editModal').modal('hide');
+});
+
+// Para el botón de cancelar en el modal de editar
+$('#editModal .btn-secondary').click(function() {
+  $('#editModal').modal('hide');
+});
 
   // Manejar clic en botón de eliminar
   $('#listar_usuarios tbody').on('click', '.btn-delete', function() {
