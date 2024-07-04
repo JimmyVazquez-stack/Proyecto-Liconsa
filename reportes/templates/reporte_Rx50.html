@@ -102,7 +102,7 @@
                 </tr>
                 {% endfor %}
                 <tr class="badge-warning" style="text-align: center;">
-                    <td colspan="2">{%if silos_datos.producto == 1 %}PROMEDIO LPD{% elif silos_datos.producto == 2 %}PROMEDIO MLGVRG{%endif%}</td>
+                    <td colspan="2">{%if tipo_producto == 1 %}PROMEDIO LPD{% elif tipo_producto == 2 %}PROMEDIO MLGVRG{%endif%}</td>
                     <td></td>
                     <td><b>{{ sum_Volumen }}</b></td>
                     <td></td>
@@ -117,22 +117,7 @@
                     <td></td>
                     <td><b>{{ proteina_Promedio|floatformat:3 }}</b></td>
                 </tr>
-                <tr style="text-align: center;">
-                    <td colspan="2">PROMEDIO MLGVRG</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+               
                 <tr style="text-align: center;">
                     <td colspan="2">PROMEDIO GLOBAL</td>
                     <td></td>

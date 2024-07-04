@@ -81,6 +81,7 @@ class ReporteRX50(View):
         context = {
             'encabezado_datos': encabezado_datos,
             'datos': silos_datos,
+            'tipo_producto':silos_datos[0].producto.id,
             **formulas,
         }
         return render(request, 'reporte_Rx50.html', context)
