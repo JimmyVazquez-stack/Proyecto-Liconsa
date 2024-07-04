@@ -8,7 +8,7 @@ from django.views.generic import ListView
 from .models import Usuario
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView, ListView, View, UpdateView, DeleteView
-from .forms import UserCreationForm
+from .forms import UserCreationForm, EditarUsuarioForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.core.serializers import serialize
@@ -18,6 +18,7 @@ from django.db.models import F
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+
 
 
 class LoginView(LoginView):
@@ -65,6 +66,17 @@ class EliminarUsuarioView(View):
         except Usuario.DoesNotExist:
             return JsonResponse({'error': 'El usuario no existe'}, status=404)
 
+class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    modal = Usuario
+    form_class = EditarUsuarioForm
+    template_name = 'editar_usuario.html'
+    success_url = reverse_lazy('usuarios:listar_usuarios')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['action'] = reverse_lazy('usuarios:editar_usuario', kwargs={'pk': self.object().pk})
+        return context    
+
 class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     model = Usuario
     template_name = 'listar_usuarios.html'
@@ -76,6 +88,7 @@ class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
         # Excluir usuarios staff al contar
         context['total_usuarios'] = self.model.objects.exclude(
             is_staff=True).count()
+        context['usuario_autenticado_username'] = self.request.user.username # Obtener el id del usuario autenticado
         return context
 
 
