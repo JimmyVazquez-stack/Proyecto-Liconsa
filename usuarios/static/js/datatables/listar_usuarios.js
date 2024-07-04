@@ -46,6 +46,22 @@ $(document).ready(function () {
     },
   });
 
+  // Delegación de evento para manejar clic en botón de editar
+  $(document).on('click', '.btn-editar', function() {
+    var userId = $(this).data('id');
+    $.ajax({
+      url: '/usuarios/editar_usuario/' + userId,
+      success: function(data) {
+        $('#editModal .modal-body').html(data);
+        $('#editModal').modal('show');
+      },
+      error: function(xhr, status, error) {
+        console.error("Error al cargar el formulario de edición:", error);
+        alert("No se pudo cargar el formulario de edición. Por favor, intente de nuevo.");
+      }
+    });
+  });
+
 // Manejar clic en botón de editar
 $('.btn-editar').on('click', function() {
   var userId = $(this).data('id');
@@ -54,18 +70,31 @@ $('.btn-editar').on('click', function() {
     success: function(data) {
       $('#editModal .modal-body').html(data);
       $('#editModal').modal('show');
+    },
+    error: function(xhr, status, error) {
+      console.error("Error al cargar el formulario de edición:", error);
+      alert("No se pudo cargar el formulario de edición. Por favor, intente de nuevo."); // Mostrar mensaje de error al usuario
     }
   });
 });
 
-// Para el botón de cerrar (X) en el modal de editar
-$('#editModal .close').click(function() {
-  $('#editModal').modal('hide');
-});
-
-// Para el botón de cancelar en el modal de editar
-$('#editModal .btn-secondary').click(function() {
-  $('#editModal').modal('hide');
+// Manejar clic en botón de guardar cambios en el modal de editar
+$('#editModal .btn-primary').on('click', function() {
+  var userId = $('#editForm').data('userid'); // Asegúrate de que el formulario tenga un atributo data-userid
+  $.ajax({
+    url: '/usuarios/editar_usuario/' + userId,
+    type: 'POST',
+    data: $('#editForm').serialize(), // Envía los datos del formulario
+    success: function(result) {
+      $('#editModal').modal('hide');
+      alert("Usuario actualizado con éxito."); // Mostrar mensaje de éxito
+      location.reload(); // Opcional: recargar la página para ver los cambios
+    },
+    error: function(xhr, status, error) {
+      console.error("Error al actualizar el usuario:", error);
+      alert("Error al actualizar el usuario. Por favor, intente de nuevo."); // Mostrar mensaje de error dentro del modal
+    }
+  });
 });
 
   // Manejar clic en botón de eliminar
