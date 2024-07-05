@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+</head>
+<body>
+
+<div class="header-container">
+        <table>
+            <tr>
+                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA </th>
+            </tr>
+
+            <tr>
+                <th>PESO NETO </th>
+            </tr> 
+            
+        </table>
+        <div class="right-image">
+            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
+        </div>
+</div>
+   
+<div class="contenedor-tablas">
+
+    {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+</head>
+<body>
+
+<div class="header-container">
+       >
+        <div class="right-image">
+            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
+        </div>
+</div>
+   
+<div class="contenedor-tablas">
+
+    <table class="table table-bordered bg-light table-hover">
+            <thead>
+                <tr>
+                    <th colspan="22" class="encabezado-tabla">PESO NETO</th>
+                </tr>
+                <tr>
+                    <th>Puntos de Evaluación</th>
+                    <th>Número de Muestras</th>
+                    <th>Densidad</th>
+                    <th >Grasa</th>
+                </tr>
+            
+                
+            </thead>
+    
+            <tbody>
+                <tr>
+                    <td>{{ valor_peso_bruto }}</td>
+                    <td>{{ promedio_envase_vacio }}</td>
+                    <td>{{ densidad_ponderada }}</td>
+                    <td>{{ peso_neto }}</td>
+                </tr>
+            </tbody>
+    </table>
+
+
+    
+</div>
+
+</div>
