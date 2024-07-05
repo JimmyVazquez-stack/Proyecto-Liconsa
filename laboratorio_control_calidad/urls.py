@@ -26,7 +26,7 @@ urlpatterns = [
     #Formato con encabezado
     path('encabezador49_create/', Encabezador49Create.as_view(), name='encabezador49_create'),
     path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
-    path('encabezado49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
+    path('encabezador49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
     path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
 
 ]
