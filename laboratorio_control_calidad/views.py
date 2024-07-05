@@ -79,37 +79,7 @@ class verificacion_documentos(LoginRequiredMixin, TemplateView):
 
 
 
-
-## CRUD FormatoR49 Juan Carlos M.
-
-# class registror49_list(generic.ListView):
-#      model = TablaR49
-#      queryset = TablaR49.objects.all ()
-#      template_name = 'registror49_list.html'
-#      context_object_name = 'tablar49'
-
-# class registror49_create(generic.CreateView):
-#     model = TablaR49
-#     template_name = 'registror49_create.html'
-#     context_object_name = 'tablar49'
-#     form_class = TablaR49Form
-#     success_url = reverse_lazy("laboratorio_control_calidad:registror49_list")
-
-# class registror49_update(generic.UpdateView):
-#     model = TablaR49
-#     template_name = 'registror49_create.html' 
-#     form_class = TablaR49Form
-#     success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
-#     context_object_name = 'tablar49'
-
-# class registror49_delete(generic.DeleteView):
-#     model = TablaR49
-#     template_name = 'registror49_delete.html'
-#     context_object_name = 'tablar49'
-#     success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
-
-    
-#VISTA ENCABEZADO TRES FORMULARIOS START
+#VISTA ENCABEZADO TRES FORMULARIOS START FORMATO R49 J.Carlos
 
 class Encabezador49View(generic.ListView):
     model = EncabTablaR49
@@ -150,33 +120,23 @@ class Encabezador49Create(View):
                     densidad.save()
                 elif not form.is_valid() and self._has_data(form.cleaned_data):
                     densidad_valid = False
-                    break
-
-            if densidad_valid:
-                return redirect(self.success_url)
-            else:
-                messages.error(request, f'Error en el formulario de Densidad: {Densidadpt_formset.errors}')
+                    break 
             #END FORMSET1
 
             #PARA FORMSET2
             pesoenvVacio_valid = True
             for form in Pesoenvvacio_formset:
                 if form.is_valid() and self._has_data(form.cleaned_data):
-                    pesoenvVacio = form.save(commit=False)
-                    pesoenvVacio.encabezado = encab_instance
-                    pesoenvVacio.save()
+                        pesoenvVacio = form.save(commit=False)
+                        pesoenvVacio.encabezado = encab_instance
+                        pesoenvVacio.save()
                 elif not form.is_valid() and self._has_data(form.cleaned_data):
                     pesoenvVacio_valid = False
                     break
-
-            if pesoenvVacio_valid:
-                return redirect(self.success_url)
-            else:
-                messages.error(request, f'Error en el formulario de Peso envase vacio: {Pesoenvvacio_formset.errors}')  
             #END FORMSET2
 
             #PARA FORMSET3
-            pesobruto_valid = True
+            pesoBruto_valid = True
             for form in Pesobruto_formset:
                 if form.is_valid() and self._has_data(form.cleaned_data):
                     pesoBruto = form.save(commit=False)
@@ -186,13 +146,8 @@ class Encabezador49Create(View):
                     pesoBruto_valid = False
                     break
 
-            if pesoBruto_valid:
-                return redirect(self.success_url)
-            else:
-                messages.error(request, f'Error en el formulario de Silos: {Pesobruto_formset.errors}')
-              #END FORMSET3
-
-
+        
+            return redirect(self.success_url)
         else:
             messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
 
@@ -299,25 +254,37 @@ class Encabezador49Delete(DeleteView):
 
 
 #CALCULOS PARA OBTENER PESO NETO
-def calcular_peso_neto():
-    # Obtener el valor del peso bruto
-    peso_bruto = get_object_or_404(Pesobruto, pk=6)  # Suponiendo que queremos el objeto con id=6
-    valor_peso_bruto = peso_bruto.valor
-    
-    # Calcular el promedio del peso del envase vacío
-    promedio_envase_vacio = Pesoenvvacio.objects.aggregate(promedio=Avg('peso'))['promedio']
-    
-    # Calcular la densidad ponderada
-    total_volumen = Densidadpt.objects.aggregate(total=Sum('volumen'))['total']
-    if total_volumen:
-        densidad_ponderada = Densidadpt.objects.aggregate(
-            densidad_ponderada=Sum('densidad' * models.F('volumen')) / total_volumen
-        )['densidad_ponderada']
-    else:
-        densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
-    
-    # Calcular el peso neto
-    peso_neto = (valor_peso_bruto - promedio_envase_vacio) / densidad_ponderada
-    
-    return peso_neto
-#Fin de calculos peso Neto
+
+class Pesonetoview(View):
+    def get(self, request, *args, **kwargs):
+        # Obtener el valor del peso bruto
+        peso_bruto = get_object_or_404(Pesobruto, pk=6)
+        valor_peso_bruto = peso_bruto.valor
+        
+        
+        # Calcular el promedio del peso del envase vacío
+        promedio_envase_vacio = Pesoenvvacio.objects.aggregate(promedio=Avg('peso'))['promedio']
+        
+        # Calcular la densidad ponderada
+        total_volumen = Densidadpt.objects.aggregate(total=Sum('volumen'))['total']
+        if total_volumen:
+            densidad_ponderada = Densidadpt.objects.aggregate(
+                densidad_ponderada=Sum(F('densidad') * F('volumen')) / total_volumen
+            )['densidad_ponderada']
+        else:
+            densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
+        
+        # Calcular el peso neto
+        if densidad_ponderada != 0:
+            peso_neto = (valor_peso_bruto - promedio_envase_vacio) / densidad_ponderada
+        else:
+            peso_neto = 0  # Manejar el caso donde la densidad ponderada es cero
+        
+        # Renderizar la plantilla con los datos calculados
+        context = {
+            'valor_peso_bruto': valor_peso_bruto,
+            'promedio_envase_vacio': promedio_envase_vacio,
+            'densidad_ponderada': densidad_ponderada,
+            'peso_neto': peso_neto,
+        }
+        return render(request, 'pesoNeto.html', context)
