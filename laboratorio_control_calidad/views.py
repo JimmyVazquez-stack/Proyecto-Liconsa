@@ -15,8 +15,9 @@ from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
 from django.shortcuts import get_object_or_404, redirect #calculos para Formator49
-from django.db.models import Avg, Sum #calculos para Formator49
+from django.db.models import Avg, Sum, F #calculos para Formator49
 from django.contrib import messages 
+from django.db import transaction
 
 
 # Create your views here.
@@ -109,56 +110,43 @@ class Encabezador49Create(View):
         Pesobruto_formset = PesobrutoFormSet(request.POST)
 
         if encab_form.is_valid():
-            encab_instance = encab_form.save()
+            with transaction.atomic():
+                encab_instance = encab_form.save()
+                densidad_valid = self._process_formset(Densidadpt_formset, encab_instance)
+                pesoenvVacio_valid = self._process_formset(Pesoenvvacio_formset, encab_instance)
+                pesoBruto_valid = self._process_formset(Pesobruto_formset, encab_instance)
 
-              #PARA FORMSET1
-            densidad_valid = True
-            for form in Densidadpt_formset:
-                if form.is_valid() and self._has_data(form.cleaned_data):
-                    densidad = form.save(commit=False)
-                    densidad.encabezado = encab_instance
-                    densidad.save()
-                elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    densidad_valid = False
-                    break 
-            #END FORMSET1
+                if densidad_valid and pesoenvVacio_valid and pesoBruto_valid:
+                  return redirect(self.success_url)
 
-            #PARA FORMSET2
-            pesoenvVacio_valid = True
-            for form in Pesoenvvacio_formset:
-                if form.is_valid() and self._has_data(form.cleaned_data):
-                        pesoenvVacio = form.save(commit=False)
-                        pesoenvVacio.encabezado = encab_instance
-                        pesoenvVacio.save()
-                elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    pesoenvVacio_valid = False
-                    break
-            #END FORMSET2
-
-            #PARA FORMSET3
-            pesoBruto_valid = True
-            for form in Pesobruto_formset:
-                if form.is_valid() and self._has_data(form.cleaned_data):
-                    pesoBruto = form.save(commit=False)
-                    pesoBruto.encabezado = encab_instance
-                    pesoBruto.save()
-                elif not form.is_valid() and self._has_data(form.cleaned_data):
-                    pesoBruto_valid = False
-                    break
-
-        
-            return redirect(self.success_url)
+                else:
+                    messages.error(self.request, 'Algunos formsets contienen errores. Por favor, revise los campos.')
         else:
-            messages.error(request, f'Error en el formulario de Encab: {encab_form.errors}')
-
+            messages.error(self.request, 'Error en el formulario principal.')
+        
         return render(request, 'encabezador49_Create.html', {
             'encab_form': encab_form,
             'Densidadpt_formset': Densidadpt_formset,
             'Pesoenvvacio_formset': Pesoenvvacio_formset,
             'Pesobruto_formset': Pesobruto_formset,
-
-
         })
+
+       
+
+    def _process_formset(self, formset, encab_instance):
+        valid = True
+        for form in formset:
+            if form.is_valid() and self._has_data(form.cleaned_data):
+                instance = form.save(commit=False)
+                instance.encabezado = encab_instance
+                instance.save()
+            elif not form.is_valid() and self._has_data(form.cleaned_data):
+                valid = False
+                messages.error(self.request, f'Error en el formset de {formset_name}: {form.errors}')
+                break
+        if not valid:
+            messages.error(self.request, f'El formset de {formset_name} tiene registros incompletos.')
+        return valid
 
     def _has_data(self, cleaned_data):
         # Verificar si el formulario tiene datos significativos
@@ -243,27 +231,37 @@ class Encabezador49Update(View):
             'Pesobruto_formset': Pesobruto_formset,
         })
 
+
    
 class Encabezador49Delete(DeleteView):
     model = EncabTablaR49
     template_name = 'encabezador49_Delete.html'
     context_object_name = 'EncabTablaR49'
     success_url = reverse_lazy('encabezador49_list')
+
     
 # VISTA ENCABEZADO TRES FORMULARIOS END 
 
 
-#CALCULOS PARA OBTENER PESO NETO
+#CALCULOS PARA OBTENER PESO NETO ---------------------------------------------------------#
 
 class Pesonetoview(View):
     def get(self, request, *args, **kwargs):
-        # Obtener el valor del peso bruto
+        datosEncabezado = EncabTablaR49.objects.filter(pk=pk)
+        datosDensidad = Densidadpt.objects.filter(encabezado=pk)
+        datosPesoBruto = Pesobruto.objects.filter(encabezado=pk)
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(encabezado=pk)
+
+        calculos = datosPesoEnvVacio.aggregate(
+            total_peso=Sum('peso', output_field=FloatField()),
+            conteo_peso=Count('peso')   
+        )
+        # Calcular el promedio manualmente
+        promedioEnvaseVacio = calculos['total_peso'] / calculos['conteo_peso'] if calculos['conteo_peso'] > 0 else 0
+        
+        # obtener registros de campo valor de peso bruto
         peso_bruto = get_object_or_404(Pesobruto, pk=6)
         valor_peso_bruto = peso_bruto.valor
-        
-        
-        # Calcular el promedio del peso del envase vacío
-        promedio_envase_vacio = Pesoenvvacio.objects.aggregate(promedio=Avg('peso'))['promedio']
         
         # Calcular la densidad ponderada
         total_volumen = Densidadpt.objects.aggregate(total=Sum('volumen'))['total']
@@ -272,19 +270,29 @@ class Pesonetoview(View):
                 densidad_ponderada=Sum(F('densidad') * F('volumen')) / total_volumen
             )['densidad_ponderada']
         else:
-            densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
+             densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
         
         # Calcular el peso neto
         if densidad_ponderada != 0:
             peso_neto = (valor_peso_bruto - promedio_envase_vacio) / densidad_ponderada
         else:
             peso_neto = 0  # Manejar el caso donde la densidad ponderada es cero
-        
-        # Renderizar la plantilla con los datos calculados
+
+
+
+
+        # Renderizar a la plantilla con los datos calculados
         context = {
-            'valor_peso_bruto': valor_peso_bruto,
-            'promedio_envase_vacio': promedio_envase_vacio,
-            'densidad_ponderada': densidad_ponderada,
-            'peso_neto': peso_neto,
+            'datosEncabezado': datosEncabezado,
+            'datosDensidad': datosDensidad,
+            'datosPesoBruto': datosPesoBruto,
+            'datosPesoEnvVacio': datosPesoEnvVacio,
         }
         return render(request, 'pesoNeto.html', context)
+    
+        
+
+        
+        
+        
+        
