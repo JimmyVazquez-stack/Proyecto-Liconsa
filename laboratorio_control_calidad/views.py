@@ -15,9 +15,10 @@ from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
 from django.shortcuts import get_object_or_404, redirect #calculos para Formator49
-from django.db.models import Avg, Sum, F #calculos para Formator49
+from django.db.models import Avg, Sum, F, DecimalField #calculos para Formator49
 from django.contrib import messages 
 from django.db import transaction
+from laboratorio_control_calidad.models import Densidadpt, Pesoenvvacio, Pesobruto, EncabTablaR49
 
 
 # Create your views here.
@@ -80,13 +81,15 @@ class verificacion_documentos(LoginRequiredMixin, TemplateView):
 
 
 
-#VISTA ENCABEZADO TRES FORMULARIOS START FORMATO R49 J.Carlos
+#START--VISTA ENCABEZADO TRES FORMULARIOS FORMATO R49 J.Carlos -----------------------------------|
 
 class Encabezador49View(generic.ListView):
     model = EncabTablaR49
     queryset = EncabTablaR49.objects.all()
     template_name = 'encabezador49_List.html'
     context_object_name = 'EncabTablaR49'
+
+
 
 class Encabezador49Create(View):
     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
@@ -237,46 +240,53 @@ class Encabezador49Delete(DeleteView):
     model = EncabTablaR49
     template_name = 'encabezador49_Delete.html'
     context_object_name = 'EncabTablaR49'
-    success_url = reverse_lazy('encabezador49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 
     
-# VISTA ENCABEZADO TRES FORMULARIOS END 
+
+class Pesonetoview(LoginRequiredMixin, TemplateView):
+    template_name = 'pesoNetor49_list.html'
+# END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
 
 
-#CALCULOS PARA OBTENER PESO NETO ---------------------------------------------------------#
+#START--CALCULOS PARA OBTENER PESO NETO -----------------------------------------------------|
 
 class Pesonetoview(View):
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk') # Asumiendo que el pk se pasa como un argumento en la URL
         datosEncabezado = EncabTablaR49.objects.filter(pk=pk)
         datosDensidad = Densidadpt.objects.filter(encabezado=pk)
         datosPesoBruto = Pesobruto.objects.filter(encabezado=pk)
         datosPesoEnvVacio = Pesoenvvacio.objects.filter(encabezado=pk)
+        
 
         calculos = datosPesoEnvVacio.aggregate(
-            total_peso=Sum('peso', output_field=FloatField()),
-            conteo_peso=Count('peso')   
+              pesoPromedio=Avg('peso'),
         )
-        # Calcular el promedio manualmente
-        promedioEnvaseVacio = calculos['total_peso'] / calculos['conteo_peso'] if calculos['conteo_peso'] > 0 else 0
         
-        # obtener registros de campo valor de peso bruto
-        peso_bruto = get_object_or_404(Pesobruto, pk=6)
-        valor_peso_bruto = peso_bruto.valor
+        # Calcular la suma del producto de densidad y volumen
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+
+        # Calcular la suma de volumen
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+
+        # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
+        densidad_ponderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+
+        calculos2 = {
+            'densidadPonderada': densidad_ponderada
+        }
+
+        #calculos2 = datosDensidad.aggregate(
+         #     densidadPonderada= Sum(F('densidad')* Decimal('volumen'), output_field=DecimalField(max_digits=5, decimal_places=4)/ Sum('volumen')),
+        #)
         
-        # Calcular la densidad ponderada
-        total_volumen = Densidadpt.objects.aggregate(total=Sum('volumen'))['total']
-        if total_volumen:
-            densidad_ponderada = Densidadpt.objects.aggregate(
-                densidad_ponderada=Sum(F('densidad') * F('volumen')) / total_volumen
-            )['densidad_ponderada']
-        else:
-             densidad_ponderada = 0  # Manejar el caso donde no hay registros o la suma de ponderaciones es cero
+         # Obtener el valor del peso bruto
         
-        # Calcular el peso neto
-        if densidad_ponderada != 0:
-            peso_neto = (valor_peso_bruto - promedio_envase_vacio) / densidad_ponderada
-        else:
-            peso_neto = 0  # Manejar el caso donde la densidad ponderada es cero
 
 
 
@@ -287,8 +297,10 @@ class Pesonetoview(View):
             'datosDensidad': datosDensidad,
             'datosPesoBruto': datosPesoBruto,
             'datosPesoEnvVacio': datosPesoEnvVacio,
+            **calculos, 
+            **calculos2,
         }
-        return render(request, 'pesoNeto.html', context)
+        return render(request, 'pesoNetor49_List.html', context)
     
         
 
