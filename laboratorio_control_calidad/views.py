@@ -21,16 +21,16 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total_usuarios'] = self.model.objects.count()
+        context['total_usuarios'] = self.model.objects.exclude(is_staff=True).count()
         
         # Verifica si el usuario tiene el permiso directamente o a través de sus grupos
         permiso_nombre = 'usuario.add_usuario'
         tiene_permiso = self.request.user.has_perm(permiso_nombre) or \
                         self.request.user.groups.filter(permissions__codename=permiso_nombre.split('.')[1]).exists()
         context['puede_agregar_usuario'] = tiene_permiso
-        
         return context
-    
+
+
     
 class grasas_aceites_vegetales(LoginRequiredMixin,TemplateView):
     template_name = 'grasas_aceites_vegetales.html'

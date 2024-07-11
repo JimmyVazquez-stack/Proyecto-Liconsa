@@ -18,8 +18,12 @@ class UsuarioAdmin(UserAdmin):
             'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', 'email', 'area', 'telefono', 'is_active', 'is_staff', 'is_superuser', 'groups'),
         }),
     )
-    list_display = ('username', 'first_name', 'last_name', 'email', 'telefono', 'is_staff', 'area')
+    list_display = ('username', 'first_name', 'last_name', 'email', 'telefono', 'is_staff', 'area', 'get_groups')
     search_fields = ('username', 'first_name', 'last_name', 'email', 'area', 'telefono')
     ordering = ('username',)
+    
+    def get_groups(self, obj):
+        return ", ".join([group.name for group in obj.groups.all()])
+    get_groups.short_description = 'Grupos'
     
 admin.site.register(Usuario, UsuarioAdmin)
