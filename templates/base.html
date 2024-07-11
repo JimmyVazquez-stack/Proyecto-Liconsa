@@ -10,19 +10,15 @@
   {% block estaticos %}
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="{% static 'css/fonts-google.css'%}">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
-  <!-- No usa el ionicons.min.css, usa el cndjs -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'css/adminlte.min.css'%}">
   <!-- overlayScrollbars -->
@@ -31,19 +27,17 @@
   <link rel="stylesheet" href="{% static 'css/daterangepicker.css'%}">
   <!-- summernote -->
   <link rel="stylesheet" href="{% static 'css/summernote-bs4.min.css'%}">
-  <!-- font awesome-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <!-- Bootstrap CSS DT-->
   <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
   <!-- Datatables bootstrap 4 CSS -->
   <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
-  
-  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
-  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
-  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
+  <!-- No usa el ionicons.min.css, usa el cndjs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- font awesome-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <script src="https://unpkg.com/feather-icons"></script>
   {%endblock%}
   <!-- Favicon -->
   {% block Favicon%}
@@ -163,7 +157,8 @@
                with font-awesome or any other icon font library -->
 
             <li class="nav-header">Panel General</li>
-
+            {% if  es_coordinador %}
+            {% block catalogos%}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-restore"></i>
@@ -172,7 +167,7 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
+              <!-- <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -188,8 +183,23 @@
                         <p>Catalogos nivel 2</p>
                       </a>
                     </li>
-
                   </ul>
+                </li>
+              </ul> -->
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'usuarios:listar_usuarios'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Usuarios</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Áreas</p>
+                  </a>
                 </li>
               </ul>
               <ul class="nav nav-treeview">
@@ -201,8 +211,98 @@
                 </li>
 
               </ul>
-            </li>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Maquinas</p>
+                  </a>
+                </li>
 
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Cabezales</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Plantas</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Poblaciones</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Gestión de productos
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Productos</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Tipo de producto</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Proveedores</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Silos</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Turnos</p>
+                  </a>
+                </li>
+              </ul>
+
+            
+            </li>
+            {% endblock%}
+            {% endif %}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-close"></i>
@@ -1791,6 +1891,7 @@
   <!-- <script src="{% static 'js/demo.js'%}"></script> -->
   
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="https://unpkg.com/feather-icons"></script>
 
   <script>
     feather.replace()
