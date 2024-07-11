@@ -40,13 +40,7 @@
 </head>
 <body>
 
-<div class="header-container">
-       >
-        <div class="right-image">
-            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
-        </div>
-</div>
-   
+
 <div class="contenedor-tablas">
 
     <table class="table table-bordered bg-light table-hover">
@@ -55,10 +49,8 @@
                     <th colspan="22" class="encabezado-tabla">PESO NETO</th>
                 </tr>
                 <tr>
-                    <th>Puntos de Evaluación</th>
-                    <th>Número de Muestras</th>
-                    <th>Densidad</th>
-                    <th >Grasa</th>
+                    <th>Peso Promedio</th>
+                    <th>Densidad Ponderada</th>
                 </tr>
             
                 
@@ -66,16 +58,11 @@
     
             <tbody>
                 <tr>
-                    <td>{{ valor_peso_bruto }}</td>
-                    <td>{{ promedio_envase_vacio }}</td>
-                    <td>{{ densidad_ponderada }}</td>
-                    <td>{{ peso_neto }}</td>
+                    <td>{{ pesoPromedio }}</td>
+                    <td>{{ densidadPonderada }}</td>
                 </tr>
             </tbody>
-    </table>
-
-
-    
+    </table>  
 </div>
 
 </div>
