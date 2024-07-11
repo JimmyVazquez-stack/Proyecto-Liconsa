@@ -28,5 +28,5 @@ urlpatterns = [
     path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
     path('encabezador49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
     path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
-
+    path('pesonetor49_list/', Pesonetoview.as_view(), name='pesoNetor49_list'),
 ]
