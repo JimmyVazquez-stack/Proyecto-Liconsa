@@ -35,68 +35,61 @@
                   <form id="formulario" action="" method="post">
                     {% csrf_token %}
                     {{ encab_form.as_p }}
-
                     <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
-                      <thead class="thead-light" style="font-size: 14px">
-                        <tr>
-
-                          <th>Id</th>
-                          <th>lotCad</th>
-                          <th>planta</th>
-                          <th>turno</th>
-                          <th>silo</th>
-                          <th>maquina</th>
-                          <th>hora</th>
-                          <th>producto</th>
-                          <th>volumen</th>
-                          <th>aspecto</th>
-                          <th>sabor</th>
-                          <th>olor</th>
-                          <th>temperatura</th>
-                          <th>acidez</th>
-                          <th>densidad</th>
-                          <th>sg</th>
-                          <th>sng</th>
-                          <th>st</th>
-                          <th>proteina</th>
-
-
-                        </tr>
-
-                      </thead>
-                      <tbody id="formularios-body" style="font-size: 14px">
-                        {{ termformset.management_form }}
-                        {% for form in termformset %}
-                        
-                        <tr>
-                          <td>{{ form.id }}</td>
-                          <td>{{ form.lotCad }}</td>
-                          <td>{{ form.planta }}</td>
-                          <td>{{ form.turno }}</td>
-                          <td>{{ form.silo }}</td>
-                          <td>{{ form.maquina }}</td>
-                          <td>{{ form.hora }}</td>
-                          <td>{{ form.producto }}</td>
-                          <td>{{ form.volumen }}</td>
-                          <td>{{ form.aspecto }}</td>
-                          <td>{{ form.sabor }}</td>
-                          <td>{{ form.olor }}</td>
-                          <td>{{ form.temperatura }}</td>
-                          <td>{{ form.acidez }}</td>
-                          <td>{{ form.densidad }}</td>
-                          <td>{{ form.sg }}</td>
-                          <td>{{ form.sng }}</td>
-                          <td>{{ form.st }}</td>
-                          <td>{{ form.proteina }}</td>
-
-
-                        </tr>
-                        {% endfor %}
-                      </tbody>
+                        <thead class="thead-light" style="font-size: 14px">
+                            <tr>
+                                <th>Id</th>
+                                <th>lotCad</th>
+                                <th>planta</th>
+                                <th>turno</th>
+                                <th>silo</th>
+                                <th>maquina</th>
+                                <th>hora</th>
+                                <th>producto</th>
+                                <th>volumen</th>
+                                <th>aspecto</th>
+                                <th>sabor</th>
+                                <th>olor</th>
+                                <th>temperatura</th>
+                                <th>acidez</th>
+                                <th>densidad</th>
+                                <th>sg</th>
+                                <th>sng</th>
+                                <th>st</th>
+                                <th>proteina</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formularios-body" style="font-size: 14px">
+                            {{ terminado_formset.management_form }}
+                            {% for form in terminado_formset %}
+                            <tr>
+                                <td>{{ form.id }}</td>
+                                <td>{{ form.lotCad }}</td>
+                                <td>{{ form.planta }}</td>
+                                <td>{{ form.turno }}</td>
+                                <td>{{ form.silo }}</td>
+                                <td>{{ form.maquina }}</td>
+                                <td>{{ form.hora }}</td>
+                                <td>{{ form.producto }}</td>
+                                <td>{{ form.volumen }}</td>
+                                <td>{{ form.aspecto }}</td>
+                                <td>{{ form.sabor }}</td>
+                                <td>{{ form.olor }}</td>
+                                <td>{{ form.temperatura }}</td>
+                                <td>{{ form.acidez }}</td>
+                                <td>{{ form.densidad }}</td>
+                                <td>{{ form.sg }}</td>
+                                <td>{{ form.sng }}</td>
+                                <td>{{ form.st }}</td>
+                                <td>{{ form.proteina }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                     <button type="submit" class="btn btn-success">Guardar</button>
                     <a href="{% url 'laboratorio_control_calidad:TerminadoList' %}" class="btn btn-danger">Cancelar</a>
-                  </form>
+                </form>
+                
                 </div>
               </div>
             </div>
