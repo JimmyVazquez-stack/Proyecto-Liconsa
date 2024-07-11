@@ -71,7 +71,7 @@
                     <th>S.G. g/l</th>
                     <th>S.N.G. g/l</th>
                     <th>S.T. g/l</th>                  
-                    <th>proteina</th>
+                    <th>PROTEINA</th>
 
                 </tr>
 
@@ -81,7 +81,7 @@
                 {% for dato in datos %}
                 <tr style="text-align: center;">
                 
-                    <td>{{ dato.lotCad }}{{ dato.planta }}{{ dato.turno }}{{ dato.silo }}{{ dato.maquina }}{{ dato.hora }}</td>
+                    <td>LOTE CAD{{ dato.lotCad }}{{ dato.planta }}{{ dato.turno }}{{ dato.silo }}{{ dato.maquina }}{{ dato.hora }}</td>
                     <td>{{ dato.producto }}</td>
                     <td>{{ dato.volumen }}</td>
                     <td>{{ dato.aspecto }}</td>
