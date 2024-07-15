@@ -51,14 +51,14 @@
                                     Registro</a>
 
                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
-                                        Generar Reporte Semanal/Mensual
-                                      </button>
+                                        Generar Reporte Rango de Fechas
+                                    </button>
                                 
                                     
 
                                 <div id="example_filter"></div>
                             </div>
-                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="leche_reconstituida" aria-describedby="example1_info">
                                 <thead class="thead-light" style="font-size: 14px">
                                     <tr>
                                         <th>Folio</th>
@@ -78,6 +78,7 @@
                                         <td>
                                             <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Update' item.id %}"><i class="fa fa-pencil"></i></a>
                                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-info" href="{% url 'reportes:reporte_Rx50' item.id %}"><i class="far fa-file-pdf"></i></a>
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -102,7 +103,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="{% url 'reportes:reporte_mensual' %}">
+        <form method="get" action="{% url 'reportes:reporte_Rx50' 1 %}">
         <div class="modal-body">
             {% csrf_token %}
             <div class="form-group">
@@ -112,6 +113,14 @@
             <div class="form-group">
                 <label for="fecha-final">Fecha Final</label>
                 <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+            </div>
+            <div class="form-group">
+                <label for="producto">Producto</label>
+                <select class="form-control" id="producto" name="producto" required>
+                    <option value="todos">Todos</option>
+                    <option value="1">LPD</option>
+                    <option value="2">MLGVRG</option>
+                </select>
             </div>
         </div>
         <div class="modal-footer justify-content-between">
@@ -124,6 +133,7 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
 
 {%endblock%} 
 {% endblock %} 
@@ -159,7 +169,7 @@
 </script>  
 <script>
     $(document).ready(function() {
-        $('#example1').DataTable({
+        $('#leche_reconstituida').DataTable({
             responsive: true,
             retrieve: true,
         });

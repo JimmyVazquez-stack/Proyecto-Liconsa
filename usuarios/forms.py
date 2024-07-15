@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Usuario
-from catalogos.models import Area
+from .models import Area
 
 class UserChangeForm(forms.ModelForm):
     grupo = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, label='Grupo')
@@ -62,3 +62,21 @@ class UserCreationForm(forms.ModelForm):
 '''
 En este archivo se definen los formularios que se utilizarán para la creación y modificación de usuarios en el sistema.
 '''
+class EditarUsuarioForm(forms.ModelForm):
+    class Meta:
+            model = Usuario
+            fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'area']
+            # Si 'grupo' es un campo del modelo Usuario, asegúrate de incluirlo aquí
+            # fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'area', 'grupo']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            # Manejo personalizado del campo 'grupo' después de guardar el usuario
+            grupo = self.cleaned_data.get('grupo')  # Usa .get para evitar KeyError si 'grupo' no está presente
+            if grupo:
+                user.groups.set([grupo])
+            else:
+                user.groups.clear()
+        return user

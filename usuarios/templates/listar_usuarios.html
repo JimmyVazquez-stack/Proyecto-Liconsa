@@ -1,15 +1,137 @@
-{% extends 'base.html   '%}
+  {% extends 'base.html' %}
+  {% load static %}
+  {%block title %} Listado de usuarios {% endblock %}
 
-{% block title %}
-{% endblock %}
+  {% block principal %}
 
-{% block catalogos %}
-  {{ block.super }}  <!-- Esto incluirá el contenido original del bloque catalogos de base.html -->
-  <!-- Aquí puedes añadir contenido adicional específico para esta vista, si es necesario -->
-{% endblock catalogos %}
+  {% block datatable %}
+  <div class="container-fluid p-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
+            <h3 class="card-title">Listado de usuarios</h3>
+          </div>
+          <div class="card-body bg-light">
+            <div class="col-xl-12 mt-3 p-3">
+              <a href="{% url 'usuarios:crear_usuario'%}" class="btn btn-primary mb-4">+ Añadir Usuario</a>              <!-- Mantener este div table-responsive aquí -->
+              <div class="table-responsive">
+                <table id="listar_usuarios" class="table table-bordered bg-light table-hover" style="width:100%;">
+                  <thead class="thead-light" style="font-size: 14px;">
+                    <tr>
+                      <th>Usuario</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Correo</th>
+                      <th>Teléfono</th>
+                      <th>Área</th>
+                      <th>Grupo</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </thead>
+                  <tfoot style="font-size: 14px;">
+                    <tr>
+                      <th>Usuario</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>Correo</th>
+                      <th>Teléfono</th>
+                      <th>Área</th>
+                      <th>Grupo</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <a href="{% url 'laboratorio_control_calidad:index' %}" class="btn btn-secondary mt-3">Regresar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal para editar usuario -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Usuario</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- El formulario se cargará aquí -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal de Eliminación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Está seguro de que desea eliminar el usuario: <span id="userNameToDelete"></span>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {%endblock%}
+<!-- Modal de Éxito para ususario registrado -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">Registro Exitoso</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Cerrar">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              El usuario ha sido registrado correctamente.
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 
-{% block principal %}
-{% endblock %}
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<script src="{% static 'js/modal_success.js' %}">
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
 
+<script>
+  var usuarioAutenticadoUsername = "{{ usuario_autenticado_username }}";
+</script>
 
+  {% endblock %}
+
+  {% block javascript %}
+  {{ block.super }}
+  
+  <script src="{% static 'js/datatables/listar_usuarios.js' %}"></script>
+  
+
+  {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario
+from .models import Usuario, Area
 
 
 class UsuarioAdmin(UserAdmin):
@@ -27,3 +27,4 @@ class UsuarioAdmin(UserAdmin):
     get_groups.short_description = 'Grupos'
     
 admin.site.register(Usuario, UsuarioAdmin)
+admin.site.register(Area)

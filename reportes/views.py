@@ -11,6 +11,9 @@ from reportlab.graphics import renderPDF
 from svglib.svglib import svg2rlg
 from reportlab.pdfgen.canvas import Canvas
 import os
+from django.db.models import Avg, Min, Max, Count, Sum, F, FloatField
+from django.shortcuts import render
+from django.views import View
 
 class PDFGeneratorView(View):
     def get(self, request, *args, **kwargs):
@@ -228,55 +231,98 @@ class PDFGeneratorView(View):
 
 
 
-"""
-from django.db.models import Avg, Min, Max, Count
-from django.shortcuts import render
-from django.views import View
-from .models import ComposicionFisioquimica, PuntosDeEvaluacion
-import datetime
 
-class ReporteMensualView(View):
+from laboratorio_control_calidad.models import *
+from catalogos.models import *
+
+
+
+class ReporteRX50(View):
     def get(self, request, *args, **kwargs):
-        # Define el mes y año para el reporte, por ejemplo, marzo de 2023
-        año_reporte = 2023
-        mes_reporte = 3
+        pk = kwargs.get('pk')
+        fecha_inicial = request.GET.get('fecha-inicial')
+        fecha_final = request.GET.get('fecha-final')
+        producto = request.GET.get('producto')
 
-        # Calcula el primer momento del mes (inicio del día 1)
-        inicio_mes = datetime.datetime(año_reporte, mes_reporte, 1)
-        # Calcula el inicio del siguiente mes y resta un segundo para obtener el último momento del mes reportado
-        fin_mes = datetime.datetime(año_reporte, mes_reporte + 1, 1) - datetime.timedelta(seconds=1)
-
-        # Obtén todos los productos
-        productos = PuntosDeEvaluacion.objects.all()
-
-        # Calcula las métricas para cada producto dentro del rango de fechas y horas
-        datos = []
-        for producto in productos:
-            metricas_producto = ComposicionFisioquimica.objects.filter(
-                nombre=producto,
-                fecha__range=(inicio_mes, fin_mes)  # Asume que `fecha` es el campo de fecha y hora en ComposicionFisioquimica
-            ).aggregate(
-                numero_muestras=Count('id'),
-                volumen_promedio=Avg('volumen'),
-                volumen_minimo=Min('volumen'),
-                volumen_maximo=Max('volumen'),
-
-                temperatura_promedio=Avg('temperatura'),  # Corrige el error tipográfico aquí
-                temperatura_minimo=Min('temperatura'),
-                temperatura_maximo=Max('temperatura'),
-                
-                densidad_promedio=Avg('densidadgml'),
-                densidad_minimo=Min('densidadgml'),
-                densidad_maximo=Max('densidadgml'),
-
-                grasas_promedio=Avg('grasasgl'),
-                grasas_minimo=Min('grasasgl'),
-                grasas_maximo=Max('grasasgl'),
-
-                # Continúa con el resto de tus métricas...
-            )
-            datos.append(metricas_producto)
+        # Inicializa rango_fechas y rango_folios como None
+        rango_fechas = None
+        rango_folios = None
         
-        # Renderiza tus datos como necesites
-        return render(request, 'tu_template.html', {'datos': datos})
-"""
+        # Si se proporcionan fechas y tipo de producto, filtrar en consecuencia
+        if fecha_inicial and fecha_final and producto:
+            if producto == "todos":
+                silos_datos = LecheReconsSilos.objects.filter(
+                    fecha_Hora__range=[fecha_inicial, fecha_final]
+                )
+            else:
+                silos_datos = LecheReconsSilos.objects.filter(
+                    fecha_Hora__range=[fecha_inicial, fecha_final],
+                    producto=producto
+                )
+            encabezado_datos = LecheReconsSilosEncab.objects.filter(
+                lechereconssilos__in=silos_datos
+            ).distinct()
+
+            rango_fechas = LecheReconsSilos.objects.filter(
+                fecha_Hora__range=[fecha_inicial, fecha_final]
+            ).aggregate(
+                fecha_inicial=Min('fecha_Hora'),
+                fecha_final=Max('fecha_Hora')
+            )
+            
+            rango_folios = LecheReconsSilosEncab.objects.filter(
+                lechereconssilos__in=silos_datos
+            ).aggregate(
+                folio_inicial=Min('folio'),
+                folio_final=Max('folio')
+            )
+
+        else:
+            # Usar el pk para obtener los datos de encabezado y el detalle de los silos
+            encabezado_datos = LecheReconsSilosEncab.objects.filter(pk=pk)
+            silos_datos = LecheReconsSilos.objects.filter(encabezado=pk)
+
+
+        # Calcular las fórmulas globales
+        formulas_globales = silos_datos.aggregate(
+            numero_muestras=Count('id'),
+            sum_Volumen=Sum('volumen'),
+            temperatura_Promedio=Sum(F('volumen') * F('temperatura'), output_field=FloatField()) / Sum('volumen'),
+            densidad_Promedio=Sum(F('volumen') * F('densidad'), output_field=FloatField()) / Sum('volumen'),
+            s_g_w_v_Promedio=Sum(F('volumen') * F('s_g_w_v'), output_field=FloatField()) / Sum('volumen'),
+            s_n_g_Stsg_wv_Promedio=Sum(F('volumen') * F('s_n_g_Stsg_wv'), output_field=FloatField()) / Sum('volumen'),
+            proteina_Promedio=Sum(F('volumen') * F('proteina'), output_field=FloatField()) / Sum('volumen'),
+        )
+        
+        # Calcular las fórmulas por tipo de producto si se seleccionó "Todos"
+        formulas_por_producto = {}
+        tipos_productos = Producto.objects.all()  # Obtener todos los tipos de producto
+        for tipo_producto in tipos_productos:
+            datos_producto = silos_datos.filter(producto=tipo_producto)
+            formulas_producto = datos_producto.aggregate(
+                numero_muestras=Count('id'),
+                sum_Volumen=Sum('volumen'),
+                temperatura_Promedio=Sum(F('volumen') * F('temperatura'), output_field=FloatField()) / Sum('volumen'),
+                densidad_Promedio=Sum(F('volumen') * F('densidad'), output_field=FloatField()) / Sum('volumen'),
+                s_g_w_v_Promedio=Sum(F('volumen') * F('s_g_w_v'), output_field=FloatField()) / Sum('volumen'),
+                s_n_g_Stsg_wv_Promedio=Sum(F('volumen') * F('s_n_g_Stsg_wv'), output_field=FloatField()) / Sum('volumen'),
+                proteina_Promedio=Sum(F('volumen') * F('proteina'), output_field=FloatField()) / Sum('volumen'),
+                )
+            formulas_por_producto[tipo_producto.nombre] = formulas_producto
+
+      
+        context = {
+            'encabezado_datos': encabezado_datos.order_by('folio'),
+            'datos': silos_datos.order_by('encabezado'),
+            'producto_seleccionado': producto,
+            'formulas_globales': formulas_globales,
+            'formulas_por_producto': formulas_por_producto,
+            }
+        
+        if rango_fechas:
+            context['rango_fechas'] = rango_fechas
+        if rango_folios:
+            context['rango_folios'] = rango_folios
+
+        return render(request, 'reporte_Rx50.html', context)
+
