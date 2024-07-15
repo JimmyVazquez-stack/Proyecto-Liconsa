@@ -42,6 +42,14 @@
   <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
+
+
 
   <script src="https://unpkg.com/feather-icons"></script>
   {%endblock%}
@@ -488,6 +496,15 @@
                   <a href="{% url 'laboratorio_control_calidad:verificacion_documentos' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Verificación de documentos</p>
+                  </a>
+                </li>
+
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:TerminadoList' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>TX-HP-910-01-R51</p>
                   </a>
                 </li>
 
@@ -1852,6 +1869,45 @@
   <!-- <script src="{% static 'js/demo.js'%}"></script> -->
   
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
+      <!-- Page specific script -->
+      <script>  
+        $(function() {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+            $('#example3').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+    <script>
+        if (screen.width > 800) {
+            document.getElementById('example2').id = '';
+            document.getElementById('example3').id = '';
+            console.log("cx")
+        }
+    </script>
+
 
   <script>
     feather.replace()

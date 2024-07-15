@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import ReporteMensualView
+from .views import PDFGeneratorView
 
 app_name = 'reportes'   
 
 urlpatterns = [
-    path('reporte-mensual/', ReporteMensualView.as_view(), name='reporte_mensual')
+    path('reporte-mensual/', PDFGeneratorView.as_view(), name='reporte_mensual')
 ]
