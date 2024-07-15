@@ -82,6 +82,7 @@ class LecheReconsSilosEncab(models.Model):
     periodo_Fin = models.DateField(default=timezone.now)
     observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
 from django.utils import timezone 
+from catalogos.models import *
 
 # Create your models here.
 class terminadoEncab(models.Model):
@@ -114,32 +115,28 @@ class LecheReconsSilos(models.Model):
     def __str__(self):
        return f"Encabezado_Id: {self.encabezado}, Hora: {self.fecha_Hora}, Producto: {self.producto}, Volumen: {self.volumen}"
 class producto_terminado(models.Model):
-    lotCad = models.CharField(blank=True, max_length=10)
-    planta = models.CharField(blank=True, max_length=10)
-    turno = models.CharField(blank=True, max_length=10)
-    silo_choice = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), ]
-    silo = models.IntegerField(choices=silo_choice, blank=True, null=True)
-    maquina = models.CharField(blank=True, max_length=10)
+    lotCad = models.CharField(max_length=10)
+    planta = models.ForeignKey(Planta, max_length=10, on_delete=models.CASCADE)
+    turno = models.ForeignKey(Turno, max_length=10, on_delete=models.CASCADE)
+    silo = models.ForeignKey(Silo, on_delete=models.CASCADE)
+    maquina = models.ForeignKey(Maquina, max_length=10, on_delete=models.CASCADE)
     hora = models.TimeField(default=timezone.now)
-    producto_choice = [(1, 'LPD'),(2, 'MLGVRG'),(3, 'FRISIA'),]
-    producto = models.IntegerField(choices=producto_choice, blank=True, null=True)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     volumen = models.FloatField(default=0.0)
-    aspecto = models.CharField(blank=True, max_length=30)
-    sabor_choice = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'),]
-    sabor = models.IntegerField(choices=sabor_choice, blank=True, null=True)
-    olor_choice = [(1, '1'), (2, '2'),(3, '3'),(4, '4'),(5, '5'),]
-    olor = models.IntegerField(choices=olor_choice, blank=True, null=True)
-    temperatura =models.FloatField(default=0.0)
-    acidez =models.FloatField(default=0.0)
+    choice = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')]
+    aspecto = models.IntegerField(choices=choice)
+    sabor = models.IntegerField(choices=choice,null=True)
+    olor = models.IntegerField(choices=choice,null=True)
+    temperatura = models.FloatField(default=0.0)
+    acidez = models.FloatField(default=0.0)
     densidad = models.FloatField(default=0.0)
     sg = models.FloatField(default=0.0)
     sng = models.FloatField(default=0.0)
     st = models.FloatField(default=0.0)
     proteina = models.FloatField(default=0.0)
-    encabezado = models.ForeignKey(terminadoEncab,on_delete=models.CASCADE,)
+    encabezado = models.ForeignKey(terminadoEncab, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "%s %s %s %s" % (self.producto, self.volumen, self.aspecto, self.sabor)
-
+        return f"Encabezado_Id: {self.encabezado}, Hora: {self.hora}, Producto: {self.producto}, Volumen: {self.volumen}"
 
  

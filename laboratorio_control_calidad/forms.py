@@ -100,21 +100,13 @@ class TerminadoEncabForm(forms.ModelForm):
     
     class Meta:
         model = terminadoEncab
-        fields = fields = [
-            'folio',
-            'fecha',
-            ]
-        labels = {
-            'folio': 'Folio',
-            'fecha': 'Fecha',}
-        widget = {
-            'folio': forms.TextInput(),
-            'fecha': forms.DateInput(attrs={'type':'date'}),}
-        
+        exclude = ('estatus',)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({'class': 'form-control'})
+            self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
 class TerminadoForm(forms.ModelForm):
     

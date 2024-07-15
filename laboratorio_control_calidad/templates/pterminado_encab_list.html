@@ -67,6 +67,7 @@
                     <th>Fecha</th>
                     <th>Opciones</th>
                     <th>Permisos</th>
+                   
 
                   </tr>
                 </thead>
@@ -83,6 +84,8 @@
                       <a class="btn btn-danger"
                         href="{% url 'laboratorio_control_calidad:Terminado_delete' item.id %}"><i
                           class="fa fa-trash"></i></a>
+                      <a class="btn btn-primary" href="{% url 'reportes:reporte_Rx51' item.id%}"><i
+                          class="fa fa-file-alt"></i></a>
                     </td>
                     {%else%}
                     <td>
@@ -91,6 +94,8 @@
                       <a class="btn btn-danger"
                         href="{% url 'laboratorio_control_calidad:TerminadoList' %}"><i
                           class="fa fa-trash"></i></a>
+                      <a class="btn btn-primary" href="{% url 'reportes:reporte_Rx51' item.id%}"><i
+                          class="fa fa-file-alt"></i></a>
                     </td>
                     {% endif %}
 
@@ -101,9 +106,10 @@
                     <td><a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:modificar' item.id %}" role="button">
                       <i class="fa fa-times"></i></a> </td></a></td>
                     {% endif %}
-
+                    
                   </tr>
                   {% endfor %}
+                  
                 </tbody>
                 </th>
                 </tr>
