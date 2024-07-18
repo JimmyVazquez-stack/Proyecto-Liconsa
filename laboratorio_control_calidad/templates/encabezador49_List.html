@@ -47,7 +47,7 @@
                                     Registro</a>
 
                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
-                                        Generar Reporte Semanal/Mensual
+                                        Generar Reporte Diario/Semanal
                                       </button>
                                 
                                     
@@ -60,6 +60,7 @@
                                         <th>ID</th>
                                         <th>Fecha Hora</th>
                                         <th>Observaciones</th>
+                                        <th>Peso Neto</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
@@ -70,8 +71,13 @@
                                         <td>{{item.fecha}}</td>
                                         <td>{{item.observaciones}}</td>
                                         <td>
+                                            <a class="btn btn-danger" href="{#}"><i class="fa fa-balance-scale"></i></a>
+                                        </td>
+                                        <td>
                                             <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49_update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'reportes:reporte_Volumen_Neto' %}"><i class="fa fa-file-alt"></i></a>
                                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            
                                         </td>
                                     </tr>
                                     {% endfor %}
