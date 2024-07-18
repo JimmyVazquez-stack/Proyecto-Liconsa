@@ -249,58 +249,7 @@ class Pesonetoview(LoginRequiredMixin, TemplateView):
 # END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
 
 
-#START--CALCULOS PARA OBTENER PESO NETO -----------------------------------------------------|
 
-class Pesonetoview(View):
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get('pk') # Asumiendo que el pk se pasa como un argumento en la URL
-        datosEncabezado = EncabTablaR49.objects.filter(pk=pk)
-        datosDensidad = Densidadpt.objects.filter(encabezado=pk)
-        datosPesoBruto = Pesobruto.objects.filter(encabezado=pk)
-        datosPesoEnvVacio = Pesoenvvacio.objects.filter(encabezado=pk)
-        
-
-        calculos = datosPesoEnvVacio.aggregate(
-              pesoPromedio=Avg('peso'),
-        )
-        
-        # Calcular la suma del producto de densidad y volumen
-        producto_sum = datosDensidad.aggregate(
-            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
-        )
-
-        # Calcular la suma de volumen
-        volumen_sum = datosDensidad.aggregate(
-            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=10, decimal_places=4))
-        )
-
-        # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
-        densidad_ponderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
-
-        calculos2 = {
-            'densidadPonderada': densidad_ponderada
-        }
-
-        #calculos2 = datosDensidad.aggregate(
-         #     densidadPonderada= Sum(F('densidad')* Decimal('volumen'), output_field=DecimalField(max_digits=5, decimal_places=4)/ Sum('volumen')),
-        #)
-        
-         # Obtener el valor del peso bruto
-        
-
-
-
-
-        # Renderizar a la plantilla con los datos calculados
-        context = {
-            'datosEncabezado': datosEncabezado,
-            'datosDensidad': datosDensidad,
-            'datosPesoBruto': datosPesoBruto,
-            'datosPesoEnvVacio': datosPesoEnvVacio,
-            **calculos, 
-            **calculos2,
-        }
-        return render(request, 'pesoNetor49_List.html', context)
     
         
 
