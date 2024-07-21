@@ -92,7 +92,7 @@ class TerminadoUpdate(generic.UpdateView):
 class TerminadoEncabView(generic.ListView):
     model = terminadoEncab
     queryset = terminadoEncab.objects.all()
-    template_name = 'pterminado_encab_list.html'
+    template_name = 'producto_terminado/pterminado_encab_list.html'
     context_object_name = 'terminadoEncab'
 
 class TerminadoEncabCreate(View):
@@ -101,7 +101,7 @@ class TerminadoEncabCreate(View):
     def get(self, request, *args, **kwargs):
         encab_form = TerminadoEncabForm()
         terminado_formset = TerminadoFormSet(queryset=producto_terminado.objects.none())
-        return render(request, 'producto_terminado.html', {
+        return render(request, 'producto_terminado/producto_terminado.html', {
             'encab_form': encab_form,
             'terminado_formset': terminado_formset,
         })
@@ -141,7 +141,7 @@ class TerminadoEncabUpdate(View):
         encab = get_object_or_404(terminadoEncab, pk=kwargs['pk'])
         encab_form = TerminadoEncabForm(instance=encab)
         terminado_formset = TerminadoFormSet(instance=encab)
-        return render(request, 'producto_terminado.html', {
+        return render(request, 'producto_terminado/producto_terminado.html', {
             'encab_form': encab_form,
             'terminado_formset': terminado_formset,
         })
@@ -173,14 +173,14 @@ class TerminadoEncabUpdate(View):
 
 class TerminadoDelete(generic.DeleteView):
     model = terminadoEncab
-    template_name = 'terminadoDelete.html'
+    template_name = 'producto_terminado/terminadoDelete.html'
     context_object_name = 'terminado'
     success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
     
 class permisos(generic.UpdateView):
     model = terminadoEncab
     form_class = permisosForm
-    template_name = "modificar.html"
+    template_name = "producto_terminado/modificar.html"
     success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
     login_url = reverse_lazy('usuarios:login')
    

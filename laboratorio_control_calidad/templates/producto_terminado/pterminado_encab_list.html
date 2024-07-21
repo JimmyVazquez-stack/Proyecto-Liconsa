@@ -16,7 +16,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="callout callout-info">
-                        <h5>Leche Reonstituida Por Silos Encabezado</h5>
+                        <h5>Leche Reonstituida Producto Terminado</h5>
                         <p>
                             En esta sección se presentan los resultados de los análisis de 
                             producto terminado.
@@ -47,7 +47,7 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <a href="{% url 'TerminadoList' %}" class="btn btn-primary">Nuevo
+                                <a href="{% url 'laboratorio_control_calidad:producto_terminadoCreate' %}" class="btn btn-primary">Nuevo
                                     Registro</a>
                                     
                               <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
@@ -73,8 +73,8 @@
                                         <td>{{item.folio}}</td>
                                         <td>{{item.fecha}}</td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url 'encab_update' item.id %}"><i class="fa fa-pencil"></i></a>
-                                            <a class="btn btn-danger" href="{% url 'Terminado_delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encab_update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:Terminado_delete' item.id %}"><i class="fa fa-trash"></i></a>
                                             <a class="btn btn-info" href="{% url 'reportes:reporte_Rx51' item.id %}"><i class="far fa-file-pdf"></i></a>
                                         </td>
                                     </tr>
@@ -115,8 +115,8 @@
                 <label for="producto">Producto</label>
                 <select class="form-control" id="producto" name="producto" required>
                     <option value="todos">Todos</option>
-                    <option value="1">LPD</option>
-                    <option value="2">MLGVRG</option>
+                    <option value="2">LPD</option>
+                    <option value="3">MLGVRG</option>
                 </select>
             </div>
         </div>
@@ -216,4 +216,3 @@
   
     });
 </script>
-  
