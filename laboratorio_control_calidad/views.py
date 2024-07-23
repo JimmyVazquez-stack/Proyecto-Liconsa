@@ -19,6 +19,7 @@ from django.db.models import Avg, Sum, F, DecimalField #calculos para Formator49
 from django.contrib import messages 
 from django.db import transaction
 from laboratorio_control_calidad.models import Densidadpt, Pesoenvvacio, Pesobruto, EncabTablaR49
+from .forms import *
 
 
 # Create your views here.
@@ -145,10 +146,10 @@ class Encabezador49Create(View):
                 instance.save()
             elif not form.is_valid() and self._has_data(form.cleaned_data):
                 valid = False
-                messages.error(self.request, f'Error en el formset de {formset_name}: {form.errors}')
+                messages.error(self.request, f'Error en el formset de {formset.form}: {form.errors}')
                 break
         if not valid:
-            messages.error(self.request, f'El formset de {formset_name} tiene registros incompletos.')
+            messages.error(self.request, f'El formset de {formset.form} tiene registros incompletos.')
         return valid
 
     def _has_data(self, cleaned_data):
@@ -250,10 +251,17 @@ class Pesonetoview(LoginRequiredMixin, TemplateView):
 
 
 
-    
+#prueba mostrar peso neto
+#def mostrar_pesos(request):
+#   pesos = Pesoenvvacio.objects.all()
+#  return render(request, 'pesonetor49_list.html', {'pesos': pesos})
+###   
         
 
-        
-        
+class MostrarPesosView(generic.ListView):
+    model = Pesobruto
+    queryset = Pesobruto.objects.all()
+    template_name = 'pesonetor49_list.html'
+    context_object_name = 'pesos'       
         
         
