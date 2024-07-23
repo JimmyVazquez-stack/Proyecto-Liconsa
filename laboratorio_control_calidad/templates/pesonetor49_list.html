@@ -1,8 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+
+
+ 
+{% load static %} 
+{%block title %} Formatos R49 {% endblock %}
+
+
+   
     <!-- Bootstrap CSS DT-->
     <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
     <!-- Datatables bootstrap 4 CSS -->
@@ -13,13 +16,9 @@
 <div class="header-container">
         <table>
             <tr>
-                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA </th>
+                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
             </tr>
-
-            <tr>
-                <th>PESO NETO </th>
-            </tr> 
-            
+          
         </table>
         <div class="right-image">
             <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
@@ -28,41 +27,37 @@
    
 <div class="contenedor-tablas">
 
-    {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
-    <!-- Bootstrap CSS DT-->
-    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
-    <!-- Datatables bootstrap 4 CSS -->
-    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
-</head>
-<body>
-
-
-<div class="contenedor-tablas">
-
     <table class="table table-bordered bg-light table-hover">
             <thead>
-                <tr>
-                    <th colspan="22" class="encabezado-tabla">PESO NETO</th>
-                </tr>
-                <tr>
-                    <th>Peso Promedio</th>
-                    <th>Densidad Ponderada</th>
-                </tr>
-            
-                
+                <h1>Listado de valores peso Neto (falta realizar operaciones con los tres modelos)</h1>
+                <ul>
+                    {% for peso in pesos %}
+                        <li>{{ peso.valor }}</li>
+                    {% endfor %}
+                </ul>
             </thead>
     
-            <tbody>
-                <tr>
-                    <td>{{ pesoPromedio }}</td>
-                    <td>{{ densidadPonderada }}</td>
-                </tr>
-            </tbody>
-    </table>  
-</div>
+            
+   
 
 </div>
+
+<div class="contenedor-autorizacion">
+    <div class="seccion">
+        <p>Nombre de la persona que elaboró</p>
+        <hr>
+        <p>Elaboró</p>
+    </div>
+
+    <div class="seccion">
+        <p>Nombre de la persona que autorizó</p>
+        <hr>
+        <p>Autorizó</p>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
