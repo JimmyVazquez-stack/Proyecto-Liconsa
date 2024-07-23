@@ -29,4 +29,6 @@ urlpatterns = [
     path('encabezador49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
     path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
     
+    #Para valores de peso Neto
+    path('pesonetor49_list/', MostrarPesosView.as_view(), name='pesonetor49_list'),
 ]
