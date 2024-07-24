@@ -26,20 +26,23 @@
 </div>
    
 <div class="contenedor-tablas">
-
     <table class="table table-bordered bg-light table-hover">
-            <thead>
-                <h1>Listado de valores peso Neto (falta realizar operaciones con los tres modelos)</h1>
-                <ul>
-                    {% for peso in pesos %}
-                        <li>{{ peso.valor }}</li>
-                    {% endfor %}
-                </ul>
-            </thead>
-    
-            
-   
-
+        <thead>
+            <tr>
+                <th colspan="2"><h2>Listado de valores peso Neto (falta realizar operaciones con los tres modelos)</h2></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for peso in pesos %}
+            <tr>
+                <td>{{ peso.valor - datosPesoEnvVacio / calculos2}}</td>
+                <td>{{datosPesoEnvVacio}}</td>
+                <td>{{calculos2}}</td>
+            </tr>
+            {% endfor %}
+            <td><a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:encabezador49_list' %}"><i class="fas fa-edit"></i></a></td>
+        </tbody>
+    </table>
 </div>
 
 <div class="contenedor-autorizacion">
