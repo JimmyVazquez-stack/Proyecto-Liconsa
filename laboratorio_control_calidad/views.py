@@ -243,13 +243,11 @@ class Encabezador49Delete(DeleteView):
     context_object_name = 'EncabTablaR49'
     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 
-    
+
+# END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
 
 class Pesonetoview(LoginRequiredMixin, TemplateView):
     template_name = 'pesoNetor49_list.html'
-# END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
-
-
 
 #prueba mostrar peso neto
 #def mostrar_pesos(request):
