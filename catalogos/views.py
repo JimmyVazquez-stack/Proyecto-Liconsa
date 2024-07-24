@@ -77,3 +77,19 @@ class PoblacionListView(LoginRequiredMixin,TemplateView):
 class AreaListView(LoginRequiredMixin,TemplateView):
     template_name = 'areas/listar_areas.html'
     login_url = reverse_lazy('usuarios:login')
+    
+#vistas de maquinas
+
+class MaquinaListView(LoginRequiredMixin,TemplateView):
+    template_name = 'maquinas/listar_maquinas.html'
+    login_url = reverse_lazy('usuarios:login')
+    
+#vistas de cabezales
+class CabezalListView(LoginRequiredMixin,TemplateView):
+    template_name = 'cabezales/listar_cabezales.html'
+    login_url = reverse_lazy('usuarios:login')
+    
+#vistas de plantas
+class PlantaListView(LoginRequiredMixin,TemplateView):
+    template_name = 'plantas/listar_plantas.html'
+    login_url = reverse_lazy('usuarios:login')
