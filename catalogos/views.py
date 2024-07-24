@@ -93,3 +93,18 @@ class CabezalListView(LoginRequiredMixin,TemplateView):
 class PlantaListView(LoginRequiredMixin,TemplateView):
     template_name = 'plantas/listar_plantas.html'
     login_url = reverse_lazy('usuarios:login')
+    
+#vistas de proveedores
+class ProveedorListView(LoginRequiredMixin,TemplateView):
+    template_name = 'proveedores/listar_proveedores.html'
+    login_url = reverse_lazy('usuarios:login')
+    
+#vistas de silos
+class SiloListView(LoginRequiredMixin,TemplateView):
+    template_name = 'silos/listar_silos.html'
+    login_url = reverse_lazy('usuarios:login')
+    
+#vistas de turnos
+class TurnoListView(LoginRequiredMixin,TemplateView):
+    template_name = 'turnos/listar_turnos.html'
+    login_url = reverse_lazy('usuarios:login')

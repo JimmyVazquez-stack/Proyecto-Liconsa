@@ -1,5 +1,18 @@
 from django.urls import path
-from .views import LecheriaListView, AñadirLecheriaView, LecheriaDataView, ActualizarLecheriaView, PoblacionListView, AreaListView, MaquinaListView, CabezalListView, PlantaListView
+from .views import (
+    LecheriaListView, 
+    AñadirLecheriaView, 
+    LecheriaDataView, 
+    ActualizarLecheriaView, 
+    PoblacionListView, 
+    AreaListView, 
+    MaquinaListView, 
+    CabezalListView, 
+    PlantaListView, 
+    ProveedorListView,
+    SiloListView,
+    TurnoListView,
+    )
 
 app_name = 'catalogos'
 
@@ -18,4 +31,10 @@ urlpatterns = [
     path('cabezales/list/', CabezalListView.as_view(), name='cabezales_list'),
     #rutas a plantas
     path('plantas/list/', PlantaListView.as_view(), name='plantas_list'),
+    #rutas a proveedores
+    path('proveedores/list/', ProveedorListView.as_view(), name='proveedores_list'),
+    #rutas a turnos
+    path('turnos/list/', TurnoListView.as_view(), name='turnos_list'),
+    #rutas a silos
+    path('silos/list/', SiloListView.as_view(), name='silos_list'),
     ]
