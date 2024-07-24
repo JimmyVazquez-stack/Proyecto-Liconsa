@@ -109,7 +109,7 @@ class VolumenNetoView(View):
         calculosPesoEnVacio = datosPesoEnvVacio.aggregate(
               pesoPromedio=Avg('peso'),
         )
-     
+        
         # Calcular la suma del producto de densidad y volumen
         producto_sum = datosDensidad.aggregate(
             densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=5, decimal_places=4))
@@ -150,7 +150,9 @@ class VolumenNetoView(View):
             'datosDensidad': datosDensidad,
             'datosPesoBruto': datosPesoBruto,
             'datosPesoEnvVacio': datosPesoEnvVacio,
-            'calculosEncabezado': calculosEncabezado, 
+            'calculosEncabezado': calculosEncabezado,
+            'calculosPesoEnvVacio': calculosPesoEnvVacio,
+            'calculosPesoBruto':calculosPesoBruto,
             **calculos2,
         } 
-        return render(request, 'reporte_VolumenNetoR49.html', context)
+        return render(request, ['reporte_VolumenNetoR49.html','pesonetor49_list'], context)
