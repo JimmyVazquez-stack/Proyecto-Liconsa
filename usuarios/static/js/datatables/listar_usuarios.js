@@ -78,6 +78,8 @@ $('.btn-editar').on('click', function() {
   });
 });
 
+
+
 // Manejar clic en botón de guardar cambios en el modal de editar
 $('#editModal .btn-primary').on('click', function() {
   var userId = $('#editForm').data('userid'); // Asegúrate de que el formulario tenga un atributo data-userid
