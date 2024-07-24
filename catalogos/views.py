@@ -64,3 +64,16 @@ class ActualizarLecheriaView(View):
         
         lecheria.save()
         return JsonResponse(model_to_dict(lecheria), safe=False)
+    
+    
+#Vistas de poblaciones
+
+class PoblacionListView(LoginRequiredMixin,TemplateView):
+    template_name = 'poblaciones/listar_poblaciones.html'
+    login_url = reverse_lazy('usuarios:login')
+
+#vistas de áreas}
+
+class AreaListView(LoginRequiredMixin,TemplateView):
+    template_name = 'areas/listar_areas.html'
+    login_url = reverse_lazy('usuarios:login')
