@@ -9,11 +9,7 @@ admin.site.register(Ruta)
 admin.site.register(Poblacion)
 admin.site.register(Rotos)
 
-#Modelos FormatoR49
-admin.site.register(Densidadpt)
-admin.site.register(Pesoenvvacio)
-admin.site.register(Pesobruto)
-admin.site.register(EncabTablaR49)
+
 
 # admin.site.register(Pesoneto)
 admin.site.register(Area)
