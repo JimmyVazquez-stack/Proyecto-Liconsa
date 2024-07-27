@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
     <!-- Datatables bootstrap 4 CSS -->
     <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+    
+    <!-- Script para datos de json calculos R49 Juan Carlos -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 
@@ -28,36 +32,50 @@
 <div class="contenedor-tablas">
     <table class="table table-bordered bg-light table-hover">
         <thead>
+            <h2>Listado de valores peso Neto</h2>
             <tr>
-                <th colspan="2"><h2>Listado de valores peso Neto (falta realizar operaciones con los tres modelos)</h2></th>
+                <th>>Resultados Peso Neto</th>
             </tr>
         </thead>
         <tbody>
-            {% for peso in pesos %}
+            <!-- {% for peso in pesos %}
             <tr>
-                <td>{{ peso.valor - datosPesoEnvVacio / calculos2}}</td>
-                <td>{{datosPesoEnvVacio}}</td>
-                <td>{{calculos2}}</td>
+                <td>{{ peso.valor }}</td>
             </tr>
-            {% endfor %}
-            <td><a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:encabezador49_list' %}"><i class="fas fa-edit"></i></a></td>
+            {% endfor %} -->
+             
+        
+            
+
         </tbody>
     </table>
+     <!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Agregar la fila con los datos obtenidos
+                    $('#reportTable').DataTable({
+                        data: [
+                            [
+                                
+                                data.resultadoOperacion
+                            ]
+                        ],
+                        columns: [
+                            
+                            { title: "Resultado Operación" }
+                        ]
+                    });
+                }
+            });
+        });
+    </script>
 </div>
 
-<div class="contenedor-autorizacion">
-    <div class="seccion">
-        <p>Nombre de la persona que elaboró</p>
-        <hr>
-        <p>Elaboró</p>
-    </div>
-
-    <div class="seccion">
-        <p>Nombre de la persona que autorizó</p>
-        <hr>
-        <p>Autorizó</p>
-    </div>
-</div>
 
 </body>
 </html>
