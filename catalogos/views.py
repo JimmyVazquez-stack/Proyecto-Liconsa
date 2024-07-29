@@ -3,10 +3,10 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import LecheriaForm
-from .models import Lecheria, Ruta, Poblacion
+from .models import Lecheria, Ruta, Poblacion, Area, Maquina
 from django.http import JsonResponse
 from django.views import View
-from django.db.models import F
+from django.db.models import F 
 from django.forms.models import model_to_dict
 import json
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -71,12 +71,38 @@ class ActualizarLecheriaView(View):
 class PoblacionListView(LoginRequiredMixin,TemplateView):
     template_name = 'poblaciones/listar_poblaciones.html'
     login_url = reverse_lazy('usuarios:login')
+    
+    
 
-#vistas de áreas}
+
+class DataPoblacionView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def get(self, request, *args, **kwargs):
+        poblaciones = Poblacion.objects.annotate(
+            nombre_poblacion=F('nombre'),
+            municipio_poblacion=F('municipio'),
+            estado_poblacion=F('estado')
+        ).values('id', 'nombre_poblacion', 'municipio_poblacion', 'estado_poblacion')
+        
+        poblaciones_list = list(poblaciones)
+        return JsonResponse(poblaciones_list, safe=False)
+
+#vistas de áreas
 
 class AreaListView(LoginRequiredMixin,TemplateView):
     template_name = 'areas/listar_areas.html'
     login_url = reverse_lazy('usuarios:login')
+    
+class DataAreaView(LoginRequiredMixin,View):
+    login_url = reverse_lazy('usuarios:login')
+    def get(self, request, *args, **kwargs):
+        areas = Area.objects.annotate(
+            nombre_poblacion=F('poblacion__nombre'),
+            nombre_lecheria=F('lecheria__nombre')
+        ).values()  # Elimina los argumentos aquí
+        areas_list = list(areas)
+        return JsonResponse(areas_list, safe=False)
     
 #vistas de maquinas
 
@@ -84,6 +110,22 @@ class MaquinaListView(LoginRequiredMixin,TemplateView):
     template_name = 'maquinas/listar_maquinas.html'
     login_url = reverse_lazy('usuarios:login')
     
+
+class MaquinaDataView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+    
+    def get(self, request, *args, **kwargs):
+        # Obtener todos los campos del modelo Maquina
+        maquinas = Maquina.objects.annotate(
+            nombre_planta=F('planta__nombre'),
+        ).values()
+        
+        maquinas_list = list(maquinas)
+        for maquina in maquinas_list:
+            maquina['numero'] = f"Maquina-{maquina['numero']}"
+        
+        return JsonResponse(maquinas_list, safe=False)
+
 #vistas de cabezales
 class CabezalListView(LoginRequiredMixin,TemplateView):
     template_name = 'cabezales/listar_cabezales.html'
