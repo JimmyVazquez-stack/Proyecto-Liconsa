@@ -100,8 +100,8 @@ class Maquina(models.Model):
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
     
 
-    def __str__(self):
-        return f"Maquina {self.numero} "
+    def __str__(self):  
+        return f"Maquina {self.numero} - {self.planta} "
     
     class Meta:
         verbose_name_plural = "Maquinas"
