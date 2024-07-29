@@ -7,11 +7,13 @@ from .views import (
     PoblacionListView, 
     AreaListView, 
     MaquinaListView, 
+    MaquinaDataView,
     CabezalListView, 
     PlantaListView, 
     ProveedorListView,
     SiloListView,
     TurnoListView,
+    DataPoblacionView,
     )
 
 app_name = 'catalogos'
@@ -23,10 +25,12 @@ urlpatterns = [
     path('actualizar_lecheria/', ActualizarLecheriaView.as_view(), name='actualizar_lecheria'),
     #rutas a poblaciones
     path('poblaciones/list/', PoblacionListView.as_view(), name='poblaciones_list'),
+    path('poblaciones/list/data/', DataPoblacionView.as_view(), name='poblaciones_data'),
     #rutas a áreas
     path('areas/list/', AreaListView.as_view(), name='areas_list'),
     #rutas a maquinas
     path('maquinas/list/', MaquinaListView.as_view(), name='maquinas_list'),
+    path('maquinas/list/data/', MaquinaDataView.as_view(), name='maquinas_data'),
     #rutas a cabezales
     path('cabezales/list/', CabezalListView.as_view(), name='cabezales_list'),
     #rutas a plantas
