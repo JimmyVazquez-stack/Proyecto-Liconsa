@@ -1,14 +1,17 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_proveedores').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/proveedores/list/data/',
             dataSrc: ''
         },
         
         columns: [
             { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'contacto' },
+            { data: 'telefono' },
+            { data: 'correo' },
+            { data: 'nombre_planta' },
             {
                 data: null,
                 defaultContent: `

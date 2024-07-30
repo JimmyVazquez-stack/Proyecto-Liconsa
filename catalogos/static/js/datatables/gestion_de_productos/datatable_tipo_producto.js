@@ -1,8 +1,8 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_tipo_producto').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/tipo_producto/list/data/',
             dataSrc: ''
         },
         

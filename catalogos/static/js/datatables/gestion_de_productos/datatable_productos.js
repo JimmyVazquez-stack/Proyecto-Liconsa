@@ -1,14 +1,14 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_productos').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/productos/list/data/',
             dataSrc: ''
         },
         
         columns: [
             { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'nombre_tipo_producto' },
             {
                 data: null,
                 defaultContent: `

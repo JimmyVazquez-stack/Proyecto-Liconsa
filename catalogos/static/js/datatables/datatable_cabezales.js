@@ -1,14 +1,15 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_cabezales').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/cabezales/list/data/',
             dataSrc: ''
         },
         
         columns: [
             { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'numero_maquina' },
+            { data: 'planta_maquina' },
             {
                 data: null,
                 defaultContent: `

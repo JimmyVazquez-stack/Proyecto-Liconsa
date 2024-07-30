@@ -1,14 +1,16 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_silos').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/silos/list/data/',
             dataSrc: ''
         },
         
         columns: [
-            { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'numero' },
+            { data: 'capacidad' },
+            { data: 'nombre_producto' },
+            { data: 'nombre_planta' },
             {
                 data: null,
                 defaultContent: `

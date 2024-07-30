@@ -1,14 +1,17 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_plantas').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/plantas/list/data/',
             dataSrc: ''
         },
         
         columns: [
             { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'ubicacion' },
+            { data: 'correo' },
+            { data: 'contacto' },
+            { data: 'telefono' },
             {
                 data: null,
                 defaultContent: `

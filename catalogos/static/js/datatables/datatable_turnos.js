@@ -1,14 +1,26 @@
 
 $(document).ready(function() {
-    $('#tabla_area').DataTable({
+    $('#tabla_turnos').DataTable({
         ajax: {
-            url: '/catalogos/areas/list/data/',
+            url: '/catalogos/turnos/list/data/',
             dataSrc: ''
         },
         
         columns: [
             { data: 'nombre' },
             { data: 'descripcion' },
+            { data: 'hora_inicio' },
+            { data: 'hora_fin' },
+            {
+                data: 'activo',
+                render: function (data, type, row) {
+                    if (data) {
+                        return '<i class="fas fa-check-circle" style="color: green;"></i>';
+                    } else {
+                        return '<i class="fas fa-times-circle" style="color: red;"></i>';
+                    }
+                }
+            },
             {
                 data: null,
                 defaultContent: `
