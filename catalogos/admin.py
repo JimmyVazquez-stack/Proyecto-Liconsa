@@ -1,5 +1,4 @@
 from django.contrib import admin
-from laboratorio_control_calidad.models import TablaR49, Densidadpt, Pesoenvvacio, Pesobruto
 from .models import Lecheria, Ruta, Poblacion, Rotos, Producto, Planta, Proveedor, Maquina, Cabezal, Turno, Silo, TipoProducto
 from django.forms import TimeInput
 from .forms import TurnoForm
@@ -10,13 +9,6 @@ admin.site.register(Lecheria)
 admin.site.register(Ruta)
 admin.site.register(Poblacion)
 admin.site.register(Rotos)
-
-#Modelos FormatoR49
-admin.site.register(TablaR49)
-admin.site.register(Densidadpt)
-admin.site.register(Pesoenvvacio)
-admin.site.register(Pesobruto)
-# admin.site.register(Pesoneto)
 admin.site.register(Producto)
 admin.site.register(Planta)
 admin.site.register(Proveedor)

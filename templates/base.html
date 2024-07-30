@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="{% static 'css/fonts-google.css'%}">
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
-  
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{% static 'css/sweetalert/sweetalert2.min.css'%}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
     <!-- JQVMap -->
@@ -165,7 +166,7 @@
                with font-awesome or any other icon font library -->
 
             <li class="nav-header">Panel General</li>
-            {% if  es_coordinador %}
+            {% if  es_coordinador or es_staff %}
             {% block catalogos%}
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -194,17 +195,18 @@
                   </ul>
                 </li>
               </ul> -->
-              <ul class="nav nav-treeview">
+              <!-- Codigo para registrar usuarios en catalogos menu -->
+              <!-- <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'usuarios:listar_usuarios'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Usuarios</p>
                   </a>
                 </li>
-              </ul>
+              </ul> -->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:areas_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Áreas</p>
                   </a>
@@ -221,7 +223,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:maquinas_list' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Maquinas</p>
                   </a>
@@ -230,7 +232,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:cabezales_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Cabezales</p>
                   </a>
@@ -238,7 +240,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{%  url 'catalogos:plantas_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Plantas</p>
                   </a>
@@ -246,7 +248,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:poblaciones_list' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Poblaciones</p>
                   </a>
@@ -264,7 +266,7 @@
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="{% url 'catalogos:productos_list'%}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Productos</p>
                       </a>
@@ -273,7 +275,7 @@
                   </ul>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="{% url 'catalogos:tipo_producto_list'%}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
                         <p>Tipo de producto</p>
                       </a>
@@ -284,7 +286,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:proveedores_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Proveedores</p>
                   </a>
@@ -292,7 +294,7 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:silos_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Silos</p>
                   </a>
@@ -300,9 +302,17 @@
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'catalogos:turnos_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Turnos</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:rutas_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Rutas</p>
                   </a>
                 </li>
               </ul>
@@ -1892,6 +1902,8 @@
   {% block javascript%}
   <!-- jQuery -->
   <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <!-- Datatables -->
@@ -1912,30 +1924,13 @@
   <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
   <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
 
-  <!-- Script para el sidebar de opcion elegida-->
-  <script>
-    $(document).ready(function () {
-      // Comprueba si hay un estado guardado en el almacenamiento local
-      var sidebarState = localStorage.getItem('sidebarState');
-      if (sidebarState) {
-        // Si hay un estado guardado, úsalo para establecer el estado del sidebar
-        $('#sidebar').attr('class', sidebarState);
-      }
-
-      // Cuando se haga clic en una opción del sidebar, guarda el estado actual del sidebar
-      $('#sidebar .nav-link').on('click', function () {
-        localStorage.setItem('sidebarState', $('#sidebar').attr('class'));
-      });
-    });
-  </script>
 
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
     $.widget.bridge('uibutton', $.ui.button)
   </script>
 
-  <!-- Bootstrap 4 -->
-  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+
   <!-- ChartJS -->
   <script src="{% static 'js/Chart.min.js'%}"></script>
   <!-- Sparkline -->
@@ -1959,6 +1954,8 @@
   
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="https://unpkg.com/feather-icons"></script>
+  <!-- SweetAlert2 -->
+  <script src="{% static 'js/sweetalert/sweetalert2.all.min.js'%}"></script>
 
       <!-- Page specific script -->
       <script>  

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Usuario
-from .models import Area
+from usuarios.models import Area
 
 class UserChangeForm(forms.ModelForm):
     grupo = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, label='Grupo')
@@ -63,11 +63,22 @@ class UserCreationForm(forms.ModelForm):
 En este archivo se definen los formularios que se utilizarán para la creación y modificación de usuarios en el sistema.
 '''
 class EditarUsuarioForm(forms.ModelForm):
+    grupo = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, label='Grupo')
     class Meta:
             model = Usuario
-            fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'area']
+            fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'area', 'grupo']
             # Si 'grupo' es un campo del modelo Usuario, asegúrate de incluirlo aquí
             # fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'area', 'grupo']
+
+    widgets = {
+        'username': forms.TextInput(attrs={'class': 'form-control'}),
+        'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+        'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+        'area': forms.Select(attrs={'class': 'form-control'}),
+        'grupo': forms.Select(attrs={'class': 'form-control'}), 
+    }
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -80,3 +91,13 @@ class EditarUsuarioForm(forms.ModelForm):
             else:
                 user.groups.clear()
         return user
+    
+    def __init__(self, *args, **kwargs):
+        super(EditarUsuarioForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # Obtiene los grupos a los que pertenece el usuario
+            grupos_usuario = self.instance.groups.all()
+            if grupos_usuario:
+                # Establece el valor inicial del campo 'grupo' con el primer grupo del usuario
+                # Asegúrate de que el campo 'grupo' en tu formulario esté esperando un ID de grupo o ajusta según sea necesario
+                self.fields['grupo'].initial = grupos_usuario.first().id
