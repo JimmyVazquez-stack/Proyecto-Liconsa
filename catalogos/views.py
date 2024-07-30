@@ -36,10 +36,9 @@ class LecheriaDataView(LoginRequiredMixin,View):
     login_url = reverse_lazy('usuarios:login')
     def get(self, request, *args, **kwargs):
         lecherias = Lecheria.objects.annotate(
-            numero_ruta=F('ruta__numero'),
+            nombre_ruta=F('ruta__nombre'),
             nombre_poblacion=F('poblacion__nombre'),
-            rotos_reportados=F('rotos__rotos_reportados')
-        ).values()  # Elimina los argumentos aquí
+            ).values()  # Elimina los argumentos aquí
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
     
