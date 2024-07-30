@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Usuario
-from catalogos.models import Area
+from usuarios.models import Area
 
 class UserChangeForm(forms.ModelForm):
     grupo = forms.ModelChoiceField(queryset=Group.objects.all(), required=False, label='Grupo')
