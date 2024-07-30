@@ -3,7 +3,8 @@
 
 
 
-{%block title %} Plantas {% endblock %}
+{%block title %} Rutas {% endblock %}
+
 
 {% block principal %}
 {% block informacion% %}
@@ -21,8 +22,8 @@
                 <div class="card-body">
 
                     <div class="callout callout-info">
-                        <h5>Registro de Plantas</h5>
-                        <p>En esta sección se presenta el listado de Plantas.</p>
+                        <h5>Registro de Rutas</h5>
+                        <p>En esta sección se presenta el listado de Rutas.</p>
                     </div>
 
                 </div>
@@ -43,7 +44,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
-                    <h3 class="card-title">Listado de Plantas</h3>
+                    <h3 class="card-title">Listado de Rutas</h3>
                 </div>
                 <div class="card-body bg-light">
                     <!-- Paginacion mensual-->
@@ -58,31 +59,25 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <button class="btn btn-primary" onclick="location.href='{% url 'catalogos:añadir_lecheria' %}';">
-                                    Añadir planta
+                                <button id="btnAddRuta" class="btn btn-primary">
+                                    Añadir Ruta
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <div id="example_filter"></div>
                             </div>
-                            <table id="tabla_plantas" class="table  table-bordered bg-light table-hover"
+                            <table id="tabla_rutas" class="table  table-bordered bg-light table-hover"
                                 style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Ubicación</th>
-                                        <th>Correo</th>
-                                        <th>Contacto</th>
-                                        <th>Teléfono</th>
+                                        <th>Número de ruta</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
                                     <tr>
                                         <th>Nombre</th>
-                                        <th>Ubicación</th>
-                                        <th>Correo</th>
-                                        <th>Contacto</th>
-                                        <th>Teléfono</th>
+                                        <th>Número de ruta</th>
                                         <th>Opciones</th>
 
                                     </tr>
@@ -96,6 +91,36 @@
     </div>
     <div class="row">
 
+    </div>
+</div>
+<!-- Modal para Añadir/Editar Ruta -->
+<div class="modal fade" id="rutaModal" tabindex="-1" role="dialog" aria-labelledby="rutaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rutaModalLabel">Añadir Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="rutaForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero">Número</label>
+                        <input type="text" class="form-control" id="numero" name="numero" required>
+                    </div>
+                    <input type="hidden" id="rutaId" name="rutaId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="saveRuta">Guardar</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -114,7 +139,9 @@
 {{ block.super }}
 
 <!-- Script para inicializar DataTables -->
-<script src="{% static 'js/datatables/datatable_plantas.js' %}"></script>
+<script src="{% static 'js/datatables/datatable_rutas.js' %}"></script>
+
+
 
 
 

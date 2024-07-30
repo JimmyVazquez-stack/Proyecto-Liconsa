@@ -43,7 +43,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
-                    <h3 class="card-title">Listado de lecherias</h3>
+                    <h3 class="card-title">Listado de Proveedores</h3>
                 </div>
                 <div class="card-body bg-light">
                     <!-- Paginacion mensual-->
@@ -58,40 +58,31 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <button class="btn btn-primary" style="font-size: 14px;"
-                                    onclick="location.href='{% url 'catalogos:añadir_lecheria'%}';">Añadir
-                                    lecheria
+                                <button class="btn btn-primary" onclick="location.href='{% url 'catalogos:añadir_lecheria' %}';">
+                                    Añadir proveedor
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <div id="example_filter"></div>
                             </div>
-                            <table id="catalogo_lecherias" class="table  table-bordered bg-light table-hover"
+                            <table id="tabla_proveedores" class="table  table-bordered bg-light table-hover"
                                 style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
-                                        <th>Ruta</th>
-                                        <th>Número de lecheria</th>
-                                        <th>Nombre de lecheria</th>
-                                        <th>Responsable</th>
+                                        <th>Nombre</th>
+                                        <th>Contacto</th>
                                         <th>Teléfono</th>
-                                        <th>Dirección</th>
-                                        <th>Número de ruta</th>
-                                        <th>Poblacion</th>
-                                        <th>Rotos reportados</th>
+                                        <th>Correo</th>
+                                        <th>Planta</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
                                     <tr>
-                                        <th>Ruta</th>
-                                        <th>Número de lecheria</th>
-                                        <th>Nombre de lecheria</th>
-                                        <th>Responsable</th>
+                                        <th>Nombre</th>
+                                        <th>Contacto</th>
                                         <th>Teléfono</th>
-                                        <th>Dirección</th>
-                                        <th>Número de ruta</th>
-                                        <th>Poblacion</th>
-                                        <th>Rotos reportados</th>
+                                        <th>Correo</th>
+                                        <th>Planta</th>
                                         <th>Opciones</th>
 
                                     </tr>
@@ -123,7 +114,7 @@
 {{ block.super }}
 
 <!-- Script para inicializar DataTables -->
-<script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+<script src="{% static 'js/datatables/datatable_proveedores.js' %}"></script>
 
 
 

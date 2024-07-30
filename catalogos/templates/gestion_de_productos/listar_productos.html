@@ -3,7 +3,7 @@
 
 
 
-{%block title %} Plantas {% endblock %}
+{%block title %} Productos {% endblock %}
 
 {% block principal %}
 {% block informacion% %}
@@ -21,8 +21,8 @@
                 <div class="card-body">
 
                     <div class="callout callout-info">
-                        <h5>Registro de Plantas</h5>
-                        <p>En esta sección se presenta el listado de Plantas.</p>
+                        <h5>Registro de Productos</h5>
+                        <p>En esta sección se presenta el listado de productos.</p>
                     </div>
 
                 </div>
@@ -43,7 +43,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
-                    <h3 class="card-title">Listado de Plantas</h3>
+                    <h3 class="card-title">Listado de Productos</h3>
                 </div>
                 <div class="card-body bg-light">
                     <!-- Paginacion mensual-->
@@ -59,30 +59,24 @@
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
                                 <button class="btn btn-primary" onclick="location.href='{% url 'catalogos:añadir_lecheria' %}';">
-                                    Añadir planta
+                                    Añadir producto
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <div id="example_filter"></div>
                             </div>
-                            <table id="tabla_plantas" class="table  table-bordered bg-light table-hover"
+                            <table id="tabla_productos" class="table  table-bordered bg-light table-hover"
                                 style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Ubicación</th>
-                                        <th>Correo</th>
-                                        <th>Contacto</th>
-                                        <th>Teléfono</th>
+                                        <th>Nombre de producto</th>
+                                        <th>Tipo de producto</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Ubicación</th>
-                                        <th>Correo</th>
-                                        <th>Contacto</th>
-                                        <th>Teléfono</th>
+                                        <th>Nombre de producto</th>
+                                        <th>Tipo de producto</th>
                                         <th>Opciones</th>
 
                                     </tr>
@@ -114,7 +108,7 @@
 {{ block.super }}
 
 <!-- Script para inicializar DataTables -->
-<script src="{% static 'js/datatables/datatable_plantas.js' %}"></script>
+<script src="{% static 'js/datatables/gestion_de_productos/datatable_productos.js' %}"></script>
 
 
 
