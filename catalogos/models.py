@@ -95,6 +95,7 @@ class Proveedor(models.Model):
 
     class Meta:
         verbose_name_plural = "Proveedores"
+        
 class Maquina(models.Model):
     numero = models.IntegerField()
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)

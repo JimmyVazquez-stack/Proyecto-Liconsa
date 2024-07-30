@@ -4,6 +4,7 @@
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
+            url: '/catalogos/lecherias/list/data/',
             url: '/producto_no_conforme/lecherias/data/',
             dataSrc: ''
         },
@@ -21,6 +22,7 @@ $(document).ready(function() {
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
         ],
+
         pageLength: 5,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         language: {
@@ -41,6 +43,13 @@ $(document).ready(function() {
             {
                 targets: -1,
                 defaultContent: "", 
+            }
+        ],
+        buttons: [
+            {
+                extend: 'pdf',
+                className: 'btn btn-success',
+                text: 'Generar PDF'
             }
         ],
     });
@@ -174,15 +183,4 @@ $(document).ready(function() {
             
         });
     });
-$(document).ready(function(){
-    $('#rotos1').DataTable ({
-        
-        ajax: {
-            url: '/producto_no_conforme/lecherias/data/',
-            dataSrc: ''
-        },
-        info: false,
-        ordering: false,
-        paging: false
-    });
-});
+

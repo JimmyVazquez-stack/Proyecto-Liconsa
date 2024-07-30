@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{%block title %} Producto Terminado {% endblock %}
+
+{% block principal %}
+{% block informacion% %}
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-xl-12 mt-1">
+      <div class="card card-default">
+        <div class="card-header bg-gray-dark">
+          <h3 class="card-title">
+            <i class="fas fa-bullhorn"></i>
+            Información
+          </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+
+          <div class="callout callout-info">
+            <h5>Producto Terminado</h5>
+            <p>En esta sección se presenta los registros del formato TX-HP-910-01-R51.</p>
+            <p>Para ver los registros en un formato, seleccione la opción que desee.</p>
+          </div>
+
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.col -->
+
+
+  </div>
+</div>
+{% endblock %}
+
+{%block datatable%}
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-gray-dark">
+          <h3 class="card-title"></h3>
+
+        </div>
+        <div class="card-body bg-light">
+          <div class="card-tools">
+            <div class="input-group-append">
+              <a href="{% url 'laboratorio_control_calidad:producto_terminadoCreate'%}"><button
+                  class="btn btn-primary"><b>Crear +</b></button></a>
+
+            </div>
+
+          </div>
+          <div class="col-xl-12 mt-3 p-3">
+            <div class="table-responsive">
+
+              <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example2"
+                aria-describedby="example1_info">
+                <thead>
+                  <tr>
+                    <th>Folio</th>
+                    <th>Fecha</th>
+                    <th>Opciones</th>
+                    <th>Permisos</th>
+                   
+
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in terminadoEncab %}
+                  <tr>
+                    <td>{{item.folio}}</td>
+                    <td>{{item.fecha}}</td>
+
+                    {% if item.estatus %}
+                    <td>
+                      <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encab_update' item.id%}"><i
+                          class="fa fa-pencil"></i></a>
+                      <a class="btn btn-danger"
+                        href="{% url 'laboratorio_control_calidad:Terminado_delete' item.id %}"><i
+                          class="fa fa-trash"></i></a>
+                      <a class="btn btn-primary" href="{% url 'reportes:reporte_Rx51' item.id%}"><i
+                          class="fa fa-file-alt"></i></a>
+                    </td>
+                    {%else%}
+                    <td>
+                      <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:TerminadoList' %}"><i
+                          class="fa fa-pencil"></i></a>
+                      <a class="btn btn-danger"
+                        href="{% url 'laboratorio_control_calidad:TerminadoList' %}"><i
+                          class="fa fa-trash"></i></a>
+                      <a class="btn btn-primary" href="{% url 'reportes:reporte_Rx51' item.id%}"><i
+                          class="fa fa-file-alt"></i></a>
+                    </td>
+                    {% endif %}
+
+                    {% if item.estatus %}
+                    <td> <a class="btn btn-success" href="{% url 'laboratorio_control_calidad:modificar' item.id %}">
+                      <i class="fa fa-pencil"></i></a> </td>
+                    {%else%}
+                    <td><a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:modificar' item.id %}" role="button">
+                      <i class="fa fa-times"></i></a> </td></a></td>
+                    {% endif %}
+                    
+                  </tr>
+                  {% endfor %}
+                  
+                </tbody>
+                </th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+
+  </div>
+</div>
+{%endblock%}
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+<!-- extension responsive -->
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+<script type="application/javascript">
+  $(function () {
+    $('.btnTest').on('click', function () {
+      $.ajax({
+        url: "{% url 'laboratorio_control_calidad:TerminadoList'%}",
+        type: 'POST',
+        data: {
+          id: 1
+        },
+        dataType: 'json'
+      }).done(function (data) {
+        console.log(data)
+      }).fail(function (data) {
+        alert("error");
+      }).always(function (data) {
+
+      })
+    });
+
+  });
+</script>
+
+
+
+<script>
+  $(document).ready(function () {
+    $('#example2').DataTable({
+      responsive: true,
+      retrieve: true,
+    });
+  });
+
+</script>
+{% endblock %}

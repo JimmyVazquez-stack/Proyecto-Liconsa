@@ -22,7 +22,6 @@ class Usuario(AbstractUser):
     class Meta:
         verbose_name_plural = "Usuarios"
         
-    
-    
 
 
+        
