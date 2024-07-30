@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Lecheria, Ruta, Poblacion, Rotos, Area, Producto, Planta, Proveedor, Maquina, Cabezal, Turno, Silo, TipoProducto
+from .models import Lecheria, Ruta, Poblacion, Rotos, Producto, Planta, Proveedor, Maquina, Cabezal, Turno, Silo, TipoProducto
 from django.forms import TimeInput
 from .forms import TurnoForm
 from django.db import models
@@ -9,7 +9,6 @@ admin.site.register(Lecheria)
 admin.site.register(Ruta)
 admin.site.register(Poblacion)
 admin.site.register(Rotos)
-admin.site.register(Area)
 admin.site.register(Producto)
 admin.site.register(Planta)
 admin.site.register(Proveedor)
