@@ -28,7 +28,16 @@ from .views import (
     RutaDataView,
     RutaCreateView,
     RutaUpdateView,
-    RutaDeleteView
+    RutaDeleteView,
+    AreaCreateView,
+    AreaUpdateView,
+    AreaDeleteView,
+    MaquinaCreateView,
+    MaquinaUpdateView,
+    MaquinaDeleteView,
+    PlantaCreateView,
+    PlantaUpdateView,
+    PlantaDeleteView
     )
 
 app_name = 'catalogos'
@@ -44,15 +53,24 @@ urlpatterns = [
     #rutas a áreas
     path('areas/list/', AreaListView.as_view(), name='areas_list'),
     path('areas/list/data/', DataAreaView.as_view(), name='areas_data'),
+    path('areas/create/', AreaCreateView.as_view(), name='crear_area'),
+    path('areas/update/<int:pk>/', AreaUpdateView.as_view(), name='actualizar_area'),
+    path('areas/delete/<int:pk>/', AreaDeleteView.as_view(), name='eliminar_area'),
     #rutas a maquinas
     path('maquinas/list/', MaquinaListView.as_view(), name='maquinas_list'),
     path('maquinas/list/data/', MaquinaDataView.as_view(), name='maquinas_data'),
+    path('maquinas/create/', MaquinaCreateView.as_view(), name='crear_maquina'),
+    path('maquinas/update/<int:pk>/', MaquinaUpdateView.as_view(), name='actualizar_maquina'),
+    path('maquinas/delete/<int:id>/', MaquinaDeleteView.as_view(), name='eliminar_maquina'),
     #rutas a cabezales
     path('cabezales/list/', CabezalListView.as_view(), name='cabezales_list'),
     path('cabezales/list/data/', CabezalDataView.as_view(), name='cabezales_data'),
     #rutas a plantas
     path('plantas/list/', PlantaListView.as_view(), name='plantas_list'),
     path('plantas/list/data/', PlantaDataView.as_view(), name='plantas_data'),
+    path('plantas/create/', PlantaCreateView.as_view(), name='crear_planta'),
+    path('plantas/update/<int:pk>/', PlantaUpdateView.as_view(), name='actualizar_planta'),
+    path('plantas/delete/<int:pk>/', PlantaDeleteView.as_view(), name='eliminar_planta'),
     #rutas a proveedores
     path('proveedores/list/', ProveedorListView.as_view(), name='proveedores_list'),
     path('proveedores/list/data/', ProveedorDataView.as_view(), name='proveedores_data'),
