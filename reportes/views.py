@@ -57,7 +57,7 @@ class PDFGeneratorView(View):
             # Aplicar la transformación de escala y renderizar el SVG
             canvas.translate(x_position, y_position)
             canvas.scale(scale_width, scale_height)
-            renderPDF.draw(drawing, canvas, 0, 500)  # Dibuja en la posición ajustada y escalada
+            renderPDF.draw(drawing, canvas, 0, 0)  # Dibuja en la posición ajustada y escalada
 
             # Restablecer la transformación antes de dibujar el texto
             canvas.restoreState()
@@ -75,16 +75,19 @@ class PDFGeneratorView(View):
 
             canvas.restoreState()
 
+            # Retornar la posición Y del texto del encabezado
+            return text_y_position
+
         # Añadir la plantilla de página con el encabezado
-        frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - 1 * doc.bottomMargin, id='normal')
+        frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height - .5 * doc.bottomMargin, id='normal')
         template = PageTemplate(id='header_template', frames=frame, onPage=header)
         doc.addPageTemplates([template])
 
         # Función para manejar valores None
         def safe_value(value, default="N/A"):
             return default if value is None else value
-            # Datos y tablas como lo tienes actualmente
-               
+
+        # Datos para el reporte
         punto_evaluacion = safe_value("Punto 1")
         numero_muestras = safe_value(10)
         densidad_promedio = safe_value(1.030)
@@ -108,7 +111,6 @@ class PDFGeneratorView(View):
         temperatura_maximo = safe_value(4.5)
         temperatura_minimo = safe_value(3.5)
 
-
         composicion_fisicoquimica_data = [
             ['Composicion Fisioquimica', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
             [Paragraph("Puntos de Evaluación", small_style), Paragraph("N", small_style), "Densidad", "", "", "", "Grasa", "", "", "", "SNG", "", "", "", "Proteínas", "", "", "", "Temperatura", "", "", ""],
@@ -131,11 +133,11 @@ class PDFGeneratorView(View):
             ('SPAN', (10, 1), (13, 1)),  # SNG
             ('SPAN', (14, 1), (17, 1)),  # Proteínas
             ('SPAN', (18, 1), (21, 1)),  # Temperatura
-            ('SPAN', (2,2), (5,2)), #g/ml
-            ('SPAN', (6,2), (9,2)), #g/ml
-            ('SPAN', (10,2), (13,2)), #g/ml
-            ('SPAN', (14,2), (17,2)), #g/ml
-            ('SPAN', (18,2), (21,2)), #centigrados
+            ('SPAN', (2, 2), (5, 2)),  # g/ml
+            ('SPAN', (6, 2), (9, 2)),  # g/ml
+            ('SPAN', (10, 2), (13, 2)),  # g/ml
+            ('SPAN', (14, 2), (17, 2)),  # g/ml
+            ('SPAN', (18, 2), (21, 2)),  # centigrados
             ('SPAN', (0, 1), (0, 3)),  # Punto de evaluación
             ('SPAN', (1, 1), (1, 3)),  # Numero de muestras
             ('WORDWRAP', (0, 0), (-1, -1)),  # Habilitar ajuste de línea
@@ -144,14 +146,6 @@ class PDFGeneratorView(View):
             ('RIGHTPADDING', (0, 0), (-1, -1), 5),  # Padding derecho
             
         ]))
-
-        # Posicionar la tabla
-        # Ajusta 'x_position' y 'y_position' según donde quieras colocar la tabla
-        x_position = doc.leftMargin
-        y_position = text_y_position - 100  # Por ejemplo, 100 puntos por debajo del texto del encabezado
-
-        table.wrapOn(canvas, doc.width - 2 * doc.leftMargin, doc.bottomMargin)
-        table.drawOn(canvas, x_position, y_position)
 
         # Asignar los anchos de las columnas y las alturas de las filas
         tabla_fisicoquimica._argW = [40, 40] + [35]*20
@@ -224,7 +218,6 @@ class PDFGeneratorView(View):
         # Construir el documento
         elementos = [tabla_fisicoquimica, Spacer(1, 12), tabla_produccion, Spacer(1, 12), tabla_envasado, Spacer(1, 12), tabla_microbiologicos, Spacer(1, 12)]
         
-
         doc.build(elementos)
 
         return response
