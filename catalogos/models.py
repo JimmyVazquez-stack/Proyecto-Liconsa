@@ -6,7 +6,7 @@ Importamos ValidationError para poder validar los datos que se ingresan en los c
 '''
 class Ruta(models.Model):
     nombre = models.CharField(max_length=50)
-    numero = models.IntegerField()
+    numero = models.IntegerField(unique=True)
         
     def __str__(self):
         return self.nombre
@@ -55,15 +55,15 @@ class Rotos(models.Model):
         verbose_name_plural = "Rotos"
 
 #Modelo usado en usuarios
-class Area(models.Model):
-    nombre = models.CharField(max_length=50)
-    descripcion = models.CharField(max_length=50)
+# class Area(models.Model):
+#     nombre = models.CharField(max_length=50)
+#     descripcion = models.CharField(max_length=50)
     
-    def __str__(self):
-        return self.nombre
+#     def __str__(self):
+#         return self.nombre
     
-    class Meta:
-        verbose_name_plural = "Areas"
+#     class Meta:
+#         verbose_name_plural = "Areas"
         
 
 
