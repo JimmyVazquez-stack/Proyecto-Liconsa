@@ -99,16 +99,7 @@ class PoblacionListView(LoginRequiredMixin, TemplateView):
 class DataPoblacionView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
     def get(self, request, *args, **kwargs):
-<<<<<<< HEAD
-        poblaciones = Poblacion.objects.annotate(
-            nombre_poblacion=F('nombre'),
-            municipio_poblacion=F('municipio'),
-            estado_poblacion=F('estado')
-        ).values('id', 'nombre_poblacion', 'municipio_poblacion', 'estado_poblacion')
-
-=======
         poblaciones = Poblacion.objects.values()
->>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
         poblaciones_list = list(poblaciones)
         return JsonResponse(poblaciones_list, safe=False)
     
@@ -174,15 +165,8 @@ class PoblacionDeleteView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-<<<<<<< HEAD
-# vistas de áreas
-
-
-class AreaListView(LoginRequiredMixin, TemplateView):
-=======
 #vistas de áreas
 class AreaListView(LoginRequiredMixin,TemplateView):
->>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
     template_name = 'areas/listar_areas.html'
     login_url = reverse_lazy('usuarios:login')
 

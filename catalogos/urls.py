@@ -37,15 +37,12 @@ from .views import (
     PlantaCreateView,
     PlantaUpdateView,
     PlantaDeleteView,
-<<<<<<< HEAD
     LecheriaCreateView,
     LecheriaUpdateView,
     LecheriaDeleteView,
-=======
     PoblacionCreateView,
     PoblacionUpdateView,
     PoblacionDeleteView,
->>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
     )
 
 app_name = 'catalogos'
