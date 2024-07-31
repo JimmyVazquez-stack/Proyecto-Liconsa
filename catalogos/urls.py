@@ -35,7 +35,10 @@ from .views import (
     MaquinaDeleteView,
     PlantaCreateView,
     PlantaUpdateView,
-    PlantaDeleteView
+    PlantaDeleteView,
+    LecheriaCreateView,
+    LecheriaUpdateView,
+    LecheriaDeleteView,
     )
 
 app_name = 'catalogos'
@@ -43,6 +46,9 @@ app_name = 'catalogos'
 urlpatterns = [
     path('lecherias/list/', LecheriaListView.as_view(), name='lecherias_list'),
     path('lecherias/list/data/', LecheriaDataView.as_view(), name='lecherias_data'),
+    path('lecherias/create/', LecheriaCreateView.as_view(), name='crear_lecheria'),
+    path('lecherias/update/<int:pk>/', LecheriaUpdateView.as_view(), name='actualizar_lecheria'),
+    path('lecherias/delete/<int:pk>/', LecheriaDeleteView.as_view(), name='eliminar_lecheria'),
     #rutas a poblaciones
     path('poblaciones/list/', PoblacionListView.as_view(), name='poblaciones_list'),
     path('poblaciones/list/data/', DataPoblacionView.as_view(), name='poblaciones_data'),
