@@ -103,6 +103,46 @@
             </div>
         </div>
     </div>
+ <!-- Modal de creación de plantas -->
+<div id="addPlantaModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Añadir Planta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPlantaForm" method="post">
+                    {% csrf_token %}
+                    <!-- Campos del formulario de creación de plantas -->
+                    <div class="form-group">
+                        <label for="nombrePlanta">Nombre de la Planta</label>
+                        <input type="text" class="form-control" id="nombrePlanta" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacionPlanta">Ubicación</label>
+                        <input type="text" class="form-control" id="ubicacionPlanta" name="ubicacion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="correoPlanta">Correo</label>
+                        <input type="email" class="form-control" id="correoPlanta" name="correo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactoPlanta">Contacto</label>
+                        <input type="text" class="form-control" id="contactoPlanta" name="contacto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefonoPlanta">Teléfono</label>
+                        <input type="text" class="form-control" id="telefonoPlanta" name="telefono" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
     {% endblock %}
 {% endblock %}
 
