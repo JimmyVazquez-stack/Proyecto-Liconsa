@@ -36,8 +36,10 @@ $(document).ready(function() {
             {
                 data: null,
                 defaultContent: `
-                    <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
-                    <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
+                    <div class="d-flex justify-content-between">
+                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
                 `
             }
         ],
@@ -195,9 +197,36 @@ $(document).ready(function() {
         });
     });
 
-    // Abrir modal para añadir planta
+
+       // Abrir modal para añadir planta
     $('#addPlantaLink').click(function() {
-        // Aquí puedes abrir un modal o redirigir a una página para añadir una nueva planta
-        alert('Función para añadir una nueva planta no implementada.');
+        $('#addPlantaModal').modal('show');
     });
-});
+
+    // Manejar el envío del formulario de creación de plantas
+    $('#addPlantaForm').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: '/catalogos/plantas/create/',  // Actualiza esta URL con la ruta correcta
+            data: formData,
+            success: function(response) {
+                // Cerrar el modal
+                $('#addPlantaModal').modal('hide');
+
+                // Actualizar el select2 con la nueva planta
+                var newOption = new Option(response.nombre, response.id, false, false);
+                $('#selectPlanta').append(newOption).trigger('change');
+
+                // Mostrar un mensaje de éxito (opcional)
+                alert('Planta añadida exitosamente.');
+            },
+            error: function(xhr, status, error) {
+                // Manejar errores (opcional)
+                alert('Error al añadir la planta.');
+            }
+        });
+    });
+    });

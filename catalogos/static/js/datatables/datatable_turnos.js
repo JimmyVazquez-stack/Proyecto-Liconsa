@@ -1,11 +1,61 @@
 
 $(document).ready(function() {
-    $('#tabla_turnos').DataTable({
+    //obtener el token CSRF de las cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    //configurar jQuery para incluir el token CSRF en las solicitudes AJAX
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    var table =$ ('#tabla_turnos').DataTable({
         ajax: {
             url: '/catalogos/turnos/list/data/',
             dataSrc: ''
         },
-        
+        columns: [
+            { data: 'nombre' },
+            { data: 'descripcion' },
+            { data: 'hora_inicio' },
+            { data: 'hora_fin' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    if (data) {
+                        return '<i class="fas fa-check-circle" style="color: green;"></i>';
+                    } else {
+                        return '<i class="fas fa-times-circle" style="color: red;"></i>';
+                    }
+                }
+            },
+            {
+                data: null,
+                defaultContent: `
+                    <div class="d-flex justify-content-between">
+                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
+                `
+            }]
+ 
         columns: [
             { data: 'nombre' },
             { data: 'descripcion' },
@@ -24,8 +74,10 @@ $(document).ready(function() {
             {
                 data: null,
                 defaultContent: `
-                    <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
-                    <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
+                    <div class="d-flex justify-content-between">
+                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
                 `
             }
         ],

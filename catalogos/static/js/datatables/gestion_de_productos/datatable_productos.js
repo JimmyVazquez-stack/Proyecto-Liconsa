@@ -12,8 +12,10 @@ $(document).ready(function() {
             {
                 data: null,
                 defaultContent: `
-                    <button class="btn btn-edit"><i class="fas fa-pencil-alt text-gray"></i></button>
-                    <button class="btn btn-delete"><i class="fas fa-trash text-red"></i></button>
+                    <div class="d-flex justify-content-between">
+                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
+                </div>
                 `
             }
         ],
