@@ -16,29 +16,6 @@ $(document).ready(function () {
   }
   var csrftoken = getCookie("csrftoken");
 
-<<<<<<< HEAD
-$(document).ready(function() {
-    $('#tabla_poblacion').DataTable({
-        ajax: {
-            url: '/catalogos/poblaciones/list/data/',
-            dataSrc: ''
-        },
-        
-        columns: [
-            { data: 'nombre_poblacion' },
-            { data: 'municipio_poblacion' },
-            { data: 'estado_poblacion' },
-            {
-                data: null,
-                defaultContent: `
-                    <div class="d-flex justify-content-between">
-                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
-                </div>
-                `
-            }
-        ],
-=======
   // Configurar jQuery para incluir el token CSRF en las solicitudes AJAX
   $.ajaxSetup({
     beforeSend: function (xhr, settings) {
@@ -50,7 +27,6 @@ $(document).ready(function() {
       }
     },
   });
->>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
 
   var table = $("#tabla_poblacion").DataTable({
     ajax: {

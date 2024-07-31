@@ -58,7 +58,7 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <button id="btnAddRuta" class="btn btn-primary">
+                                <button id="btnAddTurno" class="btn btn-primary">
                                     Añadir Turno
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -98,15 +98,52 @@
 
     </div>
 </div>
-
-
+<!-- Modal para Añadir/Editar Turno -->
+<div class="modal fade" id="turnoModal" tabindex="-1" aria-labelledby="turnoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="turnoModalLabel">Añadir Turno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="turnoForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input list="tipo_turno_options" class="form-control" id="nombre" name="nombre" required>
+                        <datalist id="tipo_turno_options">
+                            <option value="Matutino">
+                            <option value="Vespertino">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora_inicio">Hora de Inicio</label>
+                        <input type="text" class="form-control timepicker" id="hora_inicio" name="hora_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora_fin">Hora de Fin</label>
+                        <input type="text" class="form-control timepicker" id="hora_fin" name="hora_fin" required>
+                    </div>
+                    <input type="hidden" id="turnoId" name="turnoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveTurno">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
 {%endblock%}
-
-
-
 {% endblock %}
 
 

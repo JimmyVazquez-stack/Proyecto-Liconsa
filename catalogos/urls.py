@@ -43,6 +43,10 @@ from .views import (
     PoblacionCreateView,
     PoblacionUpdateView,
     PoblacionDeleteView,
+    TurnoCreateView,
+    TurnoUpdateView,
+    TurnoDeleteView,
+    
     )
 
 app_name = 'catalogos'
@@ -86,6 +90,9 @@ urlpatterns = [
     #rutas a turnos
     path('turnos/list/', TurnoListView.as_view(), name='turnos_list'),
     path('turnos/list/data/', TurnoDataView.as_view(), name='turnos_data'),
+    path('turnos/create/', TurnoCreateView.as_view(), name='turnos_create'),
+    path('turnos/update/<int:pk>/', TurnoUpdateView.as_view(), name='turnos_update'),
+    path('turnos/delete/<int:pk>/', TurnoDeleteView.as_view(), name='turnos_delete'),
     #rutas a silos
     path('silos/list/', SiloListView.as_view(), name='silos_list'),
     path('silos/list/data/', DataSilosView.as_view(), name='silos_data'),

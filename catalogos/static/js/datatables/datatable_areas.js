@@ -36,15 +36,10 @@ $(document).ready(function() {
             {
                 data: null,
                 defaultContent: `
-<<<<<<< HEAD
                     <div class="d-flex justify-content-between">
                     <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
                     <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
                 </div>
-=======
-                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
->>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
                 `
             }
         ],

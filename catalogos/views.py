@@ -477,9 +477,65 @@ class TurnoDataView(LoginRequiredMixin, View):
         turnos = Turno.objects.values()  # Elimina la anotación aquí
         turnos_list = list(turnos)
         return JsonResponse(turnos_list, safe=False)
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from .models import Turno
+
+class TurnoCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        hora_inicio = request.POST.get('hora_inicio')
+        hora_fin = request.POST.get('hora_fin')
+
+        if not nombre or not descripcion or not hora_inicio or not hora_fin:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        turno = Turno.objects.create(
+            nombre=nombre,
+            descripcion=descripcion,
+            hora_inicio=hora_inicio,
+            hora_fin=hora_fin
+        )
+        return JsonResponse({'message': 'Turno creado con éxito', 'turno_id': turno.id}, status=201)
+    
+class TurnoUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, pk, *args, **kwargs):
+        turno = get_object_or_404(Turno, pk=pk)
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        hora_inicio = request.POST.get('hora_inicio')
+        hora_fin = request.POST.get('hora_fin')
+        estatus = request.POST.get('estatus')  # Obtener el valor del campo estatus
+
+        if not nombre or not descripcion or not hora_inicio or not hora_fin or estatus is None:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        turno.nombre = nombre
+        turno.descripcion = descripcion
+        turno.hora_inicio = hora_inicio
+        turno.hora_fin = hora_fin
+        turno.estatus = estatus  # Actualizar el campo estatus
+        turno.save()
+
+        return JsonResponse({'message': 'Turno actualizado con éxito'}, status=200)
+
+class TurnoDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def delete(self, request, pk, *args, **kwargs):
+        turno = get_object_or_404(Turno, pk=pk)
+        turno.delete()
+        return JsonResponse({'message': 'Turno eliminado con éxito'}, status=200)
 
 # vistas para gestion de productos
-
 
 class ProductoListView(LoginRequiredMixin, TemplateView):
     template_name = 'gestion_de_productos/listar_productos.html'

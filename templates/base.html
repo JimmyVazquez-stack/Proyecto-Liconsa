@@ -57,6 +57,8 @@
   {% block Favicon%}
   <link rel="icon" href="{% static 'img/logoLiconsaFavicon.ico' %}" type="image/x-icon" />
   {% endblock%}
+  <!--Timepicker-->
+  <link rel="stylesheet" href="{% static 'css/timepicker/jquery.timepicker.min.css'%}">
 </head>
 {% endblock %}
 
@@ -1929,7 +1931,8 @@
   <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
   <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
 
-
+  <!--Timepicker-->
+  <script src="{% static 'js/timepicker/jquery.timepicker.min.js'%}"></script>
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
     $.widget.bridge('uibutton', $.ui.button)
