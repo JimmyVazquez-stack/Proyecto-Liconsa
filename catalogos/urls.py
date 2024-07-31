@@ -1,10 +1,9 @@
 from django.urls import path
 from .views import (
     LecheriaListView, 
-    AñadirLecheriaView, 
     LecheriaDataView, 
-    ActualizarLecheriaView, 
     PoblacionListView, 
+    
     AreaListView, 
     MaquinaListView, 
     MaquinaDataView,
@@ -28,31 +27,53 @@ from .views import (
     RutaDataView,
     RutaCreateView,
     RutaUpdateView,
-    RutaDeleteView
+    RutaDeleteView,
+    AreaCreateView,
+    AreaUpdateView,
+    AreaDeleteView,
+    MaquinaCreateView,
+    MaquinaUpdateView,
+    MaquinaDeleteView,
+    PlantaCreateView,
+    PlantaUpdateView,
+    PlantaDeleteView,
+    PoblacionCreateView,
+    PoblacionUpdateView,
+    PoblacionDeleteView,
     )
 
 app_name = 'catalogos'
 
 urlpatterns = [
     path('lecherias/list/', LecheriaListView.as_view(), name='lecherias_list'),
-    path('añadir_lecheria/', AñadirLecheriaView.as_view(), name='añadir_lecheria'),
     path('lecherias/list/data/', LecheriaDataView.as_view(), name='lecherias_data'),
-    path('actualizar_lecheria/', ActualizarLecheriaView.as_view(), name='actualizar_lecheria'),
     #rutas a poblaciones
     path('poblaciones/list/', PoblacionListView.as_view(), name='poblaciones_list'),
     path('poblaciones/list/data/', DataPoblacionView.as_view(), name='poblaciones_data'),
+    path('poblaciones/create/', PoblacionCreateView.as_view(), name='crear_poblacion'),
+    path('poblaciones/update/<int:pk>/', PoblacionUpdateView.as_view(), name='actualizar_poblacion'),
+    path('poblaciones/delete/<int:pk>/', PoblacionDeleteView.as_view(), name='eliminar_poblacion'),
     #rutas a áreas
     path('areas/list/', AreaListView.as_view(), name='areas_list'),
     path('areas/list/data/', DataAreaView.as_view(), name='areas_data'),
+    path('areas/create/', AreaCreateView.as_view(), name='crear_area'),
+    path('areas/update/<int:pk>/', AreaUpdateView.as_view(), name='actualizar_area'),
+    path('areas/delete/<int:pk>/', AreaDeleteView.as_view(), name='eliminar_area'),
     #rutas a maquinas
     path('maquinas/list/', MaquinaListView.as_view(), name='maquinas_list'),
     path('maquinas/list/data/', MaquinaDataView.as_view(), name='maquinas_data'),
+    path('maquinas/create/', MaquinaCreateView.as_view(), name='crear_maquina'),
+    path('maquinas/update/<int:pk>/', MaquinaUpdateView.as_view(), name='actualizar_maquina'),
+    path('maquinas/delete/<int:id>/', MaquinaDeleteView.as_view(), name='eliminar_maquina'),
     #rutas a cabezales
     path('cabezales/list/', CabezalListView.as_view(), name='cabezales_list'),
     path('cabezales/list/data/', CabezalDataView.as_view(), name='cabezales_data'),
     #rutas a plantas
     path('plantas/list/', PlantaListView.as_view(), name='plantas_list'),
     path('plantas/list/data/', PlantaDataView.as_view(), name='plantas_data'),
+    path('plantas/create/', PlantaCreateView.as_view(), name='crear_planta'),
+    path('plantas/update/<int:pk>/', PlantaUpdateView.as_view(), name='actualizar_planta'),
+    path('plantas/delete/<int:pk>/', PlantaDeleteView.as_view(), name='eliminar_planta'),
     #rutas a proveedores
     path('proveedores/list/', ProveedorListView.as_view(), name='proveedores_list'),
     path('proveedores/list/data/', ProveedorDataView.as_view(), name='proveedores_data'),

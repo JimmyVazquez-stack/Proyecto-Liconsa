@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Registro de densidad R49{% endblock %}
+{% block principal %}
+{% block informacion %}
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-info"></i>
+                        Crear registro de la densidad de Producto terminado para R49
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+
+                 <!-- Script autocompletar campo Linea -->
+                <script>
+                    function updateLinea() {
+                        var planta = document.getElementById("id_planta").value;
+                        var turno = document.getElementById("id_turno").value;
+                        var silo = document.getElementById("id_silo").value;
+                        var cabezal = document.getElementById("id_cabezal").value
+                        var linea = planta + turno + silo + cabezal;
+                        document.getElementById("id_linea").value = linea;
+                    }
+                </script>
+                <!-- END -->
+
+
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <!-- SCRIPT -->
+                        <input type="hidden" id="id_linea" name="linea"> <!-- END -->
+
+                        <button type="submit">Guardar</button>
+                    </form>
+
+                    <!-- SCRIPT -->
+                    <script>
+                        document.getElementById("id_planta").addEventListener("input", updateLinea);
+                        document.getElementById("id_turno").addEventListener("input", updateLinea);
+                        document.getElementById("id_silo").addEventListener("input", updateLinea);
+                        document.getElementById("id_cabezal").addEventListener("input", updateLinea);
+                    </script>
+                    <!-- END -->
+                    
+                </div>    
+                <div class="callout callout-info">
+                      
+                        <p>En esta sección se realiza el registro de la densidad.</p>
+
+                        <p>Ingresa los datos y oprime guardar.</p>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{% endblock %}
+
+
+
+
+</head>
+<body>
+<h1>Create MyModel</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" id="id_linea" name="linea">
+    <button type="submit">Save</button>
+</form>
+<script>
+    document.getElementById("id_campo1").addEventListener("input", updateLinea);
+    document.getElementById("id_campo2").addEventListener("input", updateLinea);
+    document.getElementById("id_campo3").addEventListener("input", updateLinea);
+</script>

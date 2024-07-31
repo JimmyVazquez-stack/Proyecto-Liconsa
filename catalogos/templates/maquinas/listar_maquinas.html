@@ -1,117 +1,114 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
-
-{%block title %} Maquinas {% endblock %}
-
+{% block title %} Maquinas {% endblock %}
 
 {% block principal %}
-{% block informacion% %}
-<div class="container-fluid p-4">
-    <div class="row">
-        <div class="col-xl-12 mt-1">
-            <div class="card card-default">
-                <div class="card-header bg-gray-dark">
-                    <h3 class="card-title">
-                        <i class="fas fa-bullhorn"></i>
-                        Información
-                    </h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-
-                    <div class="callout callout-info">
-                        <h5>Registro de Maquinas</h5>
-                        <p>En esta sección se presenta el listado de Maquinas.</p>
+    {% block informacion %}
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-xl-12 mt-1">
+                <div class="card card-default">
+                    <div class="card-header bg-gray-dark">
+                        <h3 class="card-title">
+                            <i class="fas fa-bullhorn"></i>
+                            Información
+                        </h3>
                     </div>
-
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-        </div>
-        <!-- /.col -->
-
-
-    </div>
-</div>
-{% endblock %}
-
-{%block datatable%}
-<div class="container-fluid p-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
-                    <h3 class="card-title">Listado de maquinas</h3>
-                </div>
-                <div class="card-body bg-light">
-                    <!-- Paginacion mensual-->
-                    <!-- <ul class="pagination pagination-month justify-content-center">
-                        <li class="page-item"><a class="page-link" href="#">«</a></li>
-                        <ul id="pagination" class="pagination pagination-month justify-content-center">
-                            <li class="page-item"></li>
-                            <li class="page-item"></li>
-                        </ul>
-                        <li class="page-item"><a class="page-link" href="#">»</a></li>
-                    </ul> -->
-                    <div class="col-xl-12 mt-3 p-3">
-                        <div class="table-responsive">
-                            <div class="d-flex justify-content-between mb-3">
-                                <button class="btn btn-primary" onclick="location.href='{% url 'catalogos:añadir_lecheria' %}';">
-                                    Añadir maquina
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <div id="example_filter"></div>
-                            </div>
-                            <table id="tabla_maquinas" class="table  table-bordered bg-light table-hover"
-                                style="width:100%;">
-                                <thead class="thead-light" style="font-size: 14px;">
-                                    <tr>
-                                        <th>Número de maquina</th>
-                                        <th>Nombre de planta</th>
-
-                                        <th>Opciones</th>
-                                    </tr>
-                                </thead>
-                                <tfoot style="font-size: 14px;">
-                                    <tr>
-                                        <th>Número de maquina</th>
-                                        <th>Nombre de planta</th>
-                                        <th>Opciones</th>
-
-                                    </tr>
-                                </tfoot>
-                            </table>
+                    <div class="card-body">
+                        <div class="callout callout-info">
+                            <h5>Registro de Maquinas</h5>
+                            <p>En esta sección se presenta el listado de Maquinas.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    {% endblock %}
 
+    {% block datatable %}
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
+                        <h3 class="card-title">Listado de maquinas</h3>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="col-xl-12 mt-3 p-3">
+                            <div class="table-responsive">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button class="btn btn-primary" id="btnAddMaquina">
+                                        Añadir maquina
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <div id="example_filter"></div>
+                                </div>
+                                <table id="tabla_maquinas" class="table table-bordered bg-light table-hover" style="width:100%;">
+                                    <thead class="thead-light" style="font-size: 14px;">
+                                        <tr>
+                                            <th>Número de maquina</th>
+                                            <th>Nombre de planta</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot style="font-size: 14px;">
+                                        <tr>
+                                            <th>Número de maquina</th>
+                                            <th>Nombre de planta</th>
+                                            <th>Opciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-
-
-
-
-{%endblock%}
-
-
-
+    <div class="modal fade" id="maquinaModal" tabindex="-1" role="dialog" aria-labelledby="maquinaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="maquinaModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="maquinaForm">
+                        <div class="form-group">
+                            <label for="numero">Número de Maquina</label>
+                            <input type="text" class="form-control" id="numero" name="numero">
+                        </div>
+                        <div class="form-group">
+                            <label for="planta">Nombre de Planta</label>
+                            <select class="form-control" id="planta" name="planta">
+                                <!-- Opciones de plantas cargadas dinámicamente -->
+                            </select>
+                            <small class="form-text text-muted">
+                                <a href="#" id="addPlantaLink">Añadir nueva planta</a>
+                            </small>
+                        </div>
+                        <input type="hidden" id="maquinaId" name="maquinaId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveMaquina">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
 {% endblock %}
 
-
 {% block javascript %}
-{{ block.super }}
+    {{ block.super }}
 
-<!-- Script para inicializar DataTables -->
-<script src="{% static 'js/datatables/datatable_maquina.js' %}"></script>
-
-
-
+    <!-- Script para inicializar DataTables -->
+    <script src="{% static 'js/datatables/datatable_maquina.js' %}"></script>
 {% endblock %}

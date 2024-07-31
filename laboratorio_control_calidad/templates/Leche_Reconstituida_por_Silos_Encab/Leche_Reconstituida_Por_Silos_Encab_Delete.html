@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Elimina Un Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="col-xl-12 mt-3 p-3">
+          <div class="table-responsive">
+             
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <h2>Seguro de eliminar el Registro con el Folio: {{ LecheReconsSilosEncab.folio}}?</h2>
+                    <button type="submit" class="btn btn-danger">Si, eliminar</button>
+                    <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="btn btn-success">No, Cancelar</a>
+                </form>
+               
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+
