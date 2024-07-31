@@ -14,40 +14,23 @@ from django.views import View
 from django.db.models import F, Value, CharField
 from django.forms.models import model_to_dict
 import json
-
-
-# Create your views here.
-class LecheriaListView(TemplateView):
-    template_name = 'lecherias_list.html'
-    
-
-
-class AñadirLecheriaView(CreateView):
-    template_name = 'añadir_lecheria.html'
-    form_class = LecheriaForm
-    success_url = reverse_lazy('catalogos:lecherias_list')
+from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.db.models.functions import Concat
-from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views import View
+from django.db.models import F, Value, CharField
+
 
 
 # Create your views here.
 class LecheriaListView(LoginRequiredMixin,TemplateView):
-    template_name = 'lecherias_list.html'
+    template_name = 'lecherias/lecherias_list.html'
     login_url = reverse_lazy('usuarios:login')
     
 
-
-class AñadirLecheriaView(LoginRequiredMixin, CreateView):
-    template_name = 'añadir_lecheria.html'
-    form_class = LecheriaForm
-    login_url = reverse_lazy('usuarios:login')
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-    
-    
 
 class LecheriaDataView(LoginRequiredMixin,View):
     login_url = reverse_lazy('usuarios:login')
@@ -60,29 +43,47 @@ class LecheriaDataView(LoginRequiredMixin,View):
         return JsonResponse(lecherias_list, safe=False)
     
 
-class ActualizarLecheriaView(View):
+# Vista para crear una nueva lechería
+
+class LecheriaCreateView(LoginRequiredMixin, CreateView):
+    model = Lecheria
+    form_class = LecheriaForm
+    template_name = 'lecherias/lecheria_form.html'
+    success_url = reverse_lazy('lecherias:list')
     login_url = reverse_lazy('usuarios:login')
-    def post(self, request, *args, **kwargs):
-        form_data = json.loads(request.body)
-        lecheria = Lecheria.objects.get(id=form_data['id'])
-        
-        lecheria.numero = form_data.get('numero', lecheria.numero)
-        lecheria.nombre = form_data.get('nombre', lecheria.nombre)
-        lecheria.responsable = form_data.get('responsable', lecheria.responsable)
-        lecheria.telefono = form_data.get('telefono', lecheria.telefono)
-        lecheria.direccion = form_data.get('direccion', lecheria.direccion)
-        
-        ruta_id = form_data.get('ruta')
-        if ruta_id is not None:
-            lecheria.ruta = Ruta.objects.get(id=ruta_id)
-        
-        poblacion_id = form_data.get('poblacion')
-        if poblacion_id is not None:
-            lecheria.poblacion = Poblacion.objects.get(id=poblacion_id)
-        
-        lecheria.save()
-        return JsonResponse(model_to_dict(lecheria), safe=False)
-    
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'id': self.object.id, 'status': 'success'})
+
+    def form_invalid(self, form):
+        return JsonResponse({'errors': form.errors, 'status': 'error'})
+
+# Vista para actualizar una lechería existente
+class LecheriaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Lecheria
+    form_class = LecheriaForm
+    template_name = 'lecherias/lecheria_form.html'
+    success_url = reverse_lazy('lecherias:list')
+    login_url = reverse_lazy('usuarios:login')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'id': self.object.id, 'status': 'success'})
+
+    def form_invalid(self, form):
+        return JsonResponse({'errors': form.errors, 'status': 'error'})
+
+# Vista para eliminar una lechería
+class LecheriaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Lecheria
+    success_url = reverse_lazy('lecherias:list')
+    login_url = reverse_lazy('usuarios:login')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return JsonResponse({'status': 'success'})
     
 #Vistas de poblaciones
 
@@ -90,6 +91,7 @@ class PoblacionListView(LoginRequiredMixin,TemplateView):
     template_name = 'poblaciones/listar_poblaciones.html'
     login_url = reverse_lazy('usuarios:login')
     
+
     
 
 
