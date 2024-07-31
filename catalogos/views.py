@@ -98,21 +98,91 @@ class PoblacionListView(LoginRequiredMixin, TemplateView):
 
 class DataPoblacionView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
-
     def get(self, request, *args, **kwargs):
+<<<<<<< HEAD
         poblaciones = Poblacion.objects.annotate(
             nombre_poblacion=F('nombre'),
             municipio_poblacion=F('municipio'),
             estado_poblacion=F('estado')
         ).values('id', 'nombre_poblacion', 'municipio_poblacion', 'estado_poblacion')
 
+=======
+        poblaciones = Poblacion.objects.values()
+>>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
         poblaciones_list = list(poblaciones)
         return JsonResponse(poblaciones_list, safe=False)
+    
 
+class PoblacionCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        municipio = data.get('municipio')
+        estado = data.get('estado')
+
+        if not (nombre and municipio and estado):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            poblacion = Poblacion.objects.create(
+                nombre=nombre,
+                municipio=municipio,
+                estado=estado
+            )
+            return JsonResponse({
+                'id': poblacion.id,
+                'nombre': poblacion.nombre,
+                'municipio': poblacion.municipio,
+                'estado': poblacion.estado
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear la población.'}, status=400)
+        
+class PoblacionUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, pk, *args, **kwargs):
+        poblacion = get_object_or_404(Poblacion, pk=pk)
+        data = request.POST
+
+        nombre = data.get('nombre')
+        municipio = data.get('municipio')
+        estado = data.get('estado')
+
+        if not (nombre and municipio and estado):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            poblacion.nombre = nombre
+            poblacion.municipio = municipio
+            poblacion.estado = estado
+            poblacion.save()
+            return JsonResponse({'status': 'success', 'message': 'Población actualizada con éxito'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        
+class PoblacionDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def delete(self, request, pk, *args, **kwargs):
+        poblacion = get_object_or_404(Poblacion, pk=pk)
+        try:
+            poblacion.delete()
+            return JsonResponse({'status': 'success', 'message': 'Población eliminada'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+<<<<<<< HEAD
 # vistas de áreas
 
 
 class AreaListView(LoginRequiredMixin, TemplateView):
+=======
+#vistas de áreas
+class AreaListView(LoginRequiredMixin,TemplateView):
+>>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
     template_name = 'areas/listar_areas.html'
     login_url = reverse_lazy('usuarios:login')
 

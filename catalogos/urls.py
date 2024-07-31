@@ -3,6 +3,7 @@ from .views import (
     LecheriaListView, 
     LecheriaDataView, 
     PoblacionListView, 
+    
     AreaListView, 
     MaquinaListView, 
     MaquinaDataView,
@@ -36,9 +37,15 @@ from .views import (
     PlantaCreateView,
     PlantaUpdateView,
     PlantaDeleteView,
+<<<<<<< HEAD
     LecheriaCreateView,
     LecheriaUpdateView,
     LecheriaDeleteView,
+=======
+    PoblacionCreateView,
+    PoblacionUpdateView,
+    PoblacionDeleteView,
+>>>>>>> 9648d260015e696f90a21b7ad043d27f80636329
     )
 
 app_name = 'catalogos'
@@ -52,12 +59,15 @@ urlpatterns = [
     #rutas a poblaciones
     path('poblaciones/list/', PoblacionListView.as_view(), name='poblaciones_list'),
     path('poblaciones/list/data/', DataPoblacionView.as_view(), name='poblaciones_data'),
+    path('poblaciones/create/', PoblacionCreateView.as_view(), name='crear_poblacion'),
+    path('poblaciones/update/<int:pk>/', PoblacionUpdateView.as_view(), name='actualizar_poblacion'),
+    path('poblaciones/delete/<int:pk>/', PoblacionDeleteView.as_view(), name='eliminar_poblacion'),
     #rutas a áreas
     path('areas/list/', AreaListView.as_view(), name='areas_list'),
     path('areas/list/data/', DataAreaView.as_view(), name='areas_data'),
     path('areas/create/', AreaCreateView.as_view(), name='crear_area'),
     path('areas/update/<int:pk>/', AreaUpdateView.as_view(), name='actualizar_area'),
-    path('areas/delete/<int:id>/', AreaDeleteView.as_view(), name='eliminar_area'),
+    path('areas/delete/<int:pk>/', AreaDeleteView.as_view(), name='eliminar_area'),
     #rutas a maquinas
     path('maquinas/list/', MaquinaListView.as_view(), name='maquinas_list'),
     path('maquinas/list/data/', MaquinaDataView.as_view(), name='maquinas_data'),
