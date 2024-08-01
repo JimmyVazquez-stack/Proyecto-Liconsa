@@ -1,0 +1,161 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{%block title %} Formatos R49 {% endblock %}
+{% block principal %} 
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Formatos R49 Encabezado</h5>
+                        <p>
+                            En esta sección se presentan los registros de 
+                            Peso bruto, densidad y peso envace vacio.
+                        </p>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+{% endblock %} 
+{%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title"></h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <a href="{% url 'laboratorio_control_calidad:encabezador49V2_Create' %}" class="btn btn-primary">Nuevo
+                                    Registro</a>
+
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
+                                        Generar Reporte Diario/Semanal
+                                      </button>
+                                
+                                    
+
+                                <div id="example_filter"></div>
+                            </div>
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                                <thead class="thead-light" style="font-size: 14px">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha Hora</th>
+                                        <th>Observaciones</th>
+                                        <th>Peso Neto</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px">
+                                    {% for item in EncabTablaR49 %}
+                                    <tr>
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.fecha}}</td>
+                                        <td>{{item.observaciones}}</td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:pesonetor49_list'%}"><i class="fa fa-balance-scale"></i></a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49V2_Update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'reportes:reporte_Volumen_Neto' %}"><i class="fa fa-file-alt"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49V2_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
+
+<!-- /.modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Selecciona el rango de fechas del reporte</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="post" action="{% url 'reportes:reporte_mensual' %}">
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="fecha-inicial">Fecha Inicial</label>
+                <input type="date" class="form-control" id="fecha-inicial" name="fecha-inicial" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha-final">Fecha Final</label>
+                <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+{%endblock%} 
+{% endblock %} 
+<!-- Para traducir opciones del datatable -->
+<script src="{% static 'js/datatables/datatables_opcion_es.js'%}"></script>
+<!-- SweetAlert2 -->
+<script src="{% static 'plugins/sweetalert2/sweetalert2.min.js'%}"></script>
+<!-- Toastr -->
+<script src="{% static 'plugins/toastr/toastr.min.js'%}"></script>
+<script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+
+<!-- Page specific script datatable -->  
+<script type="application/javascript">
+    $(function() {
+        $('.btnTest').on('click', function() {
+            $.ajax({
+                url: "{% url 'laboratorio_control_calidad:encabezador49V2_List'%}" , 
+                type: 'POST',
+                data: {
+                    id: 1
+                },
+                dataType: 'json'
+            }).done(function(data) {
+                console.log(data)
+            }).fail(function(data) {
+                alert("error");
+            }).always(function(data) {
+
+            })
+        });
+
+    });
+</script> 
