@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block title %} Registro Tabla R49{% endblock %}
+{% block principal %}
+
+{% block informacion% %}
+    <div class="card-header bg-gray-dark">
+        <h3 class="card-title">
+            <i class="fas fa-table"></i>
+            Información
+        </h3>
+    </div>
+        <div class="container container-data  d-flex align-items-center flex-column"></div>
+            <h1>Listado de registros Densidad</h1>
+            <a href="{% url 'laboratorio_control_calidad:densidadr49_Create' %}" class="btn btn-primary">Nuevo registro</a>
+            <div class="card-body">
+{% endblock %}        
+
+{%block datatable%}
+<div class="table-responsive">           
+    <table class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed"  id="example1" aria-describedby="example1_info">
+    <thead class="thead-light" style="font-size: 14px;">
+        <tr>
+            <th>Fecha y Hora</th>
+            <th>Cabezal</th>
+            <th>Planta</th>
+            <th>Producto</th>
+            <th>Silo</th>
+            <th>Turno</th>
+            <th>Silo</th>
+            <th>Linea</th>
+            <th>Densidad</th>
+            <th>Volumen</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in densidadr49 %}
+        <tr>
+            <td>{{item.fechaHora}}</td>
+            <td>{{item.cabezal}}</td>
+            <td>{{item.planta}}</td>
+            <td>{{item.producto}}</td>
+            <td>{{item.silo}}</td>
+            <td>{{item.linea}}</td>
+            <td>{{item.densidad}}</td>
+            <td>{{item.volumen}}</td>
+            <td>
+            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_Update' item.id %}"><i class="fas fa-edit"></i></a>
+            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_Delete' item.id %}"> <i class="fas fa-trash"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table> 
+    </div>
+</div> 
+        
+
+{%endblock%}
+{%endblock%}
+{% block javascript %}
+{{ block.super }}
+{% endblock %}
