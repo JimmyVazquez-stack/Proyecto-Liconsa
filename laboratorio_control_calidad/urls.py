@@ -16,13 +16,7 @@ urlpatterns = [
     path('calibracion_verificacion_equipo/', calibracion_verificacion_equipo.as_view(), name='calibracion_verificacion_equipo'),    
     path('verificacion_documentos/', verificacion_documentos.as_view(), name='verificacion_documentos'),
 
-    #Rutas para el CRUD de FormatoR49
-    # path('registror49_create/', registror49_create.as_view(), name='registror49_create'),
-    # path('registror49_list/', registror49_list.as_view(), name='registror49_list'),
-    # path('registror49_delete/<int:pk>', registror49_delete.as_view(), name='registror49_delete'),
-    # path('registror49_update/<int:pk>', registror49_update.as_view(), name='registror49_update'),
-    #complementarias Densidad
-    
+       
     #Formato con encabezado
     path('encabezador49_create/', Encabezador49Create.as_view(), name='encabezador49_create'),
     path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
@@ -31,4 +25,33 @@ urlpatterns = [
     
     #Para valores de peso Neto
     path('pesonetor49_list/', MostrarPesosView.as_view(), name='pesonetor49_list'),
+
+    
+    #Rutas para el CRUD de FormatoR49 V2------------------------------------------------------
+    path('densidadr49_Create/', Densidadr49CreateView.as_view(), name='densidadr49_Create'),
+    path('densidadr49_List/', Densidadr49ListView.as_view(), name='densidadr49_List'),
+    path('densidadr49_Delete/<int:pk>', Densidadr49DeleteView.as_view(), name='densidadr49_Delete'),
+    path('densidadr49_Update/<int:pk>', Densidadr49UpdateView.as_view(), name='densidadr49_Update'),
+    #complementarias Peso vacio
+    path('pesoEnvVacior49_Create/', PesoEnvVacior49CreateView.as_view(), name='pesoEnvVacior49_Create'),
+    path('pesoEnvVacior49_List/', PesoEnvVacior49ListView.as_view(), name='pesoEnvVacior49_List'),
+    path('pesoEnvVacior49_Delete/<int:pk>', PesoEnvVacior49DeleteView.as_view(), name='pesoEnvVacior49_Delete'),
+    path('pesoEnvVacior49_Update/<int:pk>', PesoEnvVacior49UpdateView.as_view(), name='pesoEnvVacior49_Update'),
+    #complementarias Peso bruto
+    path('pesoBrutor49_Create/', PesoBrutor49CreateView.as_view(), name='pesoBrutor49_Create'),
+    path('pesoBrutor49_List/', PesoBrutor49ListView.as_view(), name='pesoBrutor49_List'),
+    path('pesoBrutor49_Delete/<int:pk>', PesoBrutor49DeleteView.as_view(), name='pesoBrutor49_Delete'),
+    path('pesoBrutor49_Update/<int:pk>', PesoBrutor49UpdateView.as_view(), name='pesoBrutor49_Update'),
+
+
+    #Formato con encabezado
+    # path('encabezador49V2_Create/', Encabezador49Create.as_view(), name='encabezador49_create'),
+    # path('encabezador49V2_list/', Encabezador49View.as_view(), name='encabezador49_list'),
+    # path('encabezador49V2_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
+    # path('encabezador49V2_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
+
+
 ]
+    
+    
+    #path('encabezador49V2_create/', .as_view(), name='encabezador49V2_Create'),
