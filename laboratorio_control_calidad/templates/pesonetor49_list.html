@@ -38,22 +38,19 @@
             </tr>
         </thead>
         <tbody>
-            <!-- {% for peso in pesos %}
+            {% for peso in pesos %}
             <tr>
                 <td>{{ peso.valor }}</td>
             </tr>
-            {% endfor %} -->
+            {% endfor %}
              
-        
-            
-
         </tbody>
     </table>
      <!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: '/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+                url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
