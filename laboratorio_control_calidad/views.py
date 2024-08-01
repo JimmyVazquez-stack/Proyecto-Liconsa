@@ -22,6 +22,7 @@ from laboratorio_control_calidad.models import Densidadpt, Pesoenvvacio, Pesobru
 from .forms import *
 
 
+
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
     model = get_user_model()
@@ -90,7 +91,7 @@ class Encabezador49View(generic.ListView):
     template_name = 'encabezador49_List.html'
     context_object_name = 'EncabTablaR49'
 
-
+User = get_user_model() #Para context usuario
 
 class Encabezador49Create(View):
     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
@@ -100,11 +101,24 @@ class Encabezador49Create(View):
         Densidadpt_formset = DensidadptFormSet(queryset=Densidadpt.objects.none())
         Pesoenvvacio_formset = PesoenvvacioFormSet(queryset=Pesoenvvacio.objects.none())
         Pesobruto_formset = PesobrutoFormSet(queryset=Pesobruto.objects.none())
+
+         # Obtener la información del usuario autenticado
+        user_info = None
+        user_groups = None
+        if request.user.is_authenticated:
+            try:
+                user_info = User.objects.get(username=request.user.username)
+                user_groups = user_info.groups.all()
+            except User.DoesNotExist:
+                pass
+
         return render(request, 'encabezador49_Create.html', {
             'encab_form': encab_form,
             'Densidadpt_formset': Densidadpt_formset,
             'Pesoenvvacio_formset': Pesoenvvacio_formset,
             'Pesobruto_formset': Pesobruto_formset,
+            'user_info': user_info,
+            'user_groups': user_groups,
         })
 
     def post(self, request, *args, **kwargs):
@@ -127,17 +141,29 @@ class Encabezador49Create(View):
                     messages.error(self.request, 'Algunos formsets contienen errores. Por favor, revise los campos.')
         else:
             messages.error(self.request, 'Error en el formulario principal.')
+
+        # Recalcular la información del usuario para la respuesta POST
+        user_info = None
+        user_groups = None
+        if request.user.is_authenticated:
+            try:
+                user_info = User.objects.get(username=request.user.username)
+                user_groups = user_info.groups.all()
+            except User.DoesNotExist:
+                pass
         
         return render(request, 'encabezador49_Create.html', {
             'encab_form': encab_form,
             'Densidadpt_formset': Densidadpt_formset,
             'Pesoenvvacio_formset': Pesoenvvacio_formset,
             'Pesobruto_formset': Pesobruto_formset,
+            'user_info': user_info,
+            'user_groups': user_groups,
         })
 
        
 
-    def _process_formset(self, formset, encab_instance):
+    def _process_formset(self, formset, encab_instance, user=None):
         valid = True
         for form in formset:
             if form.is_valid() and self._has_data(form.cleaned_data):
@@ -246,6 +272,7 @@ class Encabezador49Delete(DeleteView):
 
 # END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
 
+# START--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|
 class Pesonetoview(LoginRequiredMixin, TemplateView):
     template_name = 'pesoNetor49_list.html'
 
@@ -261,5 +288,91 @@ class MostrarPesosView(generic.ListView):
     queryset = Pesobruto.objects.all()
     template_name = 'pesonetor49_list.html'
     context_object_name = 'pesos'       
-        
-        
+# END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
+
+# START--PRUEBAS VISTA PESO NETO  ---------------------------------------------------------|
+#DENSIDAD(
+class Densidadr49ListView(generic.ListView):
+     model = Densidadpt
+     queryset = Densidadpt.objects.all ()
+     template_name = 'crud_VolumenNetoR49/densidad_List.html'
+     context_object_name = 'densidadr49'
+
+class Densidadr49CreateView(generic.CreateView):
+    model = Densidadpt
+    template_name = 'crud_VolumenNetoR49/densidad_Create.html'
+    context_object_name = 'densidadr49'
+    form_class = DensidadptForm
+    success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_List")
+
+class Densidadr49UpdateView(generic.UpdateView):
+    model = Densidadpt
+    template_name = 'crud_VolumenNetoR49/densidad_Update.html' 
+    form_class = DensidadptForm
+    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_List')
+    context_object_name = 'densidadr49'
+
+class Densidadr49DeleteView(generic.DeleteView):
+    model = Densidadpt
+    template_name = 'crud_VolumenNetoR49/densidad_Delete.html'
+    context_object_name = 'densidadr49'
+    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_List')
+#)
+
+#PESO BRUTO (
+class PesoBrutor49ListView(generic.ListView):
+     model = Pesobruto
+     queryset = Pesobruto.objects.all ()
+     template_name = 'crud_VolumenNetoR49/pesoBruto_List.html'
+     context_object_name = 'pesoBrutor49'
+
+class PesoBrutor49CreateView(generic.CreateView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html'
+    context_object_name = 'pesoBrutor49'
+    form_class = PesobrutoForm
+    success_url = reverse_lazy("laboratorio_control_calidad:pesoBrutor49_List")
+
+class PesoBrutor49UpdateView(generic.UpdateView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html' 
+    form_class = PesobrutoForm
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoBrutor49_List')
+    context_object_name = 'pesoBrutor49'
+
+class PesoBrutor49DeleteView(generic.DeleteView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Delete.html'
+    context_object_name = 'pesoBrutor49'
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoBrutor49_List')
+#)
+
+#PESO ENVASE VACIO (
+class PesoEnvVacior49ListView(generic.ListView):
+     model = Pesoenvvacio
+     queryset = Pesoenvvacio.objects.all ()
+     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_List.html'
+     context_object_name = 'pesoEnvVacior49'
+
+class PesoEnvVacior49CreateView(generic.CreateView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html'
+    context_object_name = 'pesoEnvVacior49'
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy("laboratorio_control_calidad:pesoEnvVacior49_List")
+
+class PesoEnvVacior49UpdateView(generic.UpdateView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacior49_Create.html' 
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoEnvVacior49_List')
+    context_object_name = 'pesoEnvVacior49'
+
+class PesoEnvVacior49DeleteView(generic.DeleteView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Delete.html'
+    context_object_name = 'pesoEnvVacior49'
+    success_url = reverse_lazy('laboratorio_control_calidad:pesoEnvVacior49_List')
+#)
+
+# END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
