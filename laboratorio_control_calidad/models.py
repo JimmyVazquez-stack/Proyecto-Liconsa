@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from catalogos.models import Cabezal, Planta, Turno, Producto, Proveedor, Silo, Maquina, Area, Analista
+from usuarios.models import Usuario
 
 # Create your models here.
 class EncabTablaR49(models.Model):
@@ -54,6 +55,7 @@ class Pesobruto(models.Model):
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
     analista = models.ForeignKey(Analista, on_delete=models.CASCADE, null=True)
     valor = models.IntegerField(default=0)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE) #relacion hacia modelo Usuario de app Usuarios
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
