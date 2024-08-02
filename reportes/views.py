@@ -160,17 +160,26 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
         densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
         
+        # Obtener los datos de Pesobruto
+        datosPesoBruto = Pesobruto.objects.all()
 
-        ##agregado
-        pesoPromedio = calculosPesoEnvVacio['pesoPromedio']
-        resultadoOperacion = (pesoPromedio / densidadPonderada) if densidadPonderada else None
-        ##agregado
+        #Realizar el cálculo de peso neto
+        resultadosPesoNeto = [
+            {
+                
+                'valor': dato.valor,
+                'resultado': (dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada if densidadPonderada else None
+            }
+            for dato in datosPesoBruto
+        ]
+
+        
 
         # Crear el diccionario de resultados para la respuesta JSON
         resultados = {
             'pesoPromedio': calculosPesoEnvVacio['pesoPromedio'],
             'densidadPonderada': densidadPonderada,
-            'resultadoOperacion': resultadoOperacion   #agregado prueba resultado para peso neto
+            'resultadosPesoNeto': resultadosPesoNeto   #agregado prueba resultado para peso neto
         }
 
         # Retornar la respuesta en formato JSON
