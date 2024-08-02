@@ -46,100 +46,114 @@
                         <!-- Contenido de la Pestaña 1 -->
                         <div class="tab-pane fade show active" id="tab1pbruto" role="tabpanel" aria-labelledby="tab1pbruto-tab">
                             <h4>Registro de muestras para tabla Peso Bruto</h4>
-                            <div class="table-responsive">
-                                <div class="table-scroll"> <!-- Añadir la clase para el scroll -->
-                                    <table id="tabla1" class="table table-bordered bg-light table-hover" style="width: 100%">
-                                        <thead class="thead-light" style="font-size: 14px">
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Fecha y Hora</th>
-                                                <th>Cabezal</th>
-                                                <th>Maquina</th>
-                                                <th>Planta</th>
-                                                <th>Producto</th>
-                                                <th>Valor</th>
-                                                <th>Usuario que registra:</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="formularios-body" style="font-size: 14px">
-                                            {{ Pesobruto_formset.management_form }}
-                                            {% for form in Pesobruto_formset %}
-                                            <tr>
-                                                <td>{{ form.id }}</td>
-                                                <td>{{ form.fechaHora }}</td>
-                                                <td>{{ form.cabezal }}</td>
-                                                <td>{{ form.maquina }}</td>
-                                                <td>{{ form.planta }}</td>
-                                                <td>{{ form.producto }}</td>
-                                                <td>{{ form.valor }}</td>
-                                                <!-- Agregar el usuario que registra -->
-                                                <td>
-                                                    {% if user_info %}
-                                                        {{ user_info.username }} <!-- Nombre del usuario -->                                                     
-                                                          {% if user_groups %}
-                                                            /
-                                                              {% for group in user_groups %}
-                                                                    {{ group.name }} <!-- Nombre del grupo -->
-                                                              {% endfor %}
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ Pesobruto_formset.management_form }}
+
+                                <div class="table-responsive">
+                                    <div class="table-scroll"> <!-- Añadir la clase para el scroll -->
+                                        <table id="tabla1" class="table table-bordered bg-light table-hover" style="width: 100%">
+                                            <thead class="thead-light" style="font-size: 14px">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Fecha y Hora</th>
+                                                    <th>Cabezal</th>
+                                                    <th>Planta</th>
+                                                    <th>Producto</th>
+                                                    <th>Valor</th>
+                                                    <th>Usuario que registra:</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="formularios-body" style="font-size: 14px">
+                                                {% for form in Pesobruto_formset %}
+                                                <tr>
+                                                    <td>{{ form.id }}</td>
+                                                    <td>{{ form.fechaHora }}</td>
+                                                    <td>{{ form.cabezal }}</td>
+                                                    <td>{{ form.planta }}</td>
+                                                    <td>{{ form.producto }}</td>
+                                                    <td>{{ form.valor }}</td>
+                                                    <!-- Agregar el usuario que registra -->
+                                                    <td>
+                                                        {% if user_info %}
+                                                            {{ user_info.username }} <!-- Nombre del usuario -->                                                     
+                                                            {% if user_groups %}
+                                                                /
+                                                                {% for group in user_groups %}
+                                                                        {{ group.name }} <!-- Nombre del grupo -->
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            Usuario no autenticado
                                                         {% endif %}
-                                                    {% else %}
-                                                        Usuario no autenticado
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                    
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                                    </td>
+                                                </tr>
+                                        
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                            </form>
                         </div>
 
-                        <!-- Contenido de la Pestaña 2 -->
+                            <!-- Contenido de la Pestaña 2 -->
                         <div class="tab-pane fade" id="tab2densidad" role="tabpanel" aria-labelledby="tab2densidad-tab">
                             <h4>Registro de datos para tabla Densidad</h4>
-                            <div class="table-responsive">
-                                <div class="table-scroll">
-                                    <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
-                                        <thead class="thead-light" style="font-size: 14px">
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Fecha y Hora</th>
-                                                <th>Cabezal</th>
-                                                <th>Planta</th>
-                                                <th>Producto</th>
-                                                <th>Silo</th>
-                                                <th>Turno</th>
-                                                <th>Linea</th>
-                                                <th>Densidad</th>
-                                                <th>Volumen</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="formulario-densidad" style="font-size: 14px">
-                                            {{ Densidadpt_formset.management_form }}
-                                            {% for form in Densidadpt_formset %}
-                                            <tr>
-                                                <td>{{ form.id }}</td>
-                                                <td>{{ form.fechaHora }}</td>
-                                                <td>{{ form.cabezal }}</td>
-                                                <td>{{ form.planta }}</td>
-                                                <td>{{ form.producto }}</td>
-                                                <td>{{ form.silo }}</td>
-                                                <td>{{ form.turno }}</td>
-                                                <td>{{ form.linea }}</td>
-                                                <td>{{ form.densidad }}</td>
-                                                <td>{{ form.volumen }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ Densidadpt_formset.management_form }}
+
+                                <div class="table-responsive">
+                                    <div class="table-scroll">
+                                        <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
+                                            <thead class="thead-light" style="font-size: 14px">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Fecha y Hora</th>
+                                                    <th>Cabezal</th>
+                                                    <th>Planta</th>
+                                                    <th>Producto</th>
+                                                    <th>Silo</th>
+                                                    <th>Turno</th>
+                                                    <th>Linea</th>
+                                                    <th>Densidad</th>
+                                                    <th>Volumen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="formulario-densidad" style="font-size: 14px">
+                                                {% for form in Densidadpt_formset %}
+                                                <tr>
+                                                    <td>{{ form.id }}</td>
+                                                    <td>{{ form.fechaHora }}</td>
+                                                    <td>{{ form.cabezal }}</td>
+                                                    <td>{{ form.planta }}</td>
+                                                    <td>{{ form.producto }}</td>
+                                                    <td>{{ form.silo }}</td>
+                                                    <td>{{ form.turno }}</td>
+                                                    <td>{{ form.linea }}</td>
+                                                    <td>{{ form.densidad }}</td>
+                                                    <td>{{ form.volumen }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                            </form>
                         </div>
 
                         <!-- Contenido de la Pestaña 3 -->
                         <div class="tab-pane fade" id="tab3pvacio" role="tabpanel" aria-labelledby="tab3pvacio-tab">
                             <h4>Registro de datos para tabla Peso Envase Vacio</h4>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ Pesoenvvacio_formset.management_form }}
+
                             <div class="table-responsive">
                                 <div class="table-scroll">
                                     <table id="tabla3" class="table table-bordered bg-light table-hover" style="width: 100%">
@@ -156,7 +170,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="formularios-body" style="font-size: 14px">
-                                            {{ Pesoenvvacio_formset.management_form }}
                                             {% for form in Pesoenvvacio_formset %}
                                             <tr>
                                                 <td>{{ form.id }}</td>
@@ -173,15 +186,14 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                        </form>
                     </div>
+                </div>
 
                     <!-- SCRIPT CALCULAR CAMPO LINEA -->
                     <input type="hidden" id="id_linea" name="linea"> <!-- END -->
-
-                    <button type="submit" class="btn btn-success">Guardar</button>
-                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
-                </form>
 
                 <!-- SCRIPT CALCULAR CAMPO LINEA -->
                 <script>
