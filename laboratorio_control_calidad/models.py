@@ -53,7 +53,6 @@ class Pesobruto(models.Model):
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE, null=True) 
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE, null=True)
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
-    analista = models.ForeignKey(Analista, on_delete=models.CASCADE, null=True)
     valor = models.IntegerField(default=0)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE) #relacion hacia modelo Usuario de app Usuarios
     encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE, null=True)
