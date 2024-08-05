@@ -168,8 +168,8 @@ $(document).ready(function() {
             text: "¡No podrás revertir esto!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: 'red',
+            cancelButtonColor: 'gray',
             confirmButtonText: 'Sí, eliminarlo!',
             cancelButtonText: 'Cancelar'
         }).then((result) => {

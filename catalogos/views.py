@@ -362,27 +362,27 @@ class PlantaCreateView(LoginRequiredMixin, View):
         if not (nombre and ubicacion and correo and contacto and telefono):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
-            try:
-                planta = Planta.objects.create(
-                    nombre=nombre,
-                    ubicacion=ubicacion,
-                    correo=correo,
-                    contacto=contacto,
-                    telefono=telefono
-                )
-                return JsonResponse({
-                    'id': planta.id,
-                    'nombre': planta.nombre,
-                    'ubicacion': planta.ubicacion,
-                    'correo': planta.correo,
-                    'contacto': planta.contacto,
-                    'telefono': planta.telefono
-                })
-            except IntegrityError:
-                return JsonResponse({'error': 'Error al crear la planta.'}, status=400)
-
-            #Asegurarse de que siempre se devuelva una respuesta
+        try:
+            planta = Planta.objects.create(
+                nombre=nombre,
+                ubicacion=ubicacion,
+                correo=correo,
+                contacto=contacto,
+                telefono=telefono
+            )
+            return JsonResponse({
+                'id': planta.id,
+                'nombre': planta.nombre,
+                'ubicacion': planta.ubicacion,
+                'correo': planta.correo,
+                'contacto': planta.contacto,
+                'telefono': planta.telefono
+            })
+        except IntegrityError:
             return JsonResponse({'error': 'Error al crear la planta.'}, status=400)
+
+
+        
 # Vista para actualizar planta
 
 
