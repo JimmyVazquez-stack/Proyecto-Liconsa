@@ -1,30 +1,56 @@
+$(document).ready(function () {
+    // Obtener el token CSRF de las cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            var cookies = document.cookie.split(";");
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie("csrftoken");
 
-$(document).ready(function() {
-    $('#tabla_proveedores').DataTable({
-        ajax: {
-            url: '/catalogos/proveedores/list/data/',
-            dataSrc: ''
+    // Configurar jQuery para incluir el token CSRF en las solicitudes AJAX
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
         },
-        
+    });
+
+    var table = $("#tabla_proveedores").DataTable({
+        ajax: {
+            url: "/catalogos/proveedores/list/data/",
+            dataSrc: "",
+        },
         columns: [
-            { data: 'nombre' },
-            { data: 'contacto' },
-            { data: 'telefono' },
-            { data: 'correo' },
-            { data: 'nombre_planta' },
+            { data: "nombre" },
+            { data: "contacto" },
+            { data: "telefono" },
+            { data: "correo" },
+            { data: "nombre_planta" },
             {
                 data: null,
                 defaultContent: `
-                     <div class="d-flex justify-content-between">
-                    <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
-                </div>
-                `
-            }
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-edit btn-warning"><i class="fa fa-pencil"></i></button>
+                        <button class="btn btn-delete btn-danger"><i class="fa fa-trash"></i></button>
+                    </div>
+                `,
+            },
         ],
-
         pageLength: 5,
-        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
+        lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, "Todo"],
+        ],
         language: {
             lengthMenu: "Mostrar _MENU_ entradas",
             zeroRecords: "No se encontraron resultados",
@@ -36,20 +62,19 @@ $(document).ready(function() {
                 first: "Primero",
                 last: "Último",
                 next: "Siguiente",
-                previous: "Anterior"
+                previous: "Anterior",
             },
         },
         columnDefs: [
             {
                 targets: -1,
-                defaultContent: "<div style='display: flex; justify-content: space-between;'><a href='#' class='btn btn-secondary' style='font-size: 14px; width:75px;'><i class='fas fa-pencil'></i></a><a href='#' class='btn btn-danger' style='font-size: 14px; width: 75px;' ><i class='fas fa-trash'></i></a></div>",                orderable: false
-            }
-        ]
-        
+                orderable: false,
+            },
+        ],
     });
 
-    // Abrir modal para añadir proveedor
-$("#btnAddProveedor").click(function () {
+  // Abrir modal para añadir proveedor
+  $("#btnAddProveedor").click(function () {
     $("#proveedorModalLabel").text("Añadir Proveedor");
     $("#proveedorForm")[0].reset();
     $("#proveedorId").val("");
@@ -74,9 +99,7 @@ $("#saveProveedor").click(function () {
     }
 
     var proveedorId = $("#proveedorId").val();
-    var url = proveedorId
-        ? `/proveedores/update/${proveedorId}/`
-        : "/proveedores/create/";
+    var url = proveedorId ? `/proveedores/update/${proveedorId}/` : "/proveedores/create/";
     var method = "POST";
 
     $.ajax({
@@ -134,7 +157,7 @@ $("#tabla_proveedores tbody").on("click", ".btn-delete", function () {
         confirmButtonText: "Sí, eliminar",
         cancelButtonText: "Cancelar",
         confirmButtonColor: "red", // Color personalizado para el botón de confirmar (ej. rojo)
-        cancelButtonColor: "gray" // Color personalizado para el botón de cancelar (ej. azul)
+        cancelButtonColor: "gray", // Color personalizado para el botón de cancelar (ej. azul)
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
@@ -159,5 +182,5 @@ $("#tabla_proveedores tbody").on("click", ".btn-delete", function () {
         }
     });
 });
-
 });
+
