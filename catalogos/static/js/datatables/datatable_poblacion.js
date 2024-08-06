@@ -154,6 +154,8 @@ $(document).ready(function () {
       showCancelButton: true,
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
+      confirmButtonColor: "red", // Color personalizado para el botón de confirmar (ej. rojo)
+      cancelButtonColor: "gray" // Color personalizado para el botón de cancelar (ej. azul)
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({

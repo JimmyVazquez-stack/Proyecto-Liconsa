@@ -1,27 +1,21 @@
-from django.shortcuts import render, get_object_or_404
+#Importaciones modelos
+from .models import (Lecheria, Ruta, Poblacion, Maquina, Planta, Turno, Silo, Cabezal, Producto, TipoProducto, Proveedor, Turno, Lecheria)
+from usuarios.models import Area
+from django.db.models import F, Value, CharField, Q
+from django.db.models.functions import Concat
+#Importaciones forms
+from .forms import LecheriaForm
+#Importaciones de vistas
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-from .forms import LecheriaForm
-from .models import Lecheria,  Rotos
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
-from .forms import LecheriaForm
-from .models import Lecheria, Ruta, Poblacion, Maquina, Planta, Turno, Silo, Cabezal, Producto, TipoProducto, Proveedor
-from usuarios.models import Area
-from django.http import JsonResponse, HttpResponseNotAllowed
 from django.views import View
-from django.db.models import F, Value, CharField
-from django.forms.models import model_to_dict
-import json
+#Otras importaciones
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
-from django.db.models.functions import Concat
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.views import View
-from django.db.models import F, Value, CharField
+
 
 
 # Create your views here.
@@ -251,51 +245,62 @@ class MaquinaDataView(LoginRequiredMixin, View):
 
         return JsonResponse(maquinas_list, safe=False)
 
-
 class MaquinaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
     def post(self, request, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
-        nombre_planta = data.get('nombre_planta')
+        planta_id = data.get('nombre_planta')
 
-        if not (numero and nombre_planta):
+        if not (numero and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
-            maquina = Maquina.objects.create(
-                numero=numero, nombre_planta=nombre_planta)
-            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': maquina.nombre_planta})
+            planta = Planta.objects.get(id=planta_id)
+            
+            # Verificar si ya existe una máquina con el mismo número en la misma planta
+            if Maquina.objects.filter(numero=numero, planta=planta).exists():
+                return JsonResponse({'error': 'Ya existe una máquina con este número en la planta seleccionada.'}, status=400)
+            
+            maquina = Maquina.objects.create(numero=numero, planta=planta)
+            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': planta.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
         except IntegrityError:
-            return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
-        
-        # Asegurarse de que siempre se devuelva una respuesta
+            return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
+
         return JsonResponse({'error': 'Error desconocido.'}, status=500)
-    
+
+
 class MaquinaUpdateView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
-        nombre_planta = data.get('nombre_planta')
+        planta_id = data.get('nombre_planta')
 
-        if not (numero and nombre_planta):
+        if not (numero and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
-            if not numero.startswith("Maquina-"):
-                numero = f"Maquina-{numero}"
+            planta = Planta.objects.get(id=planta_id)
+            
+            # Verificar si ya existe una máquina con el mismo número en la misma planta, excluyendo la actual
+            if Maquina.objects.filter(numero=numero, planta=planta).exclude(pk=pk).exists():
+                return JsonResponse({'error': 'Ya existe una máquina con este número en la planta seleccionada.'}, status=400)
+
             maquina = Maquina.objects.get(pk=pk)
             maquina.numero = numero
-            maquina.nombre_planta = nombre_planta
+            maquina.planta = planta
             maquina.save()
-            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': maquina.nombre_planta})
+            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': planta.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
         except Maquina.DoesNotExist:
-            return JsonResponse({'error': 'Maquina no encontrada'}, status=404)
+            return JsonResponse({'error': 'Máquina no encontrada'}, status=404)
         except IntegrityError:
-            return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
-        
-        # Asegurarse de que siempre se devuelva una respuesta
+            return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
+
         return JsonResponse({'error': 'Error desconocido.'}, status=500)
 class MaquinaDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
@@ -443,9 +448,87 @@ class ProveedorDataView(LoginRequiredMixin, View):
         proveedores_list = list(proveedores)
         return JsonResponse(proveedores_list, safe=False)
 
+class ProveedorCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        direccion = data.get('direccion')
+        telefono = data.get('telefono')
+        correo = data.get('correo')
+        planta_id = data.get('planta_id')
+
+        if not (nombre and direccion and telefono and correo and planta_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            planta = Planta.objects.get(id=planta_id)
+            proveedor = Proveedor.objects.create(
+                nombre=nombre,
+                direccion=direccion,
+                telefono=telefono,
+                correo=correo,
+                planta=planta
+            )
+            return JsonResponse({'id': proveedor.id, 'nombre': proveedor.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el proveedor.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+class ProveedorUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, pk, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        direccion = data.get('direccion')
+        telefono = data.get('telefono')
+        correo = data.get('correo')
+        planta_id = data.get('planta_id')
+
+        if not (nombre and direccion and telefono and correo and planta_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            proveedor = Proveedor.objects.get(pk=pk)
+            planta = Planta.objects.get(id=planta_id)
+            proveedor.nombre = nombre
+            proveedor.direccion = direccion
+            proveedor.telefono = telefono
+            proveedor.correo = correo
+            proveedor.planta = planta
+            proveedor.save()
+            return JsonResponse({'id': proveedor.id, 'nombre': proveedor.nombre})
+        except Proveedor.DoesNotExist:
+            return JsonResponse({'error': 'Proveedor no encontrado'}, status=404)
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el proveedor.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+
+class ProveedorDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            proveedor = Proveedor.objects.get(pk=pk)
+            proveedor.delete()
+            return JsonResponse({'success': 'Proveedor eliminado con éxito'})
+        except Proveedor.DoesNotExist:
+            return JsonResponse({'error': 'Proveedor no encontrado'}, status=404)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+
+
 # vistas de silos
-
-
 class SiloListView(LoginRequiredMixin, TemplateView):
     template_name = 'silos/listar_silos.html'
     login_url = reverse_lazy('usuarios:login')

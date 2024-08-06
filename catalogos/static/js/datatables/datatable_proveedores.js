@@ -47,4 +47,117 @@ $(document).ready(function() {
         ]
         
     });
+
+    // Abrir modal para añadir proveedor
+$("#btnAddProveedor").click(function () {
+    $("#proveedorModalLabel").text("Añadir Proveedor");
+    $("#proveedorForm")[0].reset();
+    $("#proveedorId").val("");
+    $("#proveedorModal").modal("show");
+});
+
+// Guardar proveedor (añadir o editar) con validación usando SweetAlert2
+$("#saveProveedor").click(function () {
+    var nombre = $("#nombre").val().trim();
+    var direccion = $("#direccion").val().trim();
+    var telefono = $("#telefono").val().trim();
+    var correo = $("#correo").val().trim();
+
+    // Validar que los campos no estén vacíos
+    if (!nombre || !direccion || !telefono || !correo) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Todos los campos son obligatorios",
+        });
+        return;
+    }
+
+    var proveedorId = $("#proveedorId").val();
+    var url = proveedorId
+        ? `/proveedores/update/${proveedorId}/`
+        : "/proveedores/create/";
+    var method = "POST";
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: $("#proveedorForm").serialize(),
+        success: function (response) {
+            $("#proveedorModal").modal("hide");
+            table.ajax.reload();
+            Swal.fire({
+                icon: "success",
+                title: "Guardado",
+                text: "Proveedor guardado con éxito",
+            });
+        },
+        error: function (xhr) {
+            var errorMessage = "Error al guardar el proveedor";
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: errorMessage,
+            });
+        },
+    });
+});
+
+// Manejadores manuales para cerrar el modal
+$("#proveedorModal .close, #proveedorModal .btn-secondary").click(function () {
+    $("#proveedorModal").modal("hide");
+});
+
+// Abrir modal para editar proveedor
+$("#tabla_proveedores tbody").on("click", ".btn-edit", function () {
+    var data = table.row($(this).parents("tr")).data();
+    $("#proveedorModalLabel").text("Editar Proveedor");
+    $("#nombre").val(data.nombre);
+    $("#direccion").val(data.direccion);
+    $("#telefono").val(data.telefono);
+    $("#correo").val(data.correo);
+    $("#proveedorId").val(data.id);
+    $("#proveedorModal").modal("show");
+});
+
+// Confirmar eliminación usando SweetAlert2
+$("#tabla_proveedores tbody").on("click", ".btn-delete", function () {
+    var data = table.row($(this).parents("tr")).data();
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: `¿Deseas eliminar el proveedor ${data.nombre}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "red", // Color personalizado para el botón de confirmar (ej. rojo)
+        cancelButtonColor: "gray" // Color personalizado para el botón de cancelar (ej. azul)
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/proveedores/delete/${data.id}/`,
+                method: "DELETE",
+                success: function (response) {
+                    table.ajax.reload();
+                    Swal.fire(
+                        "Eliminado",
+                        "Proveedor eliminado exitosamente",
+                        "success"
+                    );
+                },
+                error: function (error) {
+                    Swal.fire(
+                        "Error",
+                        "Hubo un problema al eliminar el proveedor",
+                        "error"
+                    );
+                },
+            });
+        }
+    });
+});
+
 });
