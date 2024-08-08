@@ -1,161 +1,189 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Encabezado R49{% endblock %}
 {% block principal %}
-{% block informacion %}
 
+{% block informacion %}
 <div class="container-fluid p-4">
     <div class="row">
         <div class="col-xl-12 mt-1">
-            <div class="card card-default">
+            <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-info"></i>
                         Tablas de captura para volumen peso neto
                     </h3>
                 </div>
-                <!-- /.card-header -->
+{% endblock %}
+<!-- /.card-header -->
+<form id="formulario" action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }} 
 
-                <div class="card-body">
-                    <!-- Pestañas -->
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="tab1pbrutov2-tab" data-toggle="tab" href="#tab1pbrutov2" role="tab" aria-controls="tab1" aria-selected="true">Tabla Peso Bruto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="tab2densidadv2-tab" data-toggle="tab" href="#tab2densidadv2" role="tab" aria-controls="tab2" aria-selected="false">Tabla Densidad</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="tab3pvaciov2-tab" data-toggle="tab" href="#tab3pvaciov2" role="tab" aria-controls="tab3" aria-selected="false">Tabla Peso Envase Vacio</a>
-                        </li>
-                    </ul>
+</form>
+<div class="card-body">
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab1pbrutov2-tab" data-toggle="tab" href="#tab1pbrutov2" role="tab" aria-controls="tab1" aria-selected="true">Tabla Peso Bruto</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab2densidadv2-tab" data-toggle="tab" href="#tab2densidadv2" role="tab" aria-controls="tab2" aria-selected="false">Tabla Densidad</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab3pvaciov2-tab" data-toggle="tab" href="#tab3pvaciov2" role="tab" aria-controls="tab3" aria-selected="false">Tabla Peso Envase Vacio</a>
+        </li>
+    </ul>
+</div>
 
-                    <!-- Contenido de las Pestañas -->
-                    <div class="tab-content" id="r49v2TabContent">
-                        <!-- Contenido de la Pestaña 1 -->
-                        <div class="tab-pane fade show active" id="tab1pbrutov2" role="tabpanel" aria-labelledby="tab1pbrutov2-tab">
-                            <h4>Registro de muestras para tabla Peso Bruto</h4>
-                            <div class="table-responsive">
-                                <div class="table-scroll"> <!-- Añadir la clase para el scroll -->
-                                    <table id="tabla1" class="table table-bordered bg-light table-hover" style="width: 100%">
-                                        <thead class="thead-light" style="font-size: 14px">
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Fecha y Hora</th>
-                                                <th>Cabezal</th>
-                                                <th>Maquina</th>
-                                                <th>Planta</th>
-                                                <th>Producto</th>
-                                                <th>Valor</th>
-                                                <th>Usuario que registra:</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="formularios-body" style="font-size: 14px">
-                                            
-                                            {% for item in pesoBrutor49 %}
-                                            <tr>
-                                                <td>{{ item.id }}</td>
-                                                <td>{{ item.fechaHora }}</td>
-                                                <td>{{ item.cabezal }}</td>
-                                                <td>{{ item.maquina }}</td>
-                                                <td>{{ item.planta }}</td>
-                                                <td>{{ item.producto }}</td>
-                                                <td>{{ item.valor }}</td>
-                                                <td>{{ item.analista }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+<!-- Contenido de las Pestañas -->
+<div class="tab-content" id="r49v2TabContent">
+    <!-- Contenido de la Pestaña 1 -->
+    <div class="tab-pane fade show active" id="tab1pbrutov2" role="tabpanel" aria-labelledby="tab1pbrutov2-tab">
+        <div class="container container-data  d-flex align-items-center flex-column"></div>
+            <!-- <h3>Listado de registros Peso Bruto</h3> -->
+            <a href="{% url 'laboratorio_control_calidad:pesoBrutor49_Create' %}" class="btn btn-primary">Nuevo registro</a>
+            
+                    
+{%block datatable%}  
+                                                    
+                    <table id="tabla1" class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed" style="width: 100%">
+                        <thead class="thead-light" style="font-size: 14px">
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Cabezal</th>
+                            <th>Maquina</th>
+                            <th>Planta</th>
+                            <th>Producto</th>
+                            <th>Valor</th>
+                            <th>Usuario que registra:</th>
+                            <th>Opciones</th>
+                            
+                        </tr>
+                        </thead>
+                    <tbody id="formularios-body" style="font-size: 14px">
+                        
+                        {% for item in pesoBrutor49 %}
+                        <tr>
+                            <td>{{ item.fechaHora }}</td>
+                            <td>{{ item.cabezal }}</td>
+                            <td>{{ item.maquina }}</td>
+                            <td>{{ item.planta }}</td>
+                            <td>{{ item.producto }}</td>
+                            <td>{{ item.valor }}</td>
+                            <td>
+                                {% if user_info %}
+                                    {{ user_info.username }} <!-- Nombre del usuario -->                                                     
+                                    {% if user_groups %}
+                                        /
+                                        {% for group in user_groups %}
+                                                {{ group.name }} <!-- Nombre del grupo -->
+                                        {% endfor %}
+                                    {% endif %}
+                                {% else %}
+                                    Usuario no autenticado
+                                {% endif %}
+                            </td>
+                        <td>
+                        <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Update' item.id %}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Delete' item.id %}"> <i class="fas fa-trash"></i></a>
+                        </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
 
-                        <!-- Contenido de la Pestaña 2 -->
-                        <div class="tab-pane fade" id="tab2densidadv2" role="tabpanel" aria-labelledby="tab2densidadv2-tab">
-                            <h4>Registro de datos para tabla Densidad</h4>
-                            <div class="table-responsive">
-                                <div class="table-scroll">
-                                    <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
-                                        <thead class="thead-light" style="font-size: 14px">
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Fecha y Hora</th>
-                                                <th>Cabezal</th>
-                                                <th>Planta</th>
-                                                <th>Producto</th>
-                                                <th>Silo</th>
-                                                <th>Turno</th>
-                                                <th>Linea</th>
-                                                <th>Densidad</th>
-                                                <th>Volumen</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="formulario-densidad" style="font-size: 14px">
-                                            
-                                            {% for item in densidadr49 %}
-                                            <tr>
-                                                <td>{{ item.id }}</td>
-                                                <td>{{ item.fechaHora }}</td>
-                                                <td>{{ item.cabezal }}</td>
-                                                <td>{{ item.planta }}</td>
-                                                <td>{{ item.producto }}</td>
-                                                <td>{{ item.silo }}</td>
-                                                <td>{{ item.turno }}</td>
-                                                <td>{{ item.linea }}</td>
-                                                <td>{{ item.densidad }}</td>
-                                                <td>{{ item.volumen }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+    </div><!-- /Tab Pane -->
 
-                        <!-- Contenido de la Pestaña 3 -->
-                        <div class="tab-pane fade" id="tab3pvaciov2" role="tabpanel" aria-labelledby="tab3pvaciov2-tab">
-                            <h4>Registro de datos para tabla Peso Envase Vacio</h4>
-                            <div class="table-responsive">
-                                <div class="table-scroll">
-                                    <table id="tabla3" class="table table-bordered bg-light table-hover" style="width: 100%">
-                                        <thead class="thead-light" style="font-size: 14px">
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Fecha y Hora</th>
-                                                <th>Num. Cabezal</th>
-                                                <th>Numero de maquina</th>
-                                                <th>planta</th>
-                                                <th>producto</th>
-                                                <th>proveedor</th>
-                                                <th>peso</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="formularios-body" style="font-size: 14px">
-                                            
-                                            {% for item in pesoEnvVacior49 %}
-                                            <tr>
-                                                <td>{{ form.id }}</td>
-                                                <td>{{ form.fechaHora }}</td>
-                                                <td>{{ form.cabezal }}</td>
-                                                <td>{{ form.maquina }}</td>
-                                                <td>{{ form.planta }}</td>
-                                                <td>{{ form.producto }}</td>
-                                                <td>{{ form.proveedor }}</td>
-                                                <td>{{ form.peso }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Contenido de la Pestaña 2 -->
+    <div class="tab-pane fade" id="tab2densidadv2" role="tabpanel" aria-labelledby="tab2densidadv2-tab">
+        <div class="container container-data  d-flex align-items-center flex-column"></div>
+        
+        <a href="{% url 'laboratorio_control_calidad:densidadr49_Create' %}" class="btn btn-primary">Nuevo registro</a>
+        <div class="table-responsive">
+            <div class="table-scroll">
 
-                    <!-- SCRIPT CALCULAR CAMPO LINEA -->
-                    <input type="hidden" id="id_linea" name="linea"> <!-- END -->
+                
+                    <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
+                    <thead class="thead-light" style="font-size: 14px">
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Cabezal</th>
+                            <th>Planta</th>
+                            <th>Producto</th>
+                            <th>Silo</th>
+                            <th>Turno</th>
+                            <th>Linea</th>
+                            <th>Densidad</th>
+                            <th>Volumen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="formulario-densidad" style="font-size: 14px">
+                        
+                        {% for item in densidadr49 %}
+                        <tr>
+                            <td>{{ item.fechaHora }}</td>
+                            <td>{{ item.cabezal }}</td>
+                            <td>{{ item.planta }}</td>
+                            <td>{{ item.producto }}</td>
+                            <td>{{ item.silo }}</td>
+                            <td>{{ item.turno }}</td>
+                            <td>{{ item.linea }}</td>
+                            <td>{{ item.densidad }}</td>
+                            <td>{{ item.volumen }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-                    <button type="submit" class="btn btn-success">Guardar</button>
-                    <a href="{% url 'laboratorio_control_calidad:encabezador49V2_List' %}" class="btn btn-danger">Cancelar</a>
-                </form>
+    <!-- Contenido de la Pestaña 3 -->
+    <div class="tab-pane fade" id="tab3pvaciov2" role="tabpanel" aria-labelledby="tab3pvaciov2-tab">
+        <div class="container container-data  d-flex align-items-center flex-column"></div>
+        
+        <a href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Create' %}" class="btn btn-primary">Nuevo registro</a>
+        <div class="table-responsive">
+            <div class="table-scroll">
+                
+                <table id="tabla3" class="table table-bordered bg-light table-hover" style="width: 100%">
+                    <thead class="thead-light" style="font-size: 14px">
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Num. Cabezal</th>
+                            <th>Numero de maquina</th>
+                            <th>planta</th>
+                            <th>producto</th>
+                            <th>proveedor</th>
+                            <th>peso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="formularios-body" style="font-size: 14px">
+                        
+                        {% for item in pesoEnvVacior49 %}
+                        <tr>
+                            <td>{{ form.fechaHora }}</td>
+                            <td>{{ form.cabezal }}</td>
+                            <td>{{ form.maquina }}</td>
+                            <td>{{ form.planta }}</td>
+                            <td>{{ form.producto }}</td>
+                            <td>{{ form.proveedor }}</td>
+                            <td>{{ form.peso }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT CALCULAR CAMPO LINEA -->
+<input type="hidden" id="id_linea" name="linea"> <!-- END -->
+
+
+</form>
 
                 <!-- SCRIPT CALCULAR CAMPO LINEA -->
                 <script>
@@ -167,6 +195,8 @@
                 <!-- END -->
                 </div> <!-- /.card-body --> 
                 <div class="callout callout-info">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
                     <p>En esta sección se realiza el registro del formato TX-HP-910-01-R49.</p>
                     <p>Ingresa los datos y oprime guardar.</p>
                 </div>
@@ -175,12 +205,16 @@
     </div>
 </div>
 
-<style>
-    .table-scroll {
-        max-height: 400px; /* Ajusta esta altura según sea necesario */
-        overflow-y: auto; /* Habilita el desplazamiento vertical */
-    }
-</style>
+<!-- Incluir Bootstrap CSS y JS para modal -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
 {% endblock %}
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
 {% endblock %}

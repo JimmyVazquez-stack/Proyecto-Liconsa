@@ -43,7 +43,7 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <a href="{% url 'laboratorio_control_calidad:encabezador49V2_Create' %}" class="btn btn-primary">Nuevo
+                                <a href="{% url 'laboratorio_control_calidad:encabezador49_create' %}" class="btn btn-primary">Nuevo
                                     Registro</a>
 
                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
@@ -65,18 +65,18 @@
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: 14px">
-                                    {% for item in EncabTablaR49 %}
+                                    {% for item in EncabR49 %}
                                     <tr>
                                         <td>{{item.id}}</td>
                                         <td>{{item.fecha}}</td>
                                         <td>{{item.observaciones}}</td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:pesonetor49_list'%}"><i class="fa fa-balance-scale"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49_list'%}"><i class="fa fa-balance-scale"></i></a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49V2_Update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49_update' item.id %}"><i class="fa fa-pencil"></i></a>
                                             <a class="btn btn-warning" href="{% url 'reportes:reporte_Volumen_Neto' %}"><i class="fa fa-file-alt"></i></a>
-                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49V2_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_delete' item.id %}"><i class="fa fa-trash"></i></a>
                                             
                                         </td>
                                     </tr>
@@ -102,7 +102,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="{% url 'reportes:reporte_mensual' %}">
+        <form method="post" action="#">
         <div class="modal-body">
             {% csrf_token %}
             <div class="form-group">
