@@ -1,19 +1,29 @@
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views.generic import View, TemplateView
+import os
+from django.db.models import Min, Max, Count, Sum, F, FloatField
+from django.shortcuts import render
+from django.views import View
+from laboratorio_control_calidad.models import *
+from catalogos.models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+#Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Frame, PageTemplate
 from reportlab.lib import colors
 from reportlab.graphics import renderPDF
-from reportlab.graphics.shapes import Drawing
-from reportlab.lib.pagesizes import letter
 from reportlab.graphics import renderPDF
 from svglib.svglib import svg2rlg
-from reportlab.pdfgen.canvas import Canvas
-import os
-from django.db.models import Avg, Min, Max, Count, Sum, F, FloatField
-from django.shortcuts import render
-from django.views import View
+
+
+#Vista para el reporte mensual para el laboratorio de control de calidad
+class ReporteMensual(LoginRequiredMixin, TemplateView):
+    template_name = 'reporte_mensual.html'
+    login_url = 'usuarios:login'
+
+    
 
 class PDFGeneratorView(View):
     def get(self, request, *args, **kwargs):
@@ -221,13 +231,6 @@ class PDFGeneratorView(View):
         doc.build(elementos)
 
         return response
-
-
-
-
-from laboratorio_control_calidad.models import *
-from catalogos.models import *
-
 
 
 class ReporteRX50(View):

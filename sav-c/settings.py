@@ -71,7 +71,8 @@ JAZZMIN_SETTINGS = {
 
     "custom_app_names":
     {
-        "producto_no_conforme": "Productonforme",
+        
+        "laboratorio_control_calidad": "Control de calidad",
     },
     
 }
