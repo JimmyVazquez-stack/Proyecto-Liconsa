@@ -31,3 +31,11 @@ sav-c/__pycache__/__init__.cpython-311.pyc
 sav-c/__pycache__/settings.cpython-311.pyc
 sav-c/__pycache__/urls.cpython-311.pyc
 sav-c/__pycache__/wsgi.cpython-311.pyc
+sav-c/__pycache__/
+reportes/__pycache__/
+produccion/__pycache__/
+mantenimiento/__pycache__/
+laboratorio_control_calidad/__pycache__/
+almacen/__pycache__/
+distribucion/__pycache__/
+catalagos/__pycache__/
