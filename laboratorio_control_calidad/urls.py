@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *  
+from .views import *
 
 app_name = 'laboratorio_control_calidad'
 
@@ -18,10 +18,10 @@ urlpatterns = [
 
        
     #Formato con encabezado
-    path('encabezador49_create/', Encabezador49Create.as_view(), name='encabezador49_create'),
-    path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
-    path('encabezador49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
-    path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
+    # path('encabezador49_create/', Encabezador49Create.as_view(), name='encabezador49_create'),
+    # path('encabezador49_list/', Encabezador49View.as_view(), name='encabezador49_list'),
+    # path('encabezador49_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
+    # path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
     
     #Para valores de peso Neto
     path('pesonetor49_list/', MostrarPesosView.as_view(), name='pesonetor49_list'),
@@ -45,13 +45,12 @@ urlpatterns = [
 
 
     #Formato con encabezado
-    # path('encabezador49V2_Create/', Encabezador49Create.as_view(), name='encabezador49_create'),
-    # path('encabezador49V2_list/', Encabezador49View.as_view(), name='encabezador49_list'),
-    # path('encabezador49V2_delete/<int:pk>', Encabezador49Delete.as_view(), name='encabezador49_delete'),
-    # path('encabezador49V2_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
+    path('encabezador49V2_Create/', EncabR49CreateView.as_view(), name='encabezador49_create'),
+    path('encabezador49V2_list/', EncabR49ListView.as_view(), name='encabezador49_list'),
+    path('encabezador49V2_delete/<int:pk>', EncabR49DeleteView.as_view(), name='encabezador49_delete'),
+    path('encabezador49V2_update/<int:pk>', EncabR49UpdateView.as_view(), name='encabezador49_update'),
 
 
 ]
     
-    
-    #path('encabezador49V2_create/', .as_view(), name='encabezador49V2_Create'),
+

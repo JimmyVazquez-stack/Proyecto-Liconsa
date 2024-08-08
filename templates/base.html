@@ -10,19 +10,16 @@
   {% block estaticos %}
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="{% static 'css/fonts-google.css'%}">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
-  <!-- No usa el ionicons.min.css, usa el cndjs -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{% static 'css/sweetalert/sweetalert2.min.css'%}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'css/adminlte.min.css'%}">
   <!-- overlayScrollbars -->
@@ -31,19 +28,37 @@
   <link rel="stylesheet" href="{% static 'css/daterangepicker.css'%}">
   <!-- summernote -->
   <link rel="stylesheet" href="{% static 'css/summernote-bs4.min.css'%}">
-  <!-- font awesome-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{% static 'css/select2/select2.min.css'%} ">
+
+  
   <!-- Bootstrap CSS DT-->
   <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
   <!-- Datatables bootstrap 4 CSS -->
   <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
 
-  <script src="https://unpkg.com/feather-icons"></script>
+
+
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
+  <!-- No usa el ionicons.min.css, usa el cndjs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- font awesome-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!--Select2-->
+  <script src="{% static 'js/select2/select2.min.js'}"></script>
   {%endblock%}
   <!-- Favicon -->
   {% block Favicon%}
   <link rel="icon" href="{% static 'img/logoLiconsaFavicon.ico' %}" type="image/x-icon" />
   {% endblock%}
+  <!--Timepicker-->
+  <link rel="stylesheet" href="{% static 'css/timepicker/jquery.timepicker.min.css'%}">
 </head>
 {% endblock %}
 
@@ -158,7 +173,8 @@
                with font-awesome or any other icon font library -->
 
             <li class="nav-header">Panel General</li>
-
+            {% if  es_coordinador or es_staff %}
+            {% block catalogos%}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-restore"></i>
@@ -167,8 +183,7 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview">
-
+              <!-- <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -184,8 +199,24 @@
                         <p>Catalogos nivel 2</p>
                       </a>
                     </li>
-
                   </ul>
+                </li>
+              </ul> -->
+              <!-- Codigo para registrar usuarios en catalogos menu -->
+              <!-- <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'usuarios:listar_usuarios'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Usuarios</p>
+                  </a>
+                </li>
+              </ul> -->
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:areas_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Áreas</p>
+                  </a>
                 </li>
               </ul>
               <ul class="nav nav-treeview">
@@ -197,8 +228,106 @@
                 </li>
 
               </ul>
-            </li>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:maquinas_list' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Maquinas</p>
+                  </a>
+                </li>
 
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:cabezales_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Cabezales</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{%  url 'catalogos:plantas_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Plantas</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:poblaciones_list' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Poblaciones</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Gestión de productos
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="{% url 'catalogos:productos_list'%}" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Productos</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="{% url 'catalogos:tipo_producto_list'%}" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Tipo de producto</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:proveedores_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Proveedores</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:silos_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Silos</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:turnos_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Turnos</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'catalogos:rutas_list'%}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Rutas</p>
+                  </a>
+                </li>
+              </ul>
+
+            
+            </li>
+            {% endblock%}
+            {% endif %}
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-window-close"></i>
@@ -238,7 +367,35 @@
 
               </ul>
             </li>
+            <!-- menu lateral apartado producto_no_conforme -->
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-ban"></i>
+                <p>
+                  Producto no conforme
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
 
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <i class="fas fa-ban"></i>
+                    <p>Producto no conforme List</p>
+                  </a>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'producto_no_conforme:lecherias' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Envases rotos</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- menu lateral apartado Distribucion -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-truck"></i>
@@ -280,7 +437,7 @@
             </li>
 
 
-            <!-- lABORATORIO DE CALIDAD -->
+            <!-- menu lateral laboratorio de calidad -->
             <li class="nav-header">Laboratorio de control de calidad</li>
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -291,7 +448,6 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
@@ -325,6 +481,17 @@
                   </ul>
                 </li>
               </ul>
+              
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Leche Reconstituida Por Silos</p>
+                  </a>
+                </li>
+              </ul>
+
+
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
@@ -332,8 +499,9 @@
                     <p>Leche en polvo fortificada o Sin fortificar</p>
                   </a>
                 </li>
-
               </ul>
+
+              
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:soluciones_valoradas_ts' %}" class="nav-link">
@@ -385,19 +553,28 @@
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
                     <p>
-                    Tablas de registros R49
+                    FORMATO R49
                     <i class="fas fa-angle-left right"></i>
                     </p>
                  </a>  
               <!-- subseccion para tabla R49 -->
-                 <ul class="nav nav-treeview">
+                <ul class="nav nav-treeview">
                   <li class="nav-item">
                     <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="nav-link">
                       <i class="fas fa-circle-notch"></i>
-                      <p>Captura tablas Volumen Neto</p>
+                      <p>Captura Version1</p>
                     </a>
                   </li> 
-                </ul> 
+                </ul>
+                
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="nav-link">
+                      <i class="fas fa-circle-notch"></i>
+                      <p>Captura Version 2</p>
+                    </a>
+                  </li>
+                </ul>
                   <!-- subseccion para reporte peso neto -->
                   <ul class="nav nav-treeview">
                   <li class="nav-item">
@@ -435,19 +612,12 @@
                       </li>
                     </ul>
                   <!--subseccion para tabla Peso de envase vacio-->
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Forms en pestañas</p>
-                      </a>
-                    </li>
-                  </ul>
+                  
                 </li>
               </ul>
               <!--Fin Seccion formato R49 Juan Carlos --> 
                
-              <ul class="nav nav-treeview">
+              <!-- <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:verificacion_documentos' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
@@ -456,7 +626,19 @@
                 </li>
 
               </ul>
-            </li>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>TX-HP-910-01-R51</p>
+                  </a>
+                </li>
+
+              </ul>
+            </li> -->
+
+
+            <!-- menu lateral Almacen -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-box"></i>
@@ -531,6 +713,8 @@
                 </li>
               </ul>
             </li>
+
+            <!-- menu lateral Produccion-->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-cog"></i>
@@ -616,6 +800,7 @@
               </ul>
             </li>
 
+            <!-- menu lateral Mantenimiento -->
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-wrench"></i>
@@ -634,8 +819,6 @@
 
               </ul>
             </li>
-            <!-- lABORATORIO DE CALIDAD -->
-
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
@@ -645,6 +828,7 @@
       <!-- /.sidebar -->
     </aside>
     {%endblock%}
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       {%block principal%}
@@ -1745,6 +1929,8 @@
   {% block javascript%}
   <!-- jQuery -->
   <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <!-- Datatables -->
@@ -1752,31 +1938,27 @@
   <script src="{% static 'js/datatables/bootstrap.min.js' %}"></script>
   <script src="{% static 'js/datatables/dataTables.js' %}"></script>
   <script src="{% static 'js/datatables/dataTables.bootstrap4.js' %}"></script>
+  <script src="{% static 'plugins/datatables/jquery.dataTables.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/dataTables.buttons.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js'%}"></script>
+  <script src="{% static 'plugins/jszip/jszip.min.js'%}"></script>
+  <script src="{% static 'plugins/pdfmake/pdfmake.min.js'%}"></script>
+  <script src="{% static 'plugins/pdfmake/vfs_fonts.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
+  <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
 
-  <!-- Script para el sidebar de opcion elegida-->
-  <script>
-    $(document).ready(function () {
-      // Comprueba si hay un estado guardado en el almacenamiento local
-      var sidebarState = localStorage.getItem('sidebarState');
-      if (sidebarState) {
-        // Si hay un estado guardado, úsalo para establecer el estado del sidebar
-        $('#sidebar').attr('class', sidebarState);
-      }
-
-      // Cuando se haga clic en una opción del sidebar, guarda el estado actual del sidebar
-      $('#sidebar .nav-link').on('click', function () {
-        localStorage.setItem('sidebarState', $('#sidebar').attr('class'));
-      });
-    });
-  </script>
-
+  <!--Timepicker-->
+  <script src="{% static 'js/timepicker/jquery.timepicker.min.js'%}"></script>
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
     $.widget.bridge('uibutton', $.ui.button)
   </script>
 
-  <!-- Bootstrap 4 -->
-  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+
   <!-- ChartJS -->
   <script src="{% static 'js/Chart.min.js'%}"></script>
   <!-- Sparkline -->
@@ -1795,13 +1977,123 @@
   <script src="{% static 'js/jquery.overlayScrollbars.min.js'%}"></script>
   <!-- AdminLTE App -->
   <script src="{% static 'js/adminlte.js'%}"></script>
+
+
   <!-- AdminLTE for demo purposes -->
   <!-- <script src="{% static 'js/demo.js'%}"></script> -->
+  
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- SweetAlert2 -->
+  <script src="{% static 'js/sweetalert/sweetalert2.all.min.js'%}"></script>
+
+      <!-- Page specific script -->
+      <script>  
+        $(function() {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+            $('#example3').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+    <script>
+        if (screen.width > 800) {
+            document.getElementById('example2').id = '';
+            document.getElementById('example3').id = '';
+            console.log("cx")
+        }
+    </script>
+
 
   <script>
     feather.replace()
   </script>
+  <script>
+    // El código JavaScript que agregará los formularios dinámicamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const addFormBtn = document.getElementById('add-form-btn');
+      const formContainer = document.getElementById('formularios-body');
+      const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
+  
+      let formIndex = formContainer.querySelectorAll('tr').length;
+  
+      addFormBtn.addEventListener('click', function(event) {
+          event.preventDefault();
+          const newForm = formContainer.querySelector('tr:last-child').cloneNode(true);
+          const regex = new RegExp(`form-(\\d+)-`, 'g');
+          newForm.innerHTML = newForm.innerHTML.replace(regex, `form-${formIndex}-`);
+          const inputs = newForm.querySelectorAll('input, select, textarea');
+          inputs.forEach(input => {
+              if (input.type !== 'hidden') {
+                  input.value = '';
+              }
+          });
+          formContainer.appendChild(newForm);
+          formIndex++;
+          totalForms.value = formIndex;
+      });
+  });
+  
+  </script>
+
+<script>  
+  $(function() {
+      $("#example1").DataTable({
+          "responsive": true,
+          "lengthChange": false,
+          "autoWidth": false,
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      $('#example2').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+      });
+      $('#example3').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+      });
+  });
+</script>
+
+<script>
+  if (screen.width > 800) {
+      document.getElementById('example2').id = '';
+      document.getElementById('example3').id = '';
+      console.log("cx")
+  }
+</script>
+
 </body>
 {%endblock%}
 
