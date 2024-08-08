@@ -1,251 +1,30 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% block title %}Hipoclorito de Sodio{% endblock %}
+{% block principal %}
+{%block informacion%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
 
-<head>
-    <style>
-        @page {
-            size: A4 landscape;
-            margin: 20pt;
-        }
+                    <div class="callout callout-info">
 
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 10pt;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            page-break-inside: avoid;
-        }
-
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: center;
-        }
-
-        .encabezado-tabla {
-            background-color: #000000;
-            color: #ffffff;
-        }
-
-        .header-frame {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header-frame img {
-            max-width: 100px;
-            height: auto;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .footer-frame {
-            text-align: center;
-            position: fixed;
-            bottom: 10pt;
-            width: 100%;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="header-frame">
-        <table>
-            <tr>
-                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
-            </tr>
-            <tr>
-                <th>REPORTE MENSUAL - PERIODO:</th>
-            </tr>
-            <tr>
-                <th>PRODUCTO: LECHE PARCIALMENTE DESCREMADA</th>
-            </tr>
-        </table>
-        <div class="right-image">
-            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
+                        <h5>Reporte Mensual para el Laboratorio de control de calidad</h5>
+                        <p>En esta sección se recaba toda la informacion obtenida de blalblabla</p>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan="22" class="encabezado-tabla">COMPOSICION FISIOQUIMICA</th>
-            </tr>
-            <tr>
-                <th rowspan="3">Puntos de Evaluación</th>
-                <th rowspan="3">Número de Muestras</th>
-                <th colspan="4">Densidad</th>
-                <th colspan="4">Grasa</th>
-                <th colspan="4">SNG</th>
-                <th colspan="4">Proteínas</th>
-                <th colspan="4">Temperatura</th>
-            </tr>
-            <tr>
-                <th colspan="4">g/ml</th>
-                <th colspan="4">%</th>
-                <th colspan="4">%</th>
-                <th colspan="4">%</th>
-                <th colspan="4">°C</th>
-            </tr>
-            <tr>
-                <th>x</th>
-                <th>%FLE</th>
-                <th>vMAX</th>
-                <th>vMIN</th>
-                <th>x</th>
-                <th>%FLE</th>
-                <th>vMAX</th>
-                <th>vMIN</th>
-                <th>x</th>
-                <th>%FLE</th>
-                <th>vMAX</th>
-                <th>vMIN</th>
-                <th>x</th>
-                <th>%FLE</th>
-                <th>vMAX</th>
-                <th>vMIN</th>
-                <th>x</th>
-                <th>%FLE</th>
-                <th>vMAX</th>
-                <th>vMIN</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for dato in datos %}
-            <tr>
-                <td>{{ dato.nombre }}</td>
-                <td>{{ dato.numero_muestras }}</td>
-                <td>{{ dato.densidad_promedio|floatformat:2 }}</td>
-                <td>{{ dato.densidad_fle }}</td>
-                <td>{{ dato.densidad_maximo }}</td>
-                <td>{{ dato.densidad_minimo }}</td>
-                <td>{{ dato.grasas_promedio|floatformat:2 }}</td>
-                <td>{{ dato.grasas_fle }}</td>
-                <td>{{ dato.grasas_maximo }}</td>
-                <td>{{ dato.grasas_minimo }}</td>
-                <td>{{ dato.sng_promedio|floatformat:2 }}</td>
-                <td>{{ dato.sng_fle }}</td>
-                <td>{{ dato.sng_maximo }}</td>
-                <td>{{ dato.sng_minimo }}</td>
-                <td>{{ dato.proteina_promedio|floatformat:2 }}</td>
-                <td>{{ dato.proteina_fle }}</td>
-                <td>{{ dato.proteina_maximo }}</td>
-                <td>{{ dato.proteina_minimo }}</td>
-                <td>{{ dato.temperatura_promedio|floatformat:2 }}</td>
-                <td>{{ dato.temperatura_fle }}</td>
-                <td>{{ dato.temperatura_maximo }}</td>
-                <td>{{ dato.temperatura_minimo }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan="2" class="encabezado-tabla">DATOS DE PRODUCCIÓN</th>
-            </tr>
-            <tr>
-                <th>Producción real</th>
-                <th>Producción ventas</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>{{ produccion_real }}</td>
-                <td>{{ produccion_ventas }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan="6" class="encabezado-tabla">CONTROL DE ENVASADO</th>
-            </tr>
-            <tr>
-                <th rowspan="3">n</th>
-                <th colspan="5">Contenido neto</th>
-            </tr>
-            <tr>
-                <th colspan="5">ml</th>
-            </tr>
-            <tr>
-                <th>X</th>
-                <th>fli</th>
-                <th>CND-2T</th>
-                <th>máximo</th>
-                <th>mínimo</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>{{ n }}</td>
-                <td>{{ contenido_neto_promedio }}</td>
-                <td>{{ contenido_neto_fli }}</td>
-                <td>{{ contenido_neto_cnd2t }}</td>
-                <td>{{ contenido_neto_maximo }}</td>
-                <td>{{ contenido_neto_minimo }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan="8" class="encabezado-tabla">CALIDAD MICROBIOLOGICA</th>
-            </tr>
-            <tr>
-                <th rowspan="3">Puntos de evaluación</th>
-                <th rowspan="3">Número de muestras</th>
-                <th colspan="3">Organismos coliformes</th>
-                <th colspan="3">Aerobias</th>
-            </tr>
-            <tr>
-                <th colspan="3">UFC/ml</th>
-                <th colspan="3">UFC/ml</th>
-            </tr>
-            <tr>
-                <th>X</th>
-                <th>Fle</th>
-                <th>Máximo</th>
-                <th>X</th>
-                <th>Fle</th>
-                <th>Máximo</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for calidad in calidad_microbiologica %}
-            <tr>
-                <td>{{ calidad.punto_evaluacion }}</td>
-                <td>{{ calidad.numero_muestras }}</td>
-                <td>{{ calidad.organismos_coliformes_promedio }}</td>
-                <td>{{ calidad.organismos_coliformes_fle }}</td>
-                <td>{{ calidad.organismos_coliformes_maximo }}</td>
-                <td>{{ calidad.aerobias_promedio }}</td>
-                <td>{{ calidad.aerobias_fle }}</td>
-                <td>{{ calidad.aerobias_maximo }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="footer-frame">
-        <div id="footerContent">
-            <p>Página {{ page }} de {{ page_count }}</p>
-        </div>
-    </div>
-
-</body>
-
-</html>
+</div>
+    {%endblock%}
+{% endblock %}
