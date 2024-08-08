@@ -32,7 +32,6 @@ $(document).ready(function () {
         },
         columns: [
             { data: "nombre" },
-            { data: "contacto" },
             { data: "telefono" },
             { data: "correo" },
             { data: "nombre_planta" },
@@ -73,13 +72,51 @@ $(document).ready(function () {
         ],
     });
 
-  // Abrir modal para añadir proveedor
-  $("#btnAddProveedor").click(function () {
+// Función para cargar opciones de plantas en el modal de creación/edición de máquina
+function loadPlantas(selectedPlantaId = null) {
+    $.ajax({
+        url: '/catalogos/plantas/list/data/',
+        method: 'GET',
+        success: function(response) {
+            var plantaSelect = $('#planta');
+            plantaSelect.empty();
+
+            if (response.length > 0) {
+                // Añadir opción por defecto si hay más de 2 plantas
+                if (response.length > 2) {
+                    plantaSelect.append(new Option('Seleccione una planta', '', true, true));
+                } else if (response.length === 1) {
+                    plantaSelect.append(new Option('Seleccione una planta', '', false, false));
+                } else {
+                    plantaSelect.append(new Option('Seleccione una planta', '', true, true));
+                }
+
+                response.forEach(function(planta) {
+                    plantaSelect.append(new Option(planta.nombre, planta.id));
+                });
+
+                if (selectedPlantaId) {
+                    plantaSelect.val(selectedPlantaId);
+                }
+            } else {
+                plantaSelect.append(new Option('No hay plantas disponibles', '', true, true));
+            }
+        },
+        error: function() {
+            alert('Error al cargar las plantas.');
+        }
+    });
+}
+
+// Abrir modal para añadir proveedor
+$("#btnAddProveedor").click(function () {
     $("#proveedorModalLabel").text("Añadir Proveedor");
     $("#proveedorForm")[0].reset();
     $("#proveedorId").val("");
+    loadPlantas();
     $("#proveedorModal").modal("show");
 });
+
 
 // Guardar proveedor (añadir o editar) con validación usando SweetAlert2
 $("#saveProveedor").click(function () {
@@ -87,9 +124,10 @@ $("#saveProveedor").click(function () {
     var direccion = $("#direccion").val().trim();
     var telefono = $("#telefono").val().trim();
     var correo = $("#correo").val().trim();
+    var plantaId = $("#planta").val();
 
     // Validar que los campos no estén vacíos
-    if (!nombre || !direccion || !telefono || !correo) {
+    if (!nombre || !direccion || !telefono || !correo || !plantaId) {
         Swal.fire({
             icon: "error",
             title: "Error",
@@ -128,6 +166,55 @@ $("#saveProveedor").click(function () {
         },
     });
 });
+
+ // Abrir modal para añadir planta
+ $("#btnAddPlanta").click(function () {
+    $("#plantaModalLabel").text("Añadir Planta");
+    $("#plantaForm")[0].reset();
+    $("#plantaModal").modal("show");
+});
+
+  // Guardar planta
+  $("#savePlanta").click(function () {
+    var nombrePlanta = $("#nombrePlanta").val().trim();
+
+    // Validar que el campo no esté vacío
+    if (!nombrePlanta) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "El nombre de la planta es obligatorio",
+        });
+        return;
+    }
+
+    $.ajax({
+        url: "/plantas/create/",
+        method: "POST",
+        data: { nombre: nombrePlanta },
+        success: function (response) {
+            $("#plantaModal").modal("hide");
+            loadPlantas();
+            Swal.fire({
+                icon: "success",
+                title: "Guardado",
+                text: "Planta guardada con éxito",
+            });
+        },
+        error: function (xhr) {
+            var errorMessage = "Error al guardar la planta";
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: errorMessage,
+            });
+        },
+    });
+});
+
 
 // Manejadores manuales para cerrar el modal
 $("#proveedorModal .close, #proveedorModal .btn-secondary").click(function () {
