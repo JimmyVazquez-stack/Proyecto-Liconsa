@@ -1,10 +1,9 @@
 from django.urls import path
 from .views import (
     LecheriaListView, 
-    AñadirLecheriaView, 
     LecheriaDataView, 
-    ActualizarLecheriaView, 
     PoblacionListView, 
+    
     AreaListView, 
     MaquinaListView, 
     MaquinaDataView,
@@ -37,19 +36,33 @@ from .views import (
     MaquinaDeleteView,
     PlantaCreateView,
     PlantaUpdateView,
-    PlantaDeleteView
+    PlantaDeleteView,
+    LecheriaCreateView,
+    LecheriaUpdateView,
+    LecheriaDeleteView,
+    PoblacionCreateView,
+    PoblacionUpdateView,
+    PoblacionDeleteView,
+    TurnoCreateView,
+    TurnoUpdateView,
+    TurnoDeleteView,
+    
     )
 
 app_name = 'catalogos'
 
 urlpatterns = [
     path('lecherias/list/', LecheriaListView.as_view(), name='lecherias_list'),
-    path('añadir_lecheria/', AñadirLecheriaView.as_view(), name='añadir_lecheria'),
     path('lecherias/list/data/', LecheriaDataView.as_view(), name='lecherias_data'),
-    path('actualizar_lecheria/', ActualizarLecheriaView.as_view(), name='actualizar_lecheria'),
+    path('lecherias/create/', LecheriaCreateView.as_view(), name='crear_lecheria'),
+    path('lecherias/update/<int:pk>/', LecheriaUpdateView.as_view(), name='actualizar_lecheria'),
+    path('lecherias/delete/<int:pk>/', LecheriaDeleteView.as_view(), name='eliminar_lecheria'),
     #rutas a poblaciones
     path('poblaciones/list/', PoblacionListView.as_view(), name='poblaciones_list'),
     path('poblaciones/list/data/', DataPoblacionView.as_view(), name='poblaciones_data'),
+    path('poblaciones/create/', PoblacionCreateView.as_view(), name='crear_poblacion'),
+    path('poblaciones/update/<int:pk>/', PoblacionUpdateView.as_view(), name='actualizar_poblacion'),
+    path('poblaciones/delete/<int:pk>/', PoblacionDeleteView.as_view(), name='eliminar_poblacion'),
     #rutas a áreas
     path('areas/list/', AreaListView.as_view(), name='areas_list'),
     path('areas/list/data/', DataAreaView.as_view(), name='areas_data'),
@@ -77,6 +90,9 @@ urlpatterns = [
     #rutas a turnos
     path('turnos/list/', TurnoListView.as_view(), name='turnos_list'),
     path('turnos/list/data/', TurnoDataView.as_view(), name='turnos_data'),
+    path('turnos/create/', TurnoCreateView.as_view(), name='turnos_create'),
+    path('turnos/update/<int:pk>/', TurnoUpdateView.as_view(), name='turnos_update'),
+    path('turnos/delete/<int:pk>/', TurnoDeleteView.as_view(), name='turnos_delete'),
     #rutas a silos
     path('silos/list/', SiloListView.as_view(), name='silos_list'),
     path('silos/list/data/', DataSilosView.as_view(), name='silos_data'),
