@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-s82_sls-p1ey(@y-n0(m7=&+qoq3jm%wk#x8p6+ukexq5j1$si
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*"]
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'rest_framework',
 
     #Mis aplicaciones
     'laboratorio_control_calidad',
@@ -212,3 +213,5 @@ LOGIN_URL='usuarios:login'
 
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
+
+API_BASE_URL = 'http://localhost:8000/api/'

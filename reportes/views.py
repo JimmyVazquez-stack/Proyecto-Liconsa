@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
 import os
 from django.db.models import Min, Max, Count, Sum, F, FloatField
@@ -7,6 +7,12 @@ from django.views import View
 from laboratorio_control_calidad.models import *
 from catalogos.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
+from laboratorio_control_calidad.models import LecheReconsSilos
+from django.conf import settings
+import requests
+from django.shortcuts import render
+from django.http import HttpResponse
+
 
 #Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4
@@ -16,14 +22,69 @@ from reportlab.lib import colors
 from reportlab.graphics import renderPDF
 from reportlab.graphics import renderPDF
 from svglib.svglib import svg2rlg
+#APIS REST
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from laboratorio_control_calidad.models import LecheReconsSilos
+from .serializers import LecheReconsSilosSerializer
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
 
 
 #Vista para el reporte mensual para el laboratorio de control de calidad
-class ReporteMensual(LoginRequiredMixin, TemplateView):
-    template_name = 'reporte_mensual.html'
-    login_url = 'usuarios:login'
+class ReporteMensualView(LoginRequiredMixin, TemplateView):
+        def get(self, request, *args, **kwargs):
+            fecha_inicio = request.GET.get('fecha_inicio')
+            fecha_fin = request.GET.get('fecha_fin')
+            datos = []
 
-    
+            if fecha_inicio and fecha_fin:
+                api_url = f"{settings.API_BASE_URL}api/composicion_fisicoquimica/?fecha_inicio={fecha_inicio}&fecha_fin={fecha_fin}"
+                
+                try:
+                    response = requests.get(api_url)
+                    response.raise_for_status()
+                    datos = response.json()
+                except requests.exceptions.RequestException as e:
+                    return HttpResponse(f"Error al obtener datos: {str(e)}", status=500)
+            
+            context = {
+                'datos': datos,
+                'fecha_inicio': fecha_inicio,
+                'fecha_fin': fecha_fin,
+            }
+            print(context)
+            return render(request, 'reporte_mensual.html', context)
+
+
+#Vista para la API de composición fisicoquímica
+class ComposicionFisicoquimicaDataView(APIView):
+    def get(self, request, *args, **kwargs):
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+
+        if not fecha_inicio or not fecha_fin:
+            return Response({"error": "Se requieren ambos parámetros 'fecha_inicio' y 'fecha_fin' en el formato 'YYYY-MM-DD'"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            fecha_inicio = parse_date(fecha_inicio)
+            fecha_fin = parse_date(fecha_fin)
+            
+            if fecha_inicio is None or fecha_fin is None:
+                raise ValidationError("Formato de fecha incorrecto. Use 'YYYY-MM-DD'.")
+            
+            datos = LecheReconsSilos.objects.filter(fecha_Hora__date__range=[fecha_inicio, fecha_fin])
+        except ValidationError:
+            return Response({"error": "Formato de fecha incorrecto. Use 'YYYY-MM-DD'"}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({"error": "Error en el rango de fechas."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = LecheReconsSilosSerializer(datos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
 
 class PDFGeneratorView(View):
     def get(self, request, *args, **kwargs):
