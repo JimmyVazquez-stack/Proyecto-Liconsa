@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from catalogos.models import Cabezal, Planta, Producto, Maquina
+from catalogos.models import Cabezal, Planta, Producto, Maquina, Silo, Turno, Proveedor
+from usuarios.models import Usuario
 
 # Create your models here.
 class EncabTablaR49(models.Model):

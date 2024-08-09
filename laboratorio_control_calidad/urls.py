@@ -52,11 +52,7 @@ urlpatterns = [
 
 
     #Rutas para el CRUD de FormatoR49
-    path('registror49_create/', registror49_create.as_view(), name='registror49_create'),
-    path('registror49_list/', registror49_list.as_view(), name='registror49_list'),
-    path('registror49_delete/<int:pk>', registror49_delete.as_view(), name='registror49_delete'),
-    path('registror49_update/<int:pk>', registror49_update.as_view(), name='registror49_update'),
-
+    
     #complementarias Densidad
     path('densidadr49_create/', densidadr49_create.as_view(), name='densidadr49_create'),
     path('densidadr49_list/', densidadr49_list.as_view(), name='densidadr49_list'),

@@ -12,7 +12,7 @@ from django.conf import settings
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from django.urls  import reverse_lazy
 
 #Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4

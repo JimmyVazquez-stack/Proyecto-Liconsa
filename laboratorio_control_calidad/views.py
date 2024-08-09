@@ -76,11 +76,7 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin):
         return context
 
 #CRUD FormatoR49 Juan Carlos M.
-class registror49_list(generic.ListView):
-     model = TablaR49
-     queryset = TablaR49.objects.all ()
-     template_name = 'registror49_list.html'
-     context_object_name = 'tablar49'
+
 
 # class Encabezador49Create(View):
 #     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
@@ -639,3 +635,55 @@ class EncabR49DeleteView(generic.DeleteView):
     success_url = reverse_lazy('laboratorio_control_calidad:encabezador49V2_Delete')
 #)
 # END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
+
+#
+class TerminadoEncabUpdate(View):
+    success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
+
+    def get(self, request, *args, **kwargs):
+        encab = get_object_or_404(terminadoEncab, pk=kwargs['pk'])
+        encab_form = TerminadoEncabForm(instance=encab)
+        terminado_formset = TerminadoFormSet(instance=encab)
+        return render(request, 'producto_terminado.html', {
+            'encab_form': encab_form,
+            'terminado_formset': terminado_formset,
+        })
+
+    def post(self, request, *args, **kwargs):
+        encab = get_object_or_404(terminadoEncab, pk=kwargs['pk'])
+        encab_form = TerminadoEncabForm(request.POST, instance=encab)
+        terminado_formset = TerminadoFormSet(request.POST, instance=encab)
+
+        # Validar y guardar los formularios
+        if encab_form.is_valid():
+            encab_form.save()
+
+        # Guardar formularios válidos del formset
+        valid_forms = True
+        for form in terminado_formset:
+            # Verificar si el formulario está vacío (todos los campos vacíos)
+            if not any(form.data.get(form.add_prefix(field)) for field in form.fields):
+                continue
+
+            if form.is_valid():
+                form.save()
+            else:
+                valid_forms = False
+
+        # Manejo de errores
+        if not encab_form.is_valid() or not valid_forms:
+             return redirect(self.success_url)
+
+class TerminadoDelete(generic.DeleteView):
+    model = terminadoEncab
+    template_name = 'terminadoDelete.html'
+    context_object_name = 'terminado'
+    success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
+    
+class permisos(generic.UpdateView):
+    model = terminadoEncab
+    form_class = permisosForm
+    template_name = "modificar.html"
+    success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
+    login_url = reverse_lazy('usuarios:login')
+   
