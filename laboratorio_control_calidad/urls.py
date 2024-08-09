@@ -25,5 +25,14 @@ urlpatterns = [
     
     # - [End] - rutas para el CRUD de LecheReconstituidaPorSilos - [End] - #
 
+    # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilos - [Start] - #
+
+    path('Leche_Reconstituida_Por_Silos/list', LecheReconsSilosView.as_view(), name='Leche_Recons_Silos_List'),
+    
+    path('Leche_Reconstituida_Por_Silos/delete/<int:pk>', LecheReconsSilosDelete.as_view(), name='Leche_Recons_Silos_Delete'),
+    path('Leche_Reconstituida_Por_Silos/update/<int:pk>', LecheReconsSilosUpdate.as_view(), name='Leche_Recons_Silos_Update'),
+    path('Leche_Reconstituida_Por_Silos/Silo/delete/<int:pk>', LecheReconsSilosDeleteSilo.as_view(), name='Leche_Recons_Silos_Delete_Silo'),
+    # - [End] - rutas para el CRUD de LecheReconstituidaPor - [End] - #
+
 
 ]

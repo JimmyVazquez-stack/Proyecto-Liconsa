@@ -11,12 +11,12 @@ class LecheReconsSilosEncab(models.Model):
     observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
 
     def __str__(self):
-       return f"ID: {self.id}, Folio: {self.folio}"
+       return f"Folio: {self.folio}"
     
 class LecheReconsSilos(models.Model):
     OPCIONES = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),]
-    encabezado = models.ForeignKey(LecheReconsSilosEncab,on_delete=models.CASCADE,null=True)
-    fecha_Hora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
+    encabezado = models.ForeignKey(LecheReconsSilosEncab,on_delete=models.CASCADE,null=True, verbose_name="Folio")
+    fecha_Hora = models.DateTimeField(default=timezone.now,verbose_name=" Fecha y Hora")
     silo = models.ForeignKey(Silo,on_delete=models.CASCADE,verbose_name="No. Silo",null=True)
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE,verbose_name="Tipo de Producto", null=True)
     volumen = models.FloatField(default=0.0,verbose_name=" Volumen")

@@ -13,10 +13,10 @@
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
   
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
   <!-- Theme style -->
@@ -37,6 +37,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- font awesome-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
+  <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
 
   {%endblock%}
   <!-- Favicon -->
@@ -462,6 +467,15 @@
                   <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche Reconstituida Por Silos</p>
+                  </a>
+                </li>
+              </ul>
+
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_List' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Leche Reconstituida Por Silos Formulario Normal</p>
                   </a>
                 </li>
               </ul>
@@ -1887,79 +1901,18 @@
   <script src="{% static 'js/jquery.overlayScrollbars.min.js'%}"></script>
   <!-- AdminLTE App -->
   <script src="{% static 'js/adminlte.js'%}"></script>
-  <!-- AdminLTE for demo purposes -->
-  <!-- <script src="{% static 'js/demo.js'%}"></script> -->
+  
   
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="https://unpkg.com/feather-icons"></script>
 
+  <script src="{% static 'js/datatables/EspecificDataTableScript.js'%}"></script>
+
   <script>
     feather.replace()
   </script>
-  <script>
-    // El código JavaScript que agregará los formularios dinámicamente
-    document.addEventListener('DOMContentLoaded', function() {
-      const addFormBtn = document.getElementById('add-form-btn');
-      const formContainer = document.getElementById('formularios-body');
-      const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
   
-      let formIndex = formContainer.querySelectorAll('tr').length;
-  
-      addFormBtn.addEventListener('click', function(event) {
-          event.preventDefault();
-          const newForm = formContainer.querySelector('tr:last-child').cloneNode(true);
-          const regex = new RegExp(`form-(\\d+)-`, 'g');
-          newForm.innerHTML = newForm.innerHTML.replace(regex, `form-${formIndex}-`);
-          const inputs = newForm.querySelectorAll('input, select, textarea');
-          inputs.forEach(input => {
-              if (input.type !== 'hidden') {
-                  input.value = '';
-              }
-          });
-          formContainer.appendChild(newForm);
-          formIndex++;
-          totalForms.value = formIndex;
-      });
-  });
-  
-  </script>
 
-<script>  
-  $(function() {
-      $("#example1").DataTable({
-          "responsive": true,
-          "lengthChange": false,
-          "autoWidth": false,
-          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-      $('#example2').DataTable({
-          "paging": true,
-          "lengthChange": false,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false,
-          "responsive": true,
-      });
-      $('#example3').DataTable({
-          "paging": true,
-          "lengthChange": false,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false,
-          "responsive": true,
-      });
-  });
-</script>
-
-<script>
-  if (screen.width > 800) {
-      document.getElementById('example2').id = '';
-      document.getElementById('example3').id = '';
-      console.log("cx")
-  }
-</script>
 
 </body>
 {%endblock%}

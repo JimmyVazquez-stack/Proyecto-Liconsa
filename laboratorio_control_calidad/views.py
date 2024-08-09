@@ -1,6 +1,7 @@
+from urllib import request
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.views.generic import TemplateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin 
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.views import generic 
 from django.urls  import reverse_lazy
 from django.views import View
@@ -8,15 +9,17 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 from django.views.generic.edit import CreateView
-
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.db import transaction
 from usuarios.utils.mixins import GroupRequiredMixin
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.urls import reverse_lazy
+
 from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
+
+
+
+from django.views.generic import DetailView
+
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
@@ -172,7 +175,6 @@ class LecheReconsSilosEncabUpdate(View):
 
    
 
-
 class LecheReconsSilosEncabDelete(DeleteView):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Delete.html'
@@ -183,3 +185,106 @@ class LecheReconsSilosEncabDelete(DeleteView):
 
 #==========================[End] Leche Reconstituida por silos encab [End]==============================#
 
+#=========================[Start] Leche Reconstituida por silos  [Start]==============================#
+
+class LecheReconsSilosView(generic.ListView):
+    model = LecheReconsSilosEncab
+    queryset = LecheReconsSilosEncab.objects.all()
+    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_List.html'
+    context_object_name = 'LecheReconsSilosEncab'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['encab'] = LecheReconsSilosEncabForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = LecheReconsSilosEncabForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('laboratorio_control_calidad:Leche_Recons_Silos_List')
+        else:
+            print("Form errors:", form.errors)  # Agrega esta línea para ver los errores del formulario
+        return self.get(request, *args, **kwargs)
+
+    
+class LecheReconsSilosUpdate(generic.UpdateView):
+    model = LecheReconsSilosEncab
+    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Create.html'
+    context_object_name = 'LecheReconsSilosEncab'
+    form_class = LecheReconsSilosEncabForm
+    success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        encab_object = self.get_object()
+        context['silos'] = LecheReconsSilos.objects.filter(encabezado=encab_object)
+
+        # Obtener el ID del silo desde los parámetros GET para edición
+        silo_id = self.request.GET.get('silo_id')
+        if silo_id:
+            try:
+                nuevo_form = LecheReconsSilosForm(instance=LecheReconsSilos.objects.get(id=silo_id))
+                context['edit_mode'] = True
+            except LecheReconsSilos.DoesNotExist:
+                # Si el ID no existe, inicializar el formulario para un nuevo registro
+                nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
+                context['edit_mode'] = False
+        else:
+            nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
+            context['edit_mode'] = False
+
+        # Desactivar edición del encabezado
+        nuevo_form.fields['encabezado'].widget.attrs['readonly'] = True
+        context['form'] = self.get_form()
+        context['nuevo_form'] = nuevo_form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        silo_id = request.POST.get('silo_id')
+
+        # Asegurarse de que el formulario esté correctamente ligado a la instancia existente
+        if silo_id and silo_id.isdigit():
+            try:
+                silo_instance = LecheReconsSilos.objects.get(id=silo_id)
+                nuevo_form = LecheReconsSilosForm(request.POST, instance=silo_instance)
+            except LecheReconsSilos.DoesNotExist:
+                nuevo_form = LecheReconsSilosForm(request.POST)
+        else:
+            nuevo_form = LecheReconsSilosForm(request.POST)
+
+        # Guardar el formulario de encabezado si se presionó su botón de guardar
+        if 'submit-encab-form' in request.POST and form.is_valid():
+            form.save()
+            return redirect(self.success_url)
+
+        # Guardar o actualizar el formulario de silo si se presionó su botón de guardar
+        if 'submit-nuevo-form' in request.POST and nuevo_form.is_valid():
+            nuevo_form.save()
+            return redirect(request.path)
+
+        # En caso de errores, renderizar los formularios con los datos ya ingresados
+        context = self.get_context_data()
+        context['form'] = form
+        context['nuevo_form'] = nuevo_form
+        return self.render_to_response(context)
+
+
+
+class LecheReconsSilosDelete(DeleteView):
+    model = LecheReconsSilosEncab
+    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete.html'
+    context_object_name = 'LecheReconsSilosEncab'
+    success_url = reverse_lazy('Leche_Recons_Silos_List')
+
+class LecheReconsSilosDeleteSilo(DeleteView):
+    model = LecheReconsSilos
+    template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete_Silo.html'
+    context_object_name = 'LecheReconsSilos'
+    success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
+    
+ 
+
+#==========================[End] Leche Reconstituida por silos  [End]==============================#
