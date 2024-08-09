@@ -729,6 +729,78 @@ class ProductoDataView(LoginRequiredMixin, View):
 
 
 
+class ProductoCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        tipo_producto_id = data.get('tipo_producto_id')
+
+        if not (nombre and tipo_producto_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            tipo_producto = TipoProducto.objects.get(id=tipo_producto_id)
+            producto = Producto.objects.create(
+                nombre=nombre,
+                tipo_producto=tipo_producto
+            )
+            return JsonResponse({
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'nombre_tipo_producto': producto.tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el producto.'}, status=400)
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=400)
+
+
+class ProductoDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        producto_id = request.POST.get('producto_id')
+
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            producto.delete()
+            return JsonResponse({'mensaje': 'Producto eliminado con éxito'})
+        except Producto.DoesNotExist:
+            return JsonResponse({'error': 'Producto no encontrado.'}, status=404)
+
+class ProductoUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        producto_id = request.POST.get('producto_id')
+        nombre = request.POST.get('nombre')
+        tipo_producto_id = request.POST.get('tipo_producto_id')
+
+        if not (producto_id and nombre and tipo_producto_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            tipo_producto = get_object_or_404(TipoProducto, id=tipo_producto_id)
+
+            producto.nombre = nombre
+            producto.tipo_producto = tipo_producto
+            producto.save()
+
+            return JsonResponse({
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'nombre_tipo_producto': producto.tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el producto.'}, status=400)
+        except Producto.DoesNotExist:
+            return JsonResponse({'error': 'Producto no encontrado.'}, status=404)
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=404)
+
 
 class TipoProductoListView(LoginRequiredMixin, TemplateView):
     template_name = 'gestion_de_productos/listar_tipo_productos.html'
@@ -745,7 +817,23 @@ class TipoProductoDataView(LoginRequiredMixin, View):
         tipo_productos_list = list(tipo_productos)
         return JsonResponse(tipo_productos_list, safe=False)
 
-# vistas para rutas
+class TipoProductoCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        nombre = request.POST.get('nombre')
+
+        if not nombre:
+            return JsonResponse({'error': 'El nombre es obligatorio'}, status=400)
+
+        try:
+            tipo_producto = TipoProducto.objects.create(nombre=nombre)
+            return JsonResponse({
+                'id': tipo_producto.id,
+                'nombre': tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el tipo de producto.'}, status=400)
 
 
 

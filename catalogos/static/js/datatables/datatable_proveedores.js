@@ -176,20 +176,12 @@ $("#btnAddPlanta").click(function () {
 
 // Guardar planta
 $("#savePlanta").click(function () {
-    var nombrePlanta = $("#nombre").val().trim();
-    var ubicacionPlanta = $("#ubicacion").val().trim();
-    var correoPlanta = $("#correo").val().trim();
-    var contactoPlanta = $("#contacto").val().trim();
-    var telefonoPlanta = $("#telefono").val().trim();
+    var nombrePlanta = $("#nombrePlanta").val().trim();
+    var ubicacionPlanta = $("#ubicacionPlanta").val().trim();
+    var correoPlanta = $("#correoPlanta").val().trim();
+    var contactoPlanta = $("#contactoPlanta").val().trim();
+    var telefonoPlanta = $("#telefonoPlanta").val().trim();
 
-     // Mensajes de depuración
-     console.log("Evento de clic activado");
-     console.log("Nombre:", nombrePlanta);
-     console.log("Ubicación:", ubicacionPlanta);
-     console.log("Correo:", correoPlanta);
-     console.log("Contacto:", contactoPlanta);
-     console.log("Teléfono:", telefonoPlanta);
- 
 
     // Validar que todos los campos estén llenos
     if (!nombrePlanta || !ubicacionPlanta || !correoPlanta || !contactoPlanta || !telefonoPlanta) {

@@ -54,8 +54,13 @@ urlpatterns = [
     #rutas a gestion de productos
     path('productos/list/', views.ProductoListView.as_view(), name='productos_list'),
     path('productos/list/data/', views.ProductoDataView.as_view(), name='productos_data'),
+    path('productos/create/', views.ProductoCreateView.as_view(), name='producto_create'),
+    path('productos/update/<int:producto_id>/', views.ProductoUpdateView.as_view(), name='producto_update'),
+    path('productos/delete/', views.ProductoDeleteView.as_view(), name='producto_delete'),
+    #rutas a gestion de tipos de productos
     path('tipo_producto/list/', views.TipoProductoListView.as_view(), name='tipo_producto_list'),
     path('tipo_producto/list/data/', views.TipoProductoDataView.as_view(), name='tipo_producto_data'),
+    path('tipo_producto/create/', views.TipoProductoCreateView.as_view(), name='tipo_producto_create'),
     #rutas
     path('rutas/list/', views.RutaListView.as_view(), name='rutas_list'),
     path('rutas/list/data/', views.RutaDataView.as_view(), name='rutas_data'),
