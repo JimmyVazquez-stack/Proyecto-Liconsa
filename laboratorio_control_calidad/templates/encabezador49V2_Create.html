@@ -78,13 +78,14 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Delete' item.id %}"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesobrutor49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesobrutor49_delete' item.id %}"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{% url 'laboratorio_control_calidad:pesobrutor49_create' %}" class="btn btn-primary">Nuevo registro</a>
         </div>
     </div>
 
@@ -119,13 +120,14 @@
                         <td>{{ item.densidad }}</td>
                         <td>{{ item.volumen }}</td>
                         <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_Update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_Delete' item.id %}"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_delete' item.id %}"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{% url 'laboratorio_control_calidad:densidadr49_create' %}" class="btn btn-primary">Nuevo registro</a>
         </div>
     </div>
 
@@ -156,14 +158,14 @@
                         <td>{{item.proveedor}}</td>
                         <td>{{item.peso}}</td>
                         <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoBrutor49_Delete' item.id %}"><i class="fas fa-trash"></i></a>
+                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_delete' item.id %}"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'laboratorio_control_calidad:pesoBrutor49_Create' %}" class="btn btn-primary">Nuevo registro</a>
+            <a href="{% url 'laboratorio_control_calidad:pesoenvvacior49_create' %}" class="btn btn-primary">Nuevo registro</a>
         </div>
     </div>
 
