@@ -37,7 +37,6 @@ class LecheriaDataView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         lecherias = Lecheria.objects.annotate(
             nombre_ruta=F('ruta__nombre'),
-            nombre_ruta=F('ruta__nombre'),
             nombre_poblacion=F('poblacion__nombre'),
         ).values()  # Elimina los argumentos aquí
         lecherias_list = list(lecherias)
@@ -407,8 +406,6 @@ class CabezalDataView(LoginRequiredMixin, View):
         cabezales = Cabezal.objects.annotate(
             numero_maquina=Concat(
                 Value('Maquina-'), F('maquina__numero'), output_field=CharField()),
-            numero_maquina=Concat(
-                Value('Maquina-'), F('maquina__numero'), output_field=CharField()),
             planta_maquina=F('maquina__planta__nombre'),
         ).values()  # Elimina la anotación aquí
         cabezales_list = list(cabezales)
@@ -439,7 +436,7 @@ class PlantaDataView(LoginRequiredMixin, View):
 
 class PlantaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
-
+ 
     def post(self, request, *args, **kwargs):
         data = request.POST
         nombre = data.get('nombre')
@@ -472,11 +469,8 @@ class PlantaCreateView(LoginRequiredMixin, View):
 
 
 
-
         
 # Vista para actualizar planta
-
-
 class PlantaUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -547,19 +541,17 @@ class ProveedorCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         data = request.POST
         nombre = data.get('nombre')
-        direccion = data.get('direccion')
         telefono = data.get('telefono')
         correo = data.get('correo')
         planta_id = data.get('planta_id')
 
-        if not (nombre and direccion and telefono and correo and planta_id):
+        if not (nombre and telefono and correo and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
             planta = Planta.objects.get(id=planta_id)
             proveedor = Proveedor.objects.create(
                 nombre=nombre,
-                direccion=direccion,
                 telefono=telefono,
                 correo=correo,
                 planta=planta
@@ -578,19 +570,17 @@ class ProveedorUpdateView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         data = request.POST
         nombre = data.get('nombre')
-        direccion = data.get('direccion')
         telefono = data.get('telefono')
         correo = data.get('correo')
         planta_id = data.get('planta_id')
 
-        if not (nombre and direccion and telefono and correo and planta_id):
+        if not (nombre  and telefono and correo and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
             proveedor = Proveedor.objects.get(pk=pk)
             planta = Planta.objects.get(id=planta_id)
             proveedor.nombre = nombre
-            proveedor.direccion = direccion
             proveedor.telefono = telefono
             proveedor.correo = correo
             proveedor.planta = planta
@@ -609,7 +599,7 @@ class ProveedorUpdateView(LoginRequiredMixin, View):
 class ProveedorDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    def post(self, request, pk, *args, **kwargs):
+    def delete(self, request, pk, *args, **kwargs):
         try:
             proveedor = Proveedor.objects.get(pk=pk)
             proveedor.delete()

@@ -96,7 +96,6 @@
 
     </div>
 </div>
-
 <!-- Modal para añadir/editar proveedor -->
 <div class="modal fade" id="proveedorModal" tabindex="-1" aria-labelledby="proveedorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -109,42 +108,42 @@
             </div>
             <div class="modal-body">
                 <form id="proveedorForm">
-                    <input type="hidden" id="proveedorId" name="id">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="correo" class="form-label">Correo</label>
+                    <div class="form-group">
+                        <label for="correo">Correo</label>
                         <input type="email" class="form-control" id="correo" name="correo" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="planta" class="form-label">Planta</label>
-                        <select class="form-control" id="planta" name="planta_id" required>
-                            <option value="">Selecciona una planta</option>
-                            <!-- Las opciones se cargarán dinámicamente -->
-                        </select>
-                        <button type="button" class="btn btn-link" id="btnAddPlanta">Añadir nueva planta</button>
+                    <div class="form-group">
+                        <label for="planta">Planta</label>
+                        <div class="input-group">
+                            <select class="form-control" id="planta" name="planta_id" required>
+                                <option value="">Selecciona una planta</option>
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" id="btnAddPlanta">Añadir Planta</button>
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="saveProveedor">Guardar</button>
+                    <input type="hidden" id="proveedorId" name="proveedorId">
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveProveedor">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
-
 <!-- Modal para añadir planta -->
-
 <div class="modal fade" id="plantaModal" tabindex="-1" aria-labelledby="plantaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -156,30 +155,32 @@
             </div>
             <div class="modal-body">
                 <form id="plantaForm">
-                    <input type="hidden" id="plantaId" name="id">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="ubicacion" class="form-label">Ubicación</label>
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicación</label>
                         <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="correo" class="form-label">Correo</label>
+                    <div class="form-group">
+                        <label for="correo">Correo</label>
                         <input type="email" class="form-control" id="correo" name="correo" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="contacto" class="form-label">Contacto</label>
+                    <div class="form-group">
+                        <label for="contacto">Contacto</label>
                         <input type="text" class="form-control" id="contacto" name="contacto" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" required>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="savePlanta">Guardar</button>
+                    <input type="hidden" id="plantaId" name="plantaId">
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="savePlanta">Guardar</button>
             </div>
         </div>
     </div>

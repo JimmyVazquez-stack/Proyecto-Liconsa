@@ -120,12 +120,12 @@ $('#btnAddPlanta').click(function() {
 
 // Guardar planta con validación usando SweetAlert2
 $('#savePlanta').click(function() {
-    console.log("Botón guardar planta clicado");
     var nombre = $('#nombre').val().trim();
     var ubicacion = $('#ubicacion').val().trim();
     var correo = $('#correo').val().trim();
     var contacto = $('#contacto').val().trim();
     var telefono = $('#telefono').val().trim();
+
 
     // Validar que todos los campos no estén vacíos
     if (!nombre || !ubicacion || !correo || !contacto || !telefono) {
