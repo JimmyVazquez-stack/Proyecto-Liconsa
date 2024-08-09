@@ -1,5 +1,5 @@
 db.sqlite3
-entornoVirtual
+entornoVirtual/
 __pycache__/
 *.pycache
 .vscode/settings.json

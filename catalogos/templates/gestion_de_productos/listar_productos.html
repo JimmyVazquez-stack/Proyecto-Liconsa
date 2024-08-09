@@ -58,7 +58,7 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <button id="btnAddRuta" class="btn btn-primary">
+                                <button id="btnAddProducto" class="btn btn-primary">
                                     Añadir Producto
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -90,6 +90,72 @@
     </div>
     <div class="row">
 
+    </div>
+</div>
+<!-- Modal para añadir producto -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Añadir Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productoForm">
+                    <div class="form-group">
+                        <label for="nombreProducto">Nombre de Producto</label>
+                        <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoProducto">Tipo de Producto</label>
+                        <div class="input-group">
+                            <select class="form-control" id="tipoProducto" name="tipoProducto" required></select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" id="btnAddTipoProducto">Añadir Tipo de Producto</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="productoId" name="productoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="saveProducto">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para añadir tipo de producto -->
+<div class="modal fade" id="tipoProductoModal" tabindex="-1" role="dialog" aria-labelledby="tipoProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tipoProductoModalLabel">Añadir Tipo de Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tipoProductoForm">
+                    <div class="form-group">
+                        <label for="nombreTipoProducto">Nombre de Tipo de Producto</label>
+                        <input type="text" class="form-control" id="nombreTipoProducto" name="nombreTipoProducto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionTipoProducto">Descripción</label>
+                        <input type="text" class="form-control" id="descripcionTipoProducto" name="descripcionTipoProducto" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="saveTipoProducto">Guardar Tipo de Producto</button>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -67,166 +67,207 @@ $(document).ready(function() {
         ]
     });
 
-    // Cargar opciones de plantas en el modal de creación/edición de máquina
-    function loadPlantas() {
-        $.ajax({
-            url: '/catalogos/plantas/list/data/',
-            method: 'GET',
-            success: function(response) {
-                var plantaSelect = $('#planta');
-                plantaSelect.empty();
-                if (response.length > 0) {
-                    response.forEach(function(planta) {
-                        plantaSelect.append(new Option(planta.nombre, planta.id));
-                    });
+// Función para cargar opciones de plantas en el modal de creación/edición de máquina
+function loadPlantas(selectedPlantaId = null) {
+    $.ajax({
+        url: '/catalogos/plantas/list/data/',
+        method: 'GET',
+        success: function(response) {
+            var plantaSelect = $('#planta');
+            plantaSelect.empty();
+
+            if (response.length > 0) {
+                // Añadir opción por defecto si hay más de 2 plantas
+                if (response.length > 2) {
+                    plantaSelect.append(new Option('Seleccione una planta', '', true, true));
+                } else if (response.length === 1) {
+                    plantaSelect.append(new Option('Seleccione una planta', '', false, false));
                 } else {
-                    plantaSelect.append(new Option('No hay plantas disponibles', ''));
+                    plantaSelect.append(new Option('Seleccione una planta', '', true, true));
                 }
-            },
-            error: function() {
-                alert('Error al cargar las plantas.');
+
+                response.forEach(function(planta) {
+                    plantaSelect.append(new Option(planta.nombre, planta.id));
+                });
+
+                if (selectedPlantaId) {
+                    plantaSelect.val(selectedPlantaId);
+                }
+            } else {
+                plantaSelect.append(new Option('No hay plantas disponibles', '', true, true));
             }
+        },
+        error: function() {
+            alert('Error al cargar las plantas.');
+        }
+    });
+}
+
+// Abrir modal para añadir máquina
+$('#btnAddMaquina').click(function() {
+    $('#maquinaModalLabel').text('Añadir Máquina');
+    $('#maquinaForm')[0].reset();
+    $('#maquinaId').val('');
+    loadPlantas();
+    $('#maquinaModal').modal('show');
+});
+
+$(function() {
+  // Abrir modal para añadir planta desde el modal de máquina
+$('#btnAddPlanta').click(function() {
+    $('#plantaModal').modal('show');
+});
+
+// Guardar planta con validación usando SweetAlert2
+$('#savePlanta').click(function() {
+    var nombre = $('#nombre').val().trim();
+    var ubicacion = $('#ubicacion').val().trim();
+    var correo = $('#correo').val().trim();
+    var contacto = $('#contacto').val().trim();
+    var telefono = $('#telefono').val().trim();
+
+
+    // Validar que todos los campos no estén vacíos
+    if (!nombre || !ubicacion || !correo || !contacto || !telefono) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Todos los campos son obligatorios',
         });
+        return;
     }
 
-    // Abrir modal para añadir maquina
-    $('#btnAddMaquina').click(function() {
-        $('#maquinaModalLabel').text('Añadir Maquina');
-        $('#maquinaForm')[0].reset();
-        $('#maquinaId').val('');
-        loadPlantas();
-        $('#maquinaModal').modal('show');
-    });
+    $.ajax({
+        url: '/catalogos/plantas/create/',
+        method: 'POST',
+        data: $('#plantaForm').serialize(),
+        success: function(response) {
+            // Añadir la nueva planta al dropdown
+            var newOption = new Option(response.nombre, response.id, true, true);
+            $('#nombre_planta').append(newOption).trigger('change');
 
-    // Guardar maquina (añadir o editar) con validación usando SweetAlert2
-    $('#saveMaquina').click(function() {
-        var numero = $('#numero').val().trim();
-        var planta = $('#planta').val();
-    
-        // Validar que los campos no estén vacíos
-        if (!numero || !planta) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Planta guardada con éxito',
+            }).then(() => {
+                // Cerrar solo el modal de añadir planta y mantener el modal de máquina abierto
+                $('#plantaModal').modal('hide');
+            });
+        },
+        error: function(xhr) {
+            var errorMessage = 'Error al guardar la planta';
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Todos los campos son obligatorios',
+                text: errorMessage,
             });
-            return;
         }
-    
-        var maquinaId = $('#maquinaId').val();
-        var url = maquinaId ? `/catalogos/maquinas/update/${maquinaId}/` : '/catalogos/maquinas/create/';
-        var method = 'POST';
-    
-        $.ajax({
-            url: url,
-            method: method,
-            data: $('#maquinaForm').serialize(),
-            success: function(response) {
-                $('#maquinaModal').modal('hide');
-                table.ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Guardado',
-                    text: 'Maquina guardada con éxito',
-                });
-            },
-            error: function(xhr) {
-                var errorMessage = 'Error al guardar la maquina';
-                if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessage,
-                });
-            }
-        });
     });
+});
 
-    // Manejadores manuales para cerrar el modal
-    $('#maquinaModal .close, #maquinaModal .btn-secondary').click(function() {
-        $('#maquinaModal').modal('hide');
-    });
+});
 
-    // Abrir modal para editar maquina
-    $('#tabla_maquinas tbody').on('click', '.btn-edit', function() {
-        var data = table.row($(this).parents('tr')).data();
-        $('#maquinaModalLabel').text('Editar Maquina');
-        $('#numero').val(data.numero);
-        $('#planta').val(data.planta_id);
-        $('#maquinaId').val(data.id);
-        loadPlantas();
-        $('#maquinaModal').modal('show');
-    });
+// Guardar máquina (añadir o editar) con validación usando SweetAlert2
+$('#saveMaquina').click(function() {
+    var numero = $('#numero').val().trim();
+    var planta = $('#planta').val();
 
-    // Confirmar eliminación usando SweetAlert2
-    $('#tabla_maquinas tbody').on('click', '.btn-delete', function() {
-        var data = table.row($(this).parents('tr')).data();
+    // Validar que los campos no estén vacíos
+    if (!numero || !planta) {
         Swal.fire({
-            title: '¿Estás seguro?',
-            text: "¡No podrás revertir esto!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: 'red',
-            cancelButtonColor: 'gray',
-            confirmButtonText: 'Sí, eliminarlo!',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `/catalogos/maquinas/delete/${data.id}/`,
-                    method: 'DELETE',
-                    success: function(response) {
-                        table.ajax.reload();
-                        Swal.fire(
-                            'Eliminado!',
-                            'La maquina ha sido eliminada.',
-                            'success'
-                        );
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error al eliminar la maquina',
-                        });
-                    }
-                });
-            }
+            icon: 'error',
+            title: 'Error',
+            text: 'Todos los campos son obligatorios',
         });
-    });
+        return;
+    }
 
+    var maquinaId = $('#maquinaId').val();
+    var url = maquinaId ? `/catalogos/maquinas/update/${maquinaId}/` : '/catalogos/maquinas/create/';
+    var method = 'POST'; // Usamos POST para ambos casos
 
-       // Abrir modal para añadir planta
-    $('#addPlantaLink').click(function() {
-        $('#addPlantaModal').modal('show');
-    });
-
-    // Manejar el envío del formulario de creación de plantas
-    $('#addPlantaForm').submit(function(event) {
-        event.preventDefault();
-        var formData = $(this).serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: '/catalogos/plantas/create/',  // Actualiza esta URL con la ruta correcta
-            data: formData,
-            success: function(response) {
-                // Cerrar el modal
-                $('#addPlantaModal').modal('hide');
-
-                // Actualizar el select2 con la nueva planta
-                var newOption = new Option(response.nombre, response.id, false, false);
-                $('#selectPlanta').append(newOption).trigger('change');
-
-                // Mostrar un mensaje de éxito (opcional)
-                alert('Planta añadida exitosamente.');
-            },
-            error: function(xhr, status, error) {
-                // Manejar errores (opcional)
-                alert('Error al añadir la planta.');
+    $.ajax({
+        url: url,
+        method: method,
+        data: $('#maquinaForm').serialize(),
+        success: function(response) {
+            $('#maquinaModal').modal('hide');
+            table.ajax.reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Máquina guardada con éxito',
+            });
+        },
+        error: function(xhr) {
+            var errorMessage = 'Error al guardar la máquina';
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
             }
-        });
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            });
+        }
     });
+});
+
+// Manejadores manuales para cerrar los modales
+$('#maquinaModal .close, #maquinaModal .btn-secondary, #plantaModal .close, #plantaModal .btn-secondary').click(function() {
+    $('#maquinaModal').modal('hide');
+    $('#plantaModal').modal('hide');
+});
+// Abrir modal para editar máquina
+$('#tabla_maquinas tbody').on('click', '.btn-edit', function() {
+    var data = table.row($(this).parents('tr')).data();
+    $('#maquinaModalLabel').text('Editar Máquina');
+    $('#numero').val(data.numero);
+    $('#maquinaId').val(data.id);
+    loadPlantas(data.planta_id); // Cargar las plantas y seleccionar la planta correcta
+    $('#maquinaModal').modal('show');
+});
+
+
+
+// Confirmar eliminación usando SweetAlert2
+$('#tabla_maquinas tbody').on('click', '.btn-delete', function() {
+    var data = table.row($(this).parents('tr')).data();
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'red',
+        cancelButtonColor: 'gray',
+        confirmButtonText: 'Sí, eliminarlo!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/catalogos/maquinas/delete/${data.id}/`,
+                method: 'DELETE',
+                success: function(response) {
+                    table.ajax.reload();
+                    Swal.fire(
+                        'Eliminado!',
+                        'La máquina ha sido eliminada.',
+                        'success'
+                    );
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al eliminar la máquina',
+                    });
+                }
+            });
+        }
+    });
+});
     });

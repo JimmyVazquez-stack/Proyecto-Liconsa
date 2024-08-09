@@ -1,7 +1,7 @@
 #Importaciones modelos
 from .models import (Lecheria, Ruta, Poblacion, Maquina, Planta, Turno, Silo, Cabezal, Producto, TipoProducto, Proveedor, Turno, Lecheria)
 from usuarios.models import Area
-from django.db.models import F, Value, CharField
+from django.db.models import F, Value, CharField, Q
 from django.db.models.functions import Concat
 #Importaciones forms
 from .forms import LecheriaForm
@@ -11,16 +11,30 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 #Otras importaciones
 from django.shortcuts import get_object_or_404
+from django.views import View
+#Otras importaciones
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.db.utils import IntegrityError
+from django.http import JsonResponse
+from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from .models import Turno
 
 
 
+
+# Create your views here.
 class LecheriaListView(LoginRequiredMixin, TemplateView):
     template_name = 'lecherias/lecherias_list.html'
     login_url = reverse_lazy('usuarios:login')
+
 
 
 class LecheriaDataView(LoginRequiredMixin, View):
@@ -35,6 +49,14 @@ class LecheriaDataView(LoginRequiredMixin, View):
         return JsonResponse(lecherias_list, safe=False)
 
 
+
+# Vista para crear una nueva lechería
+
+class LecheriaCreateView(LoginRequiredMixin, CreateView):
+    model = Lecheria
+    form_class = LecheriaForm
+    template_name = 'lecherias/lecheria_form.html'
+    success_url = reverse_lazy('lecherias:list')
 # Vista para crear una nueva lechería
 
 class LecheriaCreateView(LoginRequiredMixin, CreateView):
@@ -84,6 +106,46 @@ class LecheriaDeleteView(LoginRequiredMixin, DeleteView):
 # Vistas de poblaciones
 
 
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'id': self.object.id, 'status': 'success'})
+
+    def form_invalid(self, form):
+        return JsonResponse({'errors': form.errors, 'status': 'error'})
+
+# Vista para actualizar una lechería existente
+
+
+class LecheriaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Lecheria
+    form_class = LecheriaForm
+    template_name = 'lecherias/lecheria_form.html'
+    success_url = reverse_lazy('lecherias:list')
+    login_url = reverse_lazy('usuarios:login')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'id': self.object.id, 'status': 'success'})
+
+    def form_invalid(self, form):
+        return JsonResponse({'errors': form.errors, 'status': 'error'})
+
+# Vista para eliminar una lechería
+
+
+class LecheriaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Lecheria
+    success_url = reverse_lazy('lecherias:list')
+    login_url = reverse_lazy('usuarios:login')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return JsonResponse({'status': 'success'})
+
+# Vistas de poblaciones
+
+
 class PoblacionListView(LoginRequiredMixin, TemplateView):
     template_name = 'poblaciones/listar_poblaciones.html'
     login_url = reverse_lazy('usuarios:login')
@@ -92,6 +154,7 @@ class PoblacionListView(LoginRequiredMixin, TemplateView):
 class DataPoblacionView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
     def get(self, request, *args, **kwargs):
+        poblaciones = Poblacion.objects.values()
         poblaciones = Poblacion.objects.values()
         poblaciones_list = list(poblaciones)
         return JsonResponse(poblaciones_list, safe=False)
@@ -147,7 +210,6 @@ class PoblacionUpdateView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         
-        
 class PoblacionDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -165,13 +227,18 @@ class AreaListView(LoginRequiredMixin,TemplateView):
     login_url = reverse_lazy('usuarios:login')
 
 
+
+
 class DataAreaView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
+
 
     def get(self, request, *args, **kwargs):
         areas = Area.objects.values()  # Elimina los argumentos aquí
         areas_list = list(areas)
         return JsonResponse(areas_list, safe=False)
+
+
 
 
 class AreaCreateView(LoginRequiredMixin, View):
@@ -180,15 +247,19 @@ class AreaCreateView(LoginRequiredMixin, View):
         nombre = data.get('nombre')
         descripcion = data.get('descripcion')
 
+
         # Verificar si ya existe un área con el mismo nombre
         if Area.objects.filter(nombre=nombre).exists():
             return JsonResponse({'error': 'Ya existe un área con este nombre.'}, status=400)
+
 
         try:
             area = Area.objects.create(nombre=nombre, descripcion=descripcion)
             return JsonResponse({'id': area.id, 'nombre': area.nombre, 'descripcion': area.descripcion})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+
 
 
 class AreaUpdateView(LoginRequiredMixin, View):
@@ -224,16 +295,18 @@ class AreaDeleteView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-
-
 # vistas de maquinas
+
+
 class MaquinaListView(LoginRequiredMixin, TemplateView):
     template_name = 'maquinas/listar_maquinas.html'
     login_url = reverse_lazy('usuarios:login')
 
 
+
 class MaquinaDataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
+
 
     def get(self, request, *args, **kwargs):
         # Obtener todos los campos del modelo Maquina
@@ -241,54 +314,74 @@ class MaquinaDataView(LoginRequiredMixin, View):
             nombre_planta=F('planta__nombre'),
         ).values()
 
+
         maquinas_list = list(maquinas)
+
 
         return JsonResponse(maquinas_list, safe=False)
 
-
 class MaquinaCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
     login_url = reverse_lazy('usuarios:login')
 
     def post(self, request, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
-        nombre_planta = data.get('nombre_planta')
+        planta_id = data.get('nombre_planta')
 
-        if not (numero and nombre_planta):
+        if not (numero and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
-            maquina = Maquina.objects.create(
-                numero=numero, nombre_planta=nombre_planta)
-            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': maquina.nombre_planta})
+            planta = Planta.objects.get(id=planta_id)
+            
+            # Verificar si ya existe una máquina con el mismo número en la misma planta
+            if Maquina.objects.filter(numero=numero, planta=planta).exists():
+                return JsonResponse({'error': 'Ya existe una máquina con este número en la planta seleccionada.'}, status=400)
+            
+            maquina = Maquina.objects.create(numero=numero, planta=planta)
+            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': planta.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
         except IntegrityError:
-            return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
-    
-    
+            return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+
 class MaquinaUpdateView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
-        nombre_planta = data.get('nombre_planta')
+        planta_id = data.get('nombre_planta')
 
-        if not (numero and nombre_planta):
+        if not (numero and planta_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
-            if not numero.startswith("Maquina-"):
-                numero = f"Maquina-{numero}"
+            planta = Planta.objects.get(id=planta_id)
+            
+            # Verificar si ya existe una máquina con el mismo número en la misma planta, excluyendo la actual
+            if Maquina.objects.filter(numero=numero, planta=planta).exclude(pk=pk).exists():
+                return JsonResponse({'error': 'Ya existe una máquina con este número en la planta seleccionada.'}, status=400)
+
             maquina = Maquina.objects.get(pk=pk)
             maquina.numero = numero
-            maquina.nombre_planta = nombre_planta
+            maquina.planta = planta
             maquina.save()
-            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': maquina.nombre_planta})
+            return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': planta.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
         except Maquina.DoesNotExist:
-            return JsonResponse({'error': 'Maquina no encontrada'}, status=404)
+            return JsonResponse({'error': 'Máquina no encontrada'}, status=404)
         except IntegrityError:
-            return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
-        
-       
+            return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
 class MaquinaDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
     login_url = reverse_lazy('usuarios:login')
 
     def delete(self, request, id, *args, **kwargs):
@@ -301,11 +394,15 @@ class MaquinaDeleteView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         
-      
+        # Asegurarse de que siempre se devuelva una respuesta
+        return JsonResponse({'status': 'error', 'message': 'Error desconocido.'}, status=500)
+
 # vistas de cabezales
 class CabezalListView(LoginRequiredMixin, TemplateView):
     template_name = 'cabezales/listar_cabezales.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class CabezalDataView(LoginRequiredMixin, View):
@@ -320,12 +417,17 @@ class CabezalDataView(LoginRequiredMixin, View):
         cabezales_list = list(cabezales)
         return JsonResponse(cabezales_list, safe=False)
 
+
+
+
 # vistas de plantas
 
 
 class PlantaListView(LoginRequiredMixin, TemplateView):
     template_name = 'plantas/listar_plantas.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class PlantaDataView(LoginRequiredMixin, View):
@@ -337,9 +439,10 @@ class PlantaDataView(LoginRequiredMixin, View):
         return JsonResponse(plantas_list, safe=False)
 
 
+
 class PlantaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
-
+ 
     def post(self, request, *args, **kwargs):
         data = request.POST
         nombre = data.get('nombre')
@@ -351,33 +454,28 @@ class PlantaCreateView(LoginRequiredMixin, View):
         if not (nombre and ubicacion and correo and contacto and telefono):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
-            try:
-                planta = Planta.objects.create(
-                    nombre=nombre,
-                    ubicacion=ubicacion,
-                    correo=correo,
-                    contacto=contacto,
-                    telefono=telefono
-                )
-                return JsonResponse({
-                    'id': planta.id,
-                    'nombre': planta.nombre,
-                    'ubicacion': planta.ubicacion,
-                    'correo': planta.correo,
-                    'contacto': planta.contacto,
-                    'telefono': planta.telefono
-                })
-            except IntegrityError:
-                return JsonResponse({'error': 'Error al crear la planta.'}, status=400)
-
-            #Asegurarse de que siempre se devuelva una respuesta
+        try:
+            planta = Planta.objects.create(
+                nombre=nombre,
+                ubicacion=ubicacion,
+                correo=correo,
+                contacto=contacto,
+                telefono=telefono
+            )
+            return JsonResponse({
+                'id': planta.id,
+                'nombre': planta.nombre,
+                'ubicacion': planta.ubicacion,
+                'correo': planta.correo,
+                'contacto': planta.contacto,
+                'telefono': planta.telefono
+            })
+        except IntegrityError:
             return JsonResponse({'error': 'Error al crear la planta.'}, status=400)
 
 
         
 # Vista para actualizar planta
-
-
 class PlantaUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -406,6 +504,8 @@ class PlantaUpdateView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
+
+
 class PlantaDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -420,9 +520,14 @@ class PlantaDeleteView(LoginRequiredMixin, View):
 # vistas de proveedores
 
 
+# vistas de proveedores
+
+
 class ProveedorListView(LoginRequiredMixin, TemplateView):
     template_name = 'proveedores/listar_proveedores.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class ProveedorDataView(LoginRequiredMixin, View):
@@ -435,12 +540,88 @@ class ProveedorDataView(LoginRequiredMixin, View):
         proveedores_list = list(proveedores)
         return JsonResponse(proveedores_list, safe=False)
 
+class ProveedorCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        telefono = data.get('telefono')
+        correo = data.get('correo')
+        planta_id = data.get('planta_id')
+
+        if not (nombre and telefono and correo and planta_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            planta = Planta.objects.get(id=planta_id)
+            proveedor = Proveedor.objects.create(
+                nombre=nombre,
+                telefono=telefono,
+                correo=correo,
+                planta=planta
+            )
+            return JsonResponse({'id': proveedor.id, 'nombre': proveedor.nombre})
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el proveedor.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+class ProveedorUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, pk, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        telefono = data.get('telefono')
+        correo = data.get('correo')
+        planta_id = data.get('planta_id')
+
+        if not (nombre  and telefono and correo and planta_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            proveedor = Proveedor.objects.get(pk=pk)
+            planta = Planta.objects.get(id=planta_id)
+            proveedor.nombre = nombre
+            proveedor.telefono = telefono
+            proveedor.correo = correo
+            proveedor.planta = planta
+            proveedor.save()
+            return JsonResponse({'id': proveedor.id, 'nombre': proveedor.nombre})
+        except Proveedor.DoesNotExist:
+            return JsonResponse({'error': 'Proveedor no encontrado'}, status=404)
+        except Planta.DoesNotExist:
+            return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el proveedor.'}, status=400)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+
+class ProveedorDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def delete(self, request, pk, *args, **kwargs):
+        try:
+            proveedor = Proveedor.objects.get(pk=pk)
+            proveedor.delete()
+            return JsonResponse({'success': 'Proveedor eliminado con éxito'})
+        except Proveedor.DoesNotExist:
+            return JsonResponse({'error': 'Proveedor no encontrado'}, status=404)
+
+        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
+
+
 # vistas de silos
-
-
 class SiloListView(LoginRequiredMixin, TemplateView):
     template_name = 'silos/listar_silos.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class DataSilosView(LoginRequiredMixin, View):
@@ -457,9 +638,14 @@ class DataSilosView(LoginRequiredMixin, View):
 # vistas de turnos
 
 
+
+# vistas de turnos
+
+
 class TurnoListView(LoginRequiredMixin, TemplateView):
     template_name = 'turnos/listar_turnos.html'
     login_url = reverse_lazy('usuarios:login')
+
 
 
 class TurnoDataView(LoginRequiredMixin, View):
@@ -529,6 +715,8 @@ class ProductoListView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('usuarios:login')
 
 
+
+
 class ProductoDataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -540,9 +728,85 @@ class ProductoDataView(LoginRequiredMixin, View):
         return JsonResponse(productos_list, safe=False)
 
 
+
+class ProductoCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        nombre = data.get('nombre')
+        tipo_producto_id = data.get('tipo_producto_id')
+
+        if not (nombre and tipo_producto_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            tipo_producto = TipoProducto.objects.get(id=tipo_producto_id)
+            producto = Producto.objects.create(
+                nombre=nombre,
+                tipo_producto=tipo_producto
+            )
+            return JsonResponse({
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'nombre_tipo_producto': producto.tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el producto.'}, status=400)
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=400)
+
+
+class ProductoDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        producto_id = request.POST.get('producto_id')
+
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            producto.delete()
+            return JsonResponse({'mensaje': 'Producto eliminado con éxito'})
+        except Producto.DoesNotExist:
+            return JsonResponse({'error': 'Producto no encontrado.'}, status=404)
+
+class ProductoUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        producto_id = request.POST.get('producto_id')
+        nombre = request.POST.get('nombre')
+        tipo_producto_id = request.POST.get('tipo_producto_id')
+
+        if not (producto_id and nombre and tipo_producto_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            tipo_producto = get_object_or_404(TipoProducto, id=tipo_producto_id)
+
+            producto.nombre = nombre
+            producto.tipo_producto = tipo_producto
+            producto.save()
+
+            return JsonResponse({
+                'id': producto.id,
+                'nombre': producto.nombre,
+                'nombre_tipo_producto': producto.tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el producto.'}, status=400)
+        except Producto.DoesNotExist:
+            return JsonResponse({'error': 'Producto no encontrado.'}, status=404)
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=404)
+
+
 class TipoProductoListView(LoginRequiredMixin, TemplateView):
     template_name = 'gestion_de_productos/listar_tipo_productos.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class TipoProductoDataView(LoginRequiredMixin, View):
@@ -553,12 +817,34 @@ class TipoProductoDataView(LoginRequiredMixin, View):
         tipo_productos_list = list(tipo_productos)
         return JsonResponse(tipo_productos_list, safe=False)
 
+class TipoProductoCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        nombre = request.POST.get('nombre')
+
+        if not nombre:
+            return JsonResponse({'error': 'El nombre es obligatorio'}, status=400)
+
+        try:
+            tipo_producto = TipoProducto.objects.create(nombre=nombre)
+            return JsonResponse({
+                'id': tipo_producto.id,
+                'nombre': tipo_producto.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear el tipo de producto.'}, status=400)
+
+
+
 # vistas para rutas
 
 
 class RutaListView(LoginRequiredMixin, TemplateView):
     template_name = 'rutas/listar_rutas.html'
     login_url = reverse_lazy('usuarios:login')
+
+
 
 
 class RutaDataView(LoginRequiredMixin, View):
@@ -568,6 +854,8 @@ class RutaDataView(LoginRequiredMixin, View):
         rutas = Ruta.objects.values()  # Elimina la anotación aquí
         rutas_list = list(rutas)
         return JsonResponse(rutas_list, safe=False)
+
+
 
 
 class RutaCreateView(LoginRequiredMixin, View):
@@ -580,6 +868,7 @@ class RutaCreateView(LoginRequiredMixin, View):
             return JsonResponse({'id': ruta.id, 'nombre': ruta.nombre, 'numero': ruta.numero})
         except IntegrityError:
             return JsonResponse({'error': 'Ya existe una ruta con este número.'}, status=400)
+
 
 
 class RutaUpdateView(View):
@@ -596,6 +885,8 @@ class RutaUpdateView(View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 # Vista
+
+
 
 
 class RutaDeleteView(LoginRequiredMixin, View):

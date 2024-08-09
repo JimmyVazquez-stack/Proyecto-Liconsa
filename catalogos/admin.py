@@ -17,8 +17,7 @@ admin.site.register(Maquina)
 admin.site.register(Cabezal)
 admin.site.register(Silo)
 admin.site.register(TipoProducto)
-admin.site.register(Area)
-admin.site.register(Usuario)
+
 
 class TurnoAdmin(admin.ModelAdmin):
     form= TurnoForm
