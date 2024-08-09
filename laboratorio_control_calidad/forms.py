@@ -12,9 +12,10 @@ class TerminadoEncabForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({'class' : 'form-control'})
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control', 'id': field, 'name': field})
+
+
 
 class TerminadoForm(forms.ModelForm):
     

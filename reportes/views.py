@@ -98,7 +98,7 @@ class ReporteRX51(View):
             terminado_datos = producto_terminado.objects.filter(encabezado=pk)
 
         # Calcular las fórmulas globales
-        formulas_globales = terminado_datos.aggregate(
+        formulas_globales = terminado_datos.aggregate( 
             numero_muestras=Count('id'),
             sum_Volumen=Sum('volumen'),
             temperatura_Promedio=Sum(F('volumen') * F('temperatura'), output_field=FloatField()) / Sum('volumen'),

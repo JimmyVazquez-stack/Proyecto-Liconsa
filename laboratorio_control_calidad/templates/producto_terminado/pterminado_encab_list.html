@@ -53,8 +53,7 @@
                               <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
                                       Generar Reporte Rango de Fechas
                               </button>
-
-                                                                  
+                                                                 
                                     
 
                                 <div id="example_filter"></div>
@@ -136,42 +135,6 @@
 {% endblock %} 
 <!-- SweetAlert2 -->
 <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js'%}"></script>
-<!-- Toastr -->
-<script src="{% static 'plugins/toastr/toastr.min.js'%}"></script>
-<script src="{% static 'js/datatables/datatable_init.js' %}"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-
-
-<!-- Page specific script datatable -->  
-<script type="application/javascript">
-    $(function() {
-        $('.btnTest').on('click', function() {
-            $.ajax({
-                url: "{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List'%}" , 
-                type: 'POST',
-                data: {
-                    id: 1
-                },
-                dataType: 'json'
-            }).done(function(data) {
-                console.log(data)
-            }).fail(function(data) {
-                alert("error");
-            }).always(function(data) {
-
-            })
-        });
-
-    });
-</script>  
-<script>
-    $(document).ready(function() {
-        $('#example1').DataTable({
-            responsive: true,
-            retrieve: true,
-        });
-    } );  
-</script>
 
 <!-- Page specific script alerts -->
 <script>
