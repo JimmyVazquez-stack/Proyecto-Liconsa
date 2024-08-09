@@ -44,6 +44,7 @@ from django.contrib import messages
 from usuarios.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission #Importamos el modelo Permission
+from django.http import JsonResponse
 
 # Create your views here.
 class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin ):
@@ -417,13 +418,20 @@ class EncabR49ListView(generic.ListView):
 #     success_url = reverse_lazy("laboratorio_control_calidad:encabezador49V2_Create")
 
 
+
+#Pasar el context de los datos de los modelos ala vista create para que se muestren llenas las tablas
 class EncabR49CreateView(TemplateView):
     template_name = 'encabezador49V2_Create.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EncabR49V2Form()
+        context['datosPesoBruto'] = Pesobruto.objects.all()
+        context['datosDensidad'] = Densidadpt.objects.all()
+        context['datosPesoEnvVacio'] = Pesoenvvacio.objects.all()
         return context
+
+
 
 
 class EncabR49UpdateView(generic.UpdateView):
