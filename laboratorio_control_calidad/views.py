@@ -200,26 +200,26 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin):
 class densidadr49_list(generic.ListView):
     model = Densidadpt
     queryset = Densidadpt.objects.all ()
-    template_name = 'complementariasR49/densidadr49_list.html'
+    template_name = 'crud_VolumenNetoR49/densidad_List.html'
     context_object_name = 'densidadr49'
 
 class densidadr49_create(generic.CreateView):
     model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html'
+    template_name = 'crud_VolumenNetoR49/densidad_Create.html'
     context_object_name = 'densidadr49'
     form_class = DensidadptForm
     success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_list")
 
 class densidadr49_update(generic.UpdateView):
     model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html' 
+    template_name = 'crud_VolumenNetoR49/densidad_Create.html' 
     form_class = DensidadptForm
     success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
     context_object_name = 'densidadr49'
 
 class densidadr49_delete(generic.DeleteView):
     model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_delete.html'
+    template_name = 'crud_VolumenNetoR49/densidad_Delete.html'
     context_object_name = 'densidadr49'
     success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
 
@@ -228,26 +228,26 @@ class densidadr49_delete(generic.DeleteView):
 class pesoenvvacior49_list(generic.ListView):
     model = Pesoenvvacio
     queryset = Pesoenvvacio.objects.all ()
-    template_name = 'complementariasR49/pesoenvvacior49_list.html'
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_List.html'
     context_object_name = 'pesoenvvacior49'
 
 class pesoenvvacior49_create(generic.CreateView):
     model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html'
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html'
     context_object_name = 'pesoenvvacior49'
     form_class = PesoenvvacioForm
     success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
 
 class pesoenvvacior49_update(generic.UpdateView):
     model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html' 
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Update.html' 
     form_class = PesoenvvacioForm
     success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
     context_object_name = 'pesoenvvacior49'
 
 class pesoenvvacior49_delete(generic.DeleteView):
     model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_delete.html'
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Delete.html'
     context_object_name = 'densidadr49'
     success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
 
@@ -255,26 +255,26 @@ class pesoenvvacior49_delete(generic.DeleteView):
 class pesobrutor49_list(generic.ListView):
     model = Pesobruto
     queryset = Pesobruto.objects.all ()
-    template_name = 'complementariasR49/pesobrutor49_list.html'
+    template_name = 'crud_VolumenNetoR49/pesoBruto_List.html'
     context_object_name = 'pesobrutor49'
 
 class pesobrutor49_create(generic.CreateView):
     model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html'
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html'
     context_object_name = 'pesobrutor49'
     form_class = PesobrutoForm
     success_url = reverse_lazy("laboratorio_control_calidad:pesobrutor49_list")
 
 class pesobrutor49_update(generic.UpdateView):
     model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html' 
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Update.html' 
     form_class = PesobrutoForm
     success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
     context_object_name = 'pesobrutor49'
 
 class pesobrutor49_delete(generic.DeleteView):
     model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_delete.html'
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Delete.html'
     context_object_name = 'pesobrutor49'
     success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
 
