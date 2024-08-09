@@ -1,10 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from catalogos.models import Cabezal, Planta, Turno, Producto, Proveedor, Silo, Maquina #Analista
-from usuarios.models import Usuario
-from django.utils import timezone 
-from catalogos.models import *
-from catalogos.models import *
+from catalogos.models import Cabezal, Planta, Producto, Maquina
 
 # Create your models here.
 class EncabTablaR49(models.Model):
@@ -82,6 +78,8 @@ class LecheReconsSilosEncab(models.Model):
     periodo_Fin = models.DateField(default=timezone.now)
     observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
 
+    class Meta:
+        verbose_name_plural = "Encabezado de Leche Reconstituida en Silos"
 
 # Create your models here.
 class terminadoEncab(models.Model):
@@ -91,6 +89,10 @@ class terminadoEncab(models.Model):
 
     def __str__(self):
        return f"ID: {self.id}, Folio: {self.folio}"
+    
+    class Meta:
+        verbose_name_plural = "Encabezado de Producto Terminado"
+
     
 class LecheReconsSilos(models.Model):
     OPCIONES = [(1, '1'),(2, '2'),(3, '3'),(4, '4'),(5, '5'),]
@@ -113,6 +115,11 @@ class LecheReconsSilos(models.Model):
 
     def __str__(self):
        return f"Encabezado_Id: {self.encabezado}, Hora: {self.fecha_Hora}, Producto: {self.producto}, Volumen: {self.volumen}"
+
+    class Meta:
+        verbose_name_plural = "Leche Reconstituida en Silos"
+
+
 class producto_terminado(models.Model):
     lotCad = models.CharField(max_length=10)
     planta = models.ForeignKey(Planta, max_length=10, on_delete=models.CASCADE)

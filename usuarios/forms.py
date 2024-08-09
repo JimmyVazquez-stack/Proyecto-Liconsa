@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from .models import Usuario
 from usuarios.models import Area
 

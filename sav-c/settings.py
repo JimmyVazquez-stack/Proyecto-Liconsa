@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'rest_framework',
 
     #Mis aplicaciones
     'laboratorio_control_calidad',
@@ -71,7 +72,8 @@ JAZZMIN_SETTINGS = {
 
     "custom_app_names":
     {
-        "producto_no_conforme": "Productonforme",
+        
+        "laboratorio_control_calidad": "Control de calidad",
     },
     
 }
@@ -212,3 +214,5 @@ LOGIN_URL='usuarios:login'
 
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
+
+API_BASE_URL = 'http://localhost:8000/api/'

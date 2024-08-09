@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-{% block encabezado%}
+{% block encabezado %}
 
 <head>
   <meta charset="utf-8">
@@ -14,10 +14,10 @@
   <link rel="stylesheet" href="{% static 'css/tempusdominus-bootstrap-4.min.css'%}">
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="{% static 'css/sweetalert/sweetalert2.min.css'%}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'css/icheck-bootstrap.min.css'%}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'css/jqvmap.min.css'%}">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{% static 'css/all.min.css'%}">
   <!-- Theme style -->
@@ -30,35 +30,30 @@
   <link rel="stylesheet" href="{% static 'css/summernote-bs4.min.css'%}">
   <!-- Select2 -->
   <link rel="stylesheet" href="{% static 'css/select2/select2.min.css'%} ">
-
-  
   <!-- Bootstrap CSS DT-->
   <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
   <!-- Datatables bootstrap 4 CSS -->
   <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+  <!-- Datatables responsive CSS -->
   <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'%}">
+
   <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css'%}">
+  <!-- Datatables buttons CSS -->
   <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css'%}">
-  <link rel="stylesheet" type="text/css"
-    href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-
-
-
+  <!-- Datatables select CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="{% static 'css/ionicons.min.css'%}">
   <!-- No usa el ionicons.min.css, usa el cndjs -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- font awesome-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <!--Select2-->
-  <script src="{% static 'js/select2/select2.min.js'}"></script>
   {%endblock%}
-  <!-- Favicon -->
+
   {% block Favicon%}
+   <!-- Favicon -->
   <link rel="icon" href="{% static 'img/logoLiconsaFavicon.ico' %}" type="image/x-icon" />
   {% endblock%}
-  <!--Timepicker-->
-  <link rel="stylesheet" href="{% static 'css/timepicker/jquery.timepicker.min.css'%}">
 </head>
 {% endblock %}
 
@@ -172,7 +167,7 @@
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-            <li class="nav-header">Panel General</li>
+            <li class="nav-header" style="font-size: 15px;">Panel General</li>
             {% if  es_coordinador or es_staff %}
             {% block catalogos%}
             <li class="nav-item">
@@ -183,35 +178,39 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
-              <!-- <ul class="nav nav-treeview">
+              
+              
+
+              <ul class="nav nav-treeview">
+
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
                     <p>
-                      Catalogos nivel 1
+                      Gestión de productos
                       <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="#" class="nav-link">
+                      <a href="{% url 'catalogos:productos_list'%}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
-                        <p>Catalogos nivel 2</p>
+                        <p>Productos</p>
                       </a>
                     </li>
+
+                  </ul>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="{% url 'catalogos:tipo_producto_list'%}" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Tipo de producto</p>
+                      </a>
+                    </li>
+
                   </ul>
                 </li>
-              </ul> -->
-              <!-- Codigo para registrar usuarios en catalogos menu -->
-              <!-- <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{% url 'usuarios:listar_usuarios'%}" class="nav-link">
-                    <i class="fas fa-circle-notch"></i>
-                    <p>Usuarios</p>
-                  </a>
-                </li>
-              </ul> -->
-              <ul class="nav nav-treeview">
+
                 <li class="nav-item">
                   <a href="{% url 'catalogos:areas_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
@@ -263,33 +262,7 @@
               </ul>
               <ul class="nav nav-treeview">
 
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-circle"></i>
-                    <p>
-                      Gestión de productos
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a href="{% url 'catalogos:productos_list'%}" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Productos</p>
-                      </a>
-                    </li>
-
-                  </ul>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a href="{% url 'catalogos:tipo_producto_list'%}" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Tipo de producto</p>
-                      </a>
-                    </li>
-
-                  </ul>
-                </li>
+            
               </ul>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -328,117 +301,9 @@
             </li>
             {% endblock%}
             {% endif %}
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-window-close"></i>
-                <p>
-                  Producto no conforme
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-circle"></i>
-                    <p>
-                      Producto no conforme nivel 1
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Producto no conforme nivel 2</p>
-                      </a>
-                    </li>
-
-                  </ul>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{% url 'producto_no_conforme:lecherias' %}" class="nav-link">
-                    <i class="fas fa-circle-notch"></i>
-                    <p>Envases rotos</p>
-                  </a>
-                </li>
-
-              </ul>
-            </li>
-            <!-- menu lateral apartado producto_no_conforme -->
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-ban"></i>
-                <p>
-                  Producto no conforme
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="" class="nav-link">
-                    <i class="fas fa-ban"></i>
-                    <p>Producto no conforme List</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{% url 'producto_no_conforme:lecherias' %}" class="nav-link">
-                    <i class="fas fa-circle-notch"></i>
-                    <p>Envases rotos</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            <!-- menu lateral apartado Distribucion -->
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-truck"></i>
-                <p>
-                  Distribución
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-circle"></i>
-                    <p>
-                      Distribucion nivel 1
-                      <i class="fas fa-angle-left right"></i>
-                    </p>
-                  </a>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <i class="fas fa-circle-notch"></i>
-                        <p>Distribucion nivel 2</p>
-                      </a>
-                    </li>
-
-                  </ul>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="fas fa-circle-notch"></i>
-                    <p>Distribucion nivel 1</p>
-                  </a>
-                </li>
-
-              </ul>
-            </li>
-
 
             <!-- menu lateral laboratorio de calidad -->
-            <li class="nav-header">Laboratorio de control de calidad</li>
+            <li class="nav-header" style="font-size: 15px;" >LAB de control de calidad</li>
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-vial"></i>
@@ -447,6 +312,7 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
+              <!--
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
@@ -481,17 +347,17 @@
                   </ul>
                 </li>
               </ul>
-              
+              -->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
-                    <p>Leche Reconstituida Por Silos</p>
+                    <p>Leche Reconstituida Por Silos R50</p>
                   </a>
                 </li>
               </ul>
 
-
+              <!-- Aun no elaborado 
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
@@ -500,7 +366,7 @@
                   </a>
                 </li>
               </ul>
-
+              
               
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -509,8 +375,8 @@
                     <p>Soluciones valoradas, soluciones TS e indicadores</p>
                   </a>
                 </li>
-
               </ul>
+              
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:evaluacion_sensorial' %}" class="nav-link">
@@ -518,8 +384,8 @@
                     <p>Evaluación sensorial</p>
                   </a>
                 </li>
-
               </ul>
+
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:monitoreo_medio_ambiente' %}" class="nav-link">
@@ -527,8 +393,8 @@
                     <p>Monitoreo del medio ambiente</p>
                   </a>
                 </li>
-
               </ul>
+
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:limpieza_equipo_personal' %}" class="nav-link">
@@ -536,8 +402,8 @@
                     <p>Limpieza de equipo y manos del personal</p>
                   </a>
                 </li>
-
               </ul>
+
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:calibracion_verificacion_equipo' %}" class="nav-link">
@@ -545,8 +411,9 @@
                     <p>Calibración y verificación de equipos de laboratorio</p>
                   </a>
                 </li>
+              </ul>
+              -->
 
-              </ul> -->
               <!--Seccion para Formato R49 Juan Carlos M.-->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
@@ -617,28 +484,44 @@
               </ul>
               <!--Fin Seccion formato R49 Juan Carlos --> 
                
-              <!-- <ul class="nav nav-treeview">
+              <!-- Aun no elaborado 
+              <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:verificacion_documentos' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Verificación de documentos</p>
                   </a>
                 </li>
-
               </ul>
+               Aun no elaborado -->
+
+               
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
-                    <p>TX-HP-910-01-R51</p>
+                    <p>Producto Terminado R51</p>
                   </a>
                 </li>
 
               </ul>
-            </li> -->
 
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'reportes:reporte_mensual' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Reporte mensual LAB</p>
+                  </a>
+                </li>
 
-            <!-- menu lateral Almacen -->
+              </ul>
+              
+            </li>
+
+            
+
+            <!--
+             menu lateral Almacen 
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-box"></i>
@@ -713,8 +596,10 @@
                 </li>
               </ul>
             </li>
+            -->
 
-            <!-- menu lateral Produccion-->
+            <!--
+            menu lateral Produccion
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-cog"></i>
@@ -799,8 +684,10 @@
 
               </ul>
             </li>
+            -->
 
-            <!-- menu lateral Mantenimiento -->
+            <!--
+             menu lateral Mantenimiento
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="fas fa-wrench"></i>
@@ -819,9 +706,88 @@
 
               </ul>
             </li>
+            -->
+
+             <!-- Menu para Distribucion-->
+            <li class="nav-header" style="font-size: 15px;" >Distribución</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-truck"></i>
+                <p>
+                  Distribución
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle"></i>
+                    <p>
+                      Distribucion nivel 1
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="fas fa-circle-notch"></i>
+                        <p>Distribucion nivel 2</p>
+                      </a>
+                    </li>
+
+                  </ul>
+                </li>
+              </ul>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Distribucion nivel 1</p>
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+            <!-- Menu para producto no conforme-->
+            <li class="nav-header" style="font-size: 15px;" >Producto no conforme</li>
+            <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-ban"></i>
+            <p>
+              Producto no conforme
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="" class="nav-link">
+                <i class="fas fa-ban"></i>
+                <p>Producto no conforme List</p>
+              </a>
+            </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'producto_no_conforme:lecherias' %}" class="nav-link">
+                <i class="fas fa-circle-notch"></i>
+                <p>Envases rotos</p>
+              </a>
+            </li>
+          </ul>
+        
+        
+        </li>
+        </ul>
+
+
+       
+
         </nav>
         <!-- /.sidebar-menu -->
+
 
       </div>
 
@@ -838,16 +804,11 @@
             <div class="col-sm-6">
               <h1 class="m-0 text-sm">Panel general</h1>
             </div><!-- /.col -->
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol>
-            </div><!-- /.col -->
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
+       
       <!-- Main content -->
       <section class="content">
         <div class="container-fluid">
@@ -920,369 +881,10 @@
             <!-- Left col -->
             <section class="col-lg-7 connectedSortable">
               <!-- Custom tabs (Charts with tabs)-->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    <i class="fas fa-chart-pie mr-1"></i>
-                    Sales
-                  </h3>
-                  <div class="card-tools">
-                    <ul class="nav nav-pills ml-auto">
-                      <li class="nav-item">
-                        <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div><!-- /.card-header -->
-                <div class="card-body">
-                  <div class="tab-content p-0">
-                    <!-- Morris chart - Sales -->
-                    <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
-                      <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                    </div>
-                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                      <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                    </div>
-                  </div>
-                </div><!-- /.card-body -->
-              </div>
-              <!-- /.card -->
+              
 
-              <!-- DIRECT CHAT -->
-              <div class="card direct-chat direct-chat-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Direct Chat</h3>
 
-                  <div class="card-tools">
-                    <span title="3 New Messages" class="badge badge-primary">3</span>
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
-                      <i class="fas fa-comments"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <!-- Conversations are loaded here -->
-                  <div class="direct-chat-messages">
-                    <!-- Message. Default to the left -->
-                    <div class="direct-chat-msg">
-                      <div class="direct-chat-infos clearfix">
-                        <span class="direct-chat-name float-left">Alexander Pierce</span>
-                        <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                      </div>
-                      <!-- /.direct-chat-infos -->
-                      <img class="direct-chat-img" src="{% static 'img/user1-128x128.jpg' %}" alt="message user image">
-                      <!-- /.direct-chat-img -->
-                      <div class="direct-chat-text">
-                        Is this template really for free? That's unbelievable!
-                      </div>
-                      <!-- /.direct-chat-text -->
-                    </div>
-                    <!-- /.direct-chat-msg -->
-
-                    <!-- Message to the right -->
-                    <div class="direct-chat-msg right">
-                      <div class="direct-chat-infos clearfix">
-                        <span class="direct-chat-name float-right">Sarah Bullock</span>
-                        <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                      </div>
-                      <!-- /.direct-chat-infos -->
-                      <img class="direct-chat-img" src="{% static 'img/user3-128x128.jpg' %}" alt="message user image">
-                      <!-- /.direct-chat-img -->
-                      <div class="direct-chat-text">
-                        You better believe it!
-                      </div>
-                      <!-- /.direct-chat-text -->
-                    </div>
-                    <!-- /.direct-chat-msg -->
-
-                    <!-- Message. Default to the left -->
-                    <div class="direct-chat-msg">
-                      <div class="direct-chat-infos clearfix">
-                        <span class="direct-chat-name float-left">Alexander Pierce</span>
-                        <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
-                      </div>
-                      <!-- /.direct-chat-infos -->
-                      <img class="direct-chat-img" src="{% static 'img/user1-128x128.jpg' %}" alt="message user image">
-                      <!-- /.direct-chat-img -->
-                      <div class="direct-chat-text">
-                        Working with AdminLTE on a great new app! Wanna join?
-                      </div>
-                      <!-- /.direct-chat-text -->
-                    </div>
-                    <!-- /.direct-chat-msg -->
-
-                    <!-- Message to the right -->
-                    <div class="direct-chat-msg right">
-                      <div class="direct-chat-infos clearfix">
-                        <span class="direct-chat-name float-right">Sarah Bullock</span>
-                        <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
-                      </div>
-                      <!-- /.direct-chat-infos -->
-                      <img class="direct-chat-img" src="{% static 'img/user3-128x128.jpg' %}" alt="message user image">
-                      <!-- /.direct-chat-img -->
-                      <div class="direct-chat-text">
-                        I would love to.
-                      </div>
-                      <!-- /.direct-chat-text -->
-                    </div>
-                    <!-- /.direct-chat-msg -->
-
-                  </div>
-                  <!--/.direct-chat-messages-->
-
-                  <!-- Contacts are loaded here -->
-                  <div class="direct-chat-contacts">
-                    <ul class="contacts-list">
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user1-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              Count Dracula
-                              <small class="contacts-list-date float-right">2/28/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">How have you been? I was...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user7-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              Sarah Doe
-                              <small class="contacts-list-date float-right">2/23/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">I will be waiting for...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user3-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              Nadia Jolie
-                              <small class="contacts-list-date float-right">2/20/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">I'll call you back at...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user5-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              Nora S. Vans
-                              <small class="contacts-list-date float-right">2/10/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">Where is your new...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user6-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              John K.
-                              <small class="contacts-list-date float-right">1/27/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">Can I take a look at...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                      <li>
-                        <a href="#">
-                          <img class="contacts-list-img" src="{% static 'img/user8-128x128.jpg' %}" alt="User Avatar">
-
-                          <div class="contacts-list-info">
-                            <span class="contacts-list-name">
-                              Kenneth M.
-                              <small class="contacts-list-date float-right">1/4/2015</small>
-                            </span>
-                            <span class="contacts-list-msg">Never mind I found...</span>
-                          </div>
-                          <!-- /.contacts-list-info -->
-                        </a>
-                      </li>
-                      <!-- End Contact Item -->
-                    </ul>
-                    <!-- /.contacts-list -->
-                  </div>
-                  <!-- /.direct-chat-pane -->
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <form action="#" method="post">
-                    <div class="input-group">
-                      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                      <span class="input-group-append">
-                        <button type="button" class="btn btn-primary">Send</button>
-                      </span>
-                    </div>
-                  </form>
-                </div>
-                <!-- /.card-footer-->
-              </div>
-              <!--/.direct-chat -->
-
-              <!-- TO DO List -->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    To Do List
-                  </h3>
-
-                  <div class="card-tools">
-                    <ul class="pagination pagination-sm">
-                      <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                      <li class="page-item"><a href="#" class="page-link">1</a></li>
-                      <li class="page-item"><a href="#" class="page-link">2</a></li>
-                      <li class="page-item"><a href="#" class="page-link">3</a></li>
-                      <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <ul class="todo-list" data-widget="todo-list">
-                    <li>
-                      <!-- drag handle -->
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <!-- checkbox -->
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo1" id="todoCheck1">
-                        <label for="todoCheck1"></label>
-                      </div>
-                      <!-- todo text -->
-                      <span class="text">Design a nice theme</span>
-                      <!-- Emphasis label -->
-                      <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>
-                      <!-- General tools such as edit or delete-->
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
-                        <label for="todoCheck2"></label>
-                      </div>
-                      <span class="text">Make the theme responsive</span>
-                      <small class="badge badge-info"><i class="far fa-clock"></i> 4 hours</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo3" id="todoCheck3">
-                        <label for="todoCheck3"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-warning"><i class="far fa-clock"></i> 1 day</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo4" id="todoCheck4">
-                        <label for="todoCheck4"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-success"><i class="far fa-clock"></i> 3 days</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo5" id="todoCheck5">
-                        <label for="todoCheck5"></label>
-                      </div>
-                      <span class="text">Check your messages and notifications</span>
-                      <small class="badge badge-primary"><i class="far fa-clock"></i> 1 week</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                        <label for="todoCheck6"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-secondary"><i class="far fa-clock"></i> 1 month</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer clearfix">
-                  <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add
-                    item</button>
-                </div>
-              </div>
+             
               <!-- /.card -->
             </section>
             <!-- /.Left col -->
@@ -1386,45 +988,7 @@
               </div>
               <!-- /.card -->
 
-              <!-- Calendar -->
-              <div class="card bg-gradient-success">
-                <div class="card-header border-0">
-
-                  <h3 class="card-title">
-                    <i class="far fa-calendar-alt"></i>
-                    Calendar
-                  </h3>
-                  <!-- tools card -->
-                  <div class="card-tools">
-                    <!-- button with a dropdown -->
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"
-                        data-offset="-52">
-                        <i class="fas fa-bars"></i>
-                      </button>
-                      <div class="dropdown-menu" role="menu">
-                        <a href="#" class="dropdown-item">Add new event</a>
-                        <a href="#" class="dropdown-item">Clear events</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">View calendar</a>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                  <!-- /. tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body pt-0">
-                  <!--The calendar -->
-                  <div id="calendar" style="width: 100%"></div>
-                </div>
-                <!-- /.card-body -->
-              </div>
+              
               <!-- /.card -->
             </section>
             <!-- right col -->
@@ -1465,456 +1029,25 @@
         </div>
       </div>
       {%endblock%}
-
+      
       {%block datatable%}
-      <div class="container-fluid p-4">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header bg-gray-dark">
-                <h3 class="card-title"></h3>
-              </div>
-              <div class="card-body bg-light">
-                <ul class="pagination pagination-month justify-content-center">
-                  <li class="page-item"><a class="page-link" href="#">«</a></li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Jan</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item active">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Feb</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Mar</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Apr</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">May</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Jun</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Jul</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Aug</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Sep</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Oct</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Nov</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      <p class="page-month">Dec</p>
-                      <p class="page-year">2021</p>
-                    </a>
-                  </li>
-                  <li class="page-item"><a class="page-link" href="#">»</a></li>
-                </ul>
-                <div class="col-xl-12 mt-3 p-3">
-                  <div class="table-responsive">
-                    <div class="d-flex justify-content-between mb-3">
-                      <button class="btn btn-primary" style="font-size: 14px;" onclick="location.href='#';">Crear <i
-                          class="fas fa-plus"></i></button>
-                      <div id="example_filter"></div>
-                    </div>
-                    <table id="example" class="table  table-bordered bg-light table-hover" style="width:100%;">
-                      <thead class="thead-light" style="font-size: 14px;">
-                        <tr>
-                          <th>Name</th>
-                          <th>Position</th>
-                          <th>Office</th>
-                          <th>Age</th>
-                          <th>Start date</th>
-                          <th>Salary</th>
-                          <th>Opciones</th>
-                        </tr>
-                      </thead>
-                      <tbody style="font-size: 14px;">
-                        <tr>
-                          <td>Tiger Nixon</td>
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td>2011-04-25</td>
-                          <td>$320,800</td>
 
-                        </tr>
-                        <tr>
-                          <td>Gloria Little</td>
-                          <td>Systems Administrator</td>
-                          <td>New York</td>
-                          <td>59</td>
-                          <td>2009-04-10</td>
-                          <td>$237,500</td>
-                        </tr>
-                        <tr>
-                          <td>Bradley Greer</td>
-                          <td>Software Engineer</td>
-                          <td>London</td>
-                          <td>41</td>
-                          <td>2012-10-13</td>
-                          <td>$132,000</td>
-                        </tr>
-                        <tr>
-                          <td>Dai Rios</td>
-                          <td>Personnel Lead</td>
-                          <td>Edinburgh</td>
-                          <td>35</td>
-                          <td>2012-09-26</td>
-                          <td>$217,500</td>
-                        </tr>
-                        <tr>
-                          <td>Jenette Caldwell</td>
-                          <td>Development Lead</td>
-                          <td>New York</td>
-                          <td>30</td>
-                          <td>2011-09-03</td>
-                          <td>$345,000</td>
-                        </tr>
-                        <tr>
-                          <td>Yuri Berry</td>
-                          <td>Chief Marketing Officer (CMO)</td>
-                          <td>New York</td>
-                          <td>40</td>
-                          <td>2009-06-25</td>
-                          <td>$675,000</td>
-                        </tr>
-                        <tr>
-                          <td>Caesar Vance</td>
-                          <td>Pre-Sales Support</td>
-                          <td>New York</td>
-                          <td>21</td>
-                          <td>2011-12-12</td>
-                          <td>$106,450</td>
-                        </tr>
-                        <tr>
-                          <td>Doris Wilder</td>
-                          <td>Sales Assistant</td>
-                          <td>Sydney</td>
-                          <td>23</td>
-                          <td>2010-09-20</td>
-                          <td>$85,600</td>
-                        </tr>
-                        <tr>
-                          <td>Angelica Ramos</td>
-                          <td>Chief Executive Officer (CEO)</td>
-                          <td>London</td>
-                          <td>47</td>
-                          <td>2009-10-09</td>
-                          <td>$1,200,000</td>
-                        </tr>
-                        <tr>
-                          <td>Gavin Joyce</td>
-                          <td>Developer</td>
-                          <td>Edinburgh</td>
-                          <td>42</td>
-                          <td>2010-12-22</td>
-                          <td>$92,575</td>
-                        </tr>
-                        <tr>
-                          <td>Jennifer Chang</td>
-                          <td>Regional Director</td>
-                          <td>Singapore</td>
-                          <td>28</td>
-                          <td>2010-11-14</td>
-                          <td>$357,650</td>
-                        </tr>
-                        <tr>
-                          <td>Brenden Wagner</td>
-                          <td>Software Engineer</td>
-                          <td>San Francisco</td>
-                          <td>28</td>
-                          <td>2011-06-07</td>
-                          <td>$206,850</td>
-                        </tr>
-                        <tr>
-                          <td>Fiona Green</td>
-                          <td>Chief Operating Officer (COO)</td>
-                          <td>San Francisco</td>
-                          <td>48</td>
-                          <td>2010-03-11</td>
-                          <td>$850,000</td>
-                        </tr>
-                        <tr>
-                          <td>Shou Itou</td>
-                          <td>Regional Marketing</td>
-                          <td>Tokyo</td>
-                          <td>20</td>
-                          <td>2011-08-14</td>
-                          <td>$163,000</td>
-                        </tr>
-                        <tr>
-                          <td>Michelle House</td>
-                          <td>Integration Specialist</td>
-                          <td>Sydney</td>
-                          <td>37</td>
-                          <td>2011-06-02</td>
-                          <td>$95,400</td>
-                        </tr>
-                        <tr>
-                          <td>Suki Burks</td>
-                          <td>Developer</td>
-                          <td>London</td>
-                          <td>53</td>
-                          <td>2009-10-22</td>
-                          <td>$114,500</td>
-                        </tr>
-                        <tr>
-                          <td>Prescott Bartlett</td>
-                          <td>Technical Author</td>
-                          <td>London</td>
-                          <td>27</td>
-                          <td>2011-05-07</td>
-                          <td>$145,000</td>
-                        </tr>
-                        <tr>
-                          <td>Gavin Cortez</td>
-                          <td>Team Leader</td>
-                          <td>San Francisco</td>
-                          <td>22</td>
-                          <td>2008-10-26</td>
-                          <td>$235,500</td>
-                        </tr>
-                        <tr>
-                          <td>Martena Mccray</td>
-                          <td>Post-Sales support</td>
-                          <td>Edinburgh</td>
-                          <td>46</td>
-                          <td>2011-03-09</td>
-                          <td>$324,050</td>
-                        </tr>
-                        <tr>
-                          <td>Unity Butler</td>
-                          <td>Marketing Designer</td>
-                          <td>San Francisco</td>
-                          <td>47</td>
-                          <td>2009-12-09</td>
-                          <td>$85,675</td>
-                        </tr>
-                        <tr>
-                          <td>Howard Hatfield</td>
-                          <td>Office Manager</td>
-                          <td>San Francisco</td>
-                          <td>51</td>
-                          <td>2008-12-16</td>
-                          <td>$164,500</td>
-                        </tr>
-                        <tr>
-                          <td>Hope Fuentes</td>
-                          <td>Secretary</td>
-                          <td>San Francisco</td>
-                          <td>41</td>
-                          <td>2010-02-12</td>
-                          <td>$109,850</td>
-                        </tr>
-                        <tr>
-                          <td>Vivian Harrell</td>
-                          <td>Financial Controller</td>
-                          <td>San Francisco</td>
-                          <td>62</td>
-                          <td>2009-02-14</td>
-                          <td>$452,500</td>
-                        </tr>
-                        <tr>
-                          <td>Timothy Mooney</td>
-                          <td>Office Manager</td>
-                          <td>London</td>
-                          <td>37</td>
-                          <td>2008-12-11</td>
-                          <td>$136,200</td>
-                        </tr>
-                        <tr>
-                          <td>Jackson Bradshaw</td>
-                          <td>Director</td>
-                          <td>New York</td>
-                          <td>65</td>
-                          <td>2008-09-26</td>
-                          <td>$645,750</td>
-                        </tr>
-                        <tr>
-                          <td>Olivia Liang</td>
-                          <td>Support Engineer</td>
-                          <td>Singapore</td>
-                          <td>64</td>
-                          <td>2011-02-03</td>
-                          <td>$234,500</td>
-                        </tr>
-                        <tr>
-                          <td>Bruno Nash</td>
-                          <td>Software Engineer</td>
-                          <td>London</td>
-                          <td>38</td>
-                          <td>2011-05-03</td>
-                          <td>$163,500</td>
-                        </tr>
-                        <tr>
-                          <td>Sakura Yamamoto</td>
-                          <td>Support Engineer</td>
-                          <td>Tokyo</td>
-                          <td>37</td>
-                          <td>2009-08-19</td>
-                          <td>$139,575</td>
-                        </tr>
-                        <tr>
-                          <td>Thor Walton</td>
-                          <td>Developer</td>
-                          <td>New York</td>
-                          <td>61</td>
-                          <td>2013-08-11</td>
-                          <td>$98,540</td>
-                        </tr>
-                        <tr>
-                          <td>Finn Camacho</td>
-                          <td>Support Engineer</td>
-                          <td>San Francisco</td>
-                          <td>47</td>
-                          <td>2009-07-07</td>
-                          <td>$87,500</td>
-                        </tr>
-                        <tr>
-                          <td>Serge Baldwin</td>
-                          <td>Data Coordinator</td>
-                          <td>Singapore</td>
-                          <td>64</td>
-                          <td>2012-04-09</td>
-                          <td>$138,575</td>
-                        </tr>
-                        <tr>
-                          <td>Zenaida Frank</td>
-                          <td>Software Engineer</td>
-                          <td>New York</td>
-                          <td>63</td>
-                          <td>2010-01-04</td>
-                          <td>$125,250</td>
-                        </tr>
-                        <tr>
-                          <td>Zorita Serrano</td>
-                          <td>Software Engineer</td>
-                          <td>San Francisco</td>
-                          <td>56</td>
-                          <td>2012-06-01</td>
-                          <td>$115,000</td>
-                        </tr>
-                        <tr>
-                          <td>Jennifer Acosta</td>
-                          <td>Junior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>43</td>
-                          <td>2013-02-01</td>
-                          <td>$75,650</td>
-                        </tr>
-                        <tr>
-                          <td>Cara Stevens</td>
-                          <td>Sales Assistant</td>
-                          <td>New York</td>
-                          <td>46</td>
-                          <td>2011-12-06</td>
-                          <td>$145,600</td>
-                        </tr>
-                        <tr>
-                          <td>Hermione Butler</td>
-                          <td>Regional Director</td>
-                          <td>London</td>
-                          <td>47</td>
-                          <td>2011-03-21</td>
-                          <td>$356,250</td>
-                        </tr>
-                        <tr>
-                          <td>Lael Greer</td>
-                          <td>Systems Administrator</td>
-                          <td>London</td>
-                          <td>21</td>
-                          <td>2009-02-27</td>
-                          <td>$103,500</td>
-                        </tr>
-                        <tr>
-                          <td>Jonas Alexander</td>
-                          <td>Developer</td>
-                          <td>San Francisco</td>
-                          <td>30</td>
-                          <td>2010-07-14</td>
-                          <td>$86,500</td>
-                        </tr>
-                      </tbody>
-                      <tfoot style="font-size: 14px;">
-                        <tr>
-                          <th>Name</th>
-                          <th>Position</th>
-                          <th>Office</th>
-                          <th>Age</th>
-                          <th>Start date</th>
-                          <th>Salary</th>
-                          <th style="display: flex; justify-content: center;">
-                            <button class="btn btn-success" style="font-size: 14px;" id="reporte">Generar
-                              reporte</button>
-                          </th>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
+      <!-- /.content datatable -->
 
-        </div>
-      </div>
       {%endblock%}
 
+      <!-- /.content main -->
 
-      <!-- /.content -->
       {%endblock%}
+
     </div>
-    <!-- /.content-wrapper -->
+    <!-- /.content-wrapper --> 
     {% block footer%}
     <footer class="main-footer">
       <strong> &copy; <a href="{% url 'laboratorio_control_calidad:index'%}">SAV-C</a>.</strong>
     
       <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 1.0.0
+        <b>Version</b> 0.9.9
       </div>
     </footer>
     {%endblock%}
@@ -1927,10 +1060,11 @@
   </div>
   <!-- ./wrapper -->
   {% block javascript%}
+
   <!-- jQuery -->
   <script src="{% static 'js/jquery.min.js' %}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <!-- Datatables -->
@@ -1950,15 +1084,6 @@
   <script src="{% static 'plugins/datatables-buttons/js/buttons.html5.min.js'%}"></script>
   <script src="{% static 'plugins/datatables-buttons/js/buttons.print.min.js'%}"></script>
   <script src="{% static 'plugins/datatables-buttons/js/buttons.colVis.min.js'%}"></script>
-
-  <!--Timepicker-->
-  <script src="{% static 'js/timepicker/jquery.timepicker.min.js'%}"></script>
-  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-  <script>
-    $.widget.bridge('uibutton', $.ui.button)
-  </script>
-
-
   <!-- ChartJS -->
   <script src="{% static 'js/Chart.min.js'%}"></script>
   <!-- Sparkline -->
@@ -1977,16 +1102,12 @@
   <script src="{% static 'js/jquery.overlayScrollbars.min.js'%}"></script>
   <!-- AdminLTE App -->
   <script src="{% static 'js/adminlte.js'%}"></script>
-
-
-  <!-- AdminLTE for demo purposes -->
-  <!-- <script src="{% static 'js/demo.js'%}"></script> -->
-  
-  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script> $.widget.bridge('uibutton', $.ui.button) </script>
   <!-- SweetAlert2 -->
   <script src="{% static 'js/sweetalert/sweetalert2.all.min.js'%}"></script>
 
+  
       <!-- Page specific script -->
       <!-- <script>  
         $(function() {

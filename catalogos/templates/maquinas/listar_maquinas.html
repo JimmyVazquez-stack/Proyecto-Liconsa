@@ -82,7 +82,7 @@
                     <form id="maquinaForm">
                         <div class="form-group">
                             <label for="numero">Número de Maquina</label>
-                            <input type="text" class="form-control" id="numero" name="numero">
+                            <input type="number" class="form-control" id="numero" name="numero">
                         </div>
                         <div class="form-group">
                             <label for="planta">Nombre de Planta</label>
@@ -137,7 +137,8 @@
                         <label for="telefonoPlanta">Teléfono</label>
                         <input type="text" class="form-control" id="telefonoPlanta" name="telefono" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="savePlanta">Guardar</button>
                 </form>
             </div>
         </div>

@@ -1,40 +1,27 @@
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView
 from .models import Usuario
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView, CreateView, ListView, View, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, ListView, View, UpdateView
 from .forms import UserCreationForm, EditarUsuarioForm
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.core.serializers import serialize
 from django.http import JsonResponse
-from django.http import HttpResponseForbidden
-from django.db.models import F
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 
-
+# Sobrescribir la vista de inicio de sesión para redirigir a la página de inicio
 class LoginView(LoginView):
     template_name = 'registration/login.html'
     success_url = reverse_lazy('laboratorio_control_calidad:index')
 
 
-class PerfilView(LoginRequiredMixin, DetailView):
-    template_name = 'perfil.html'
-    model = Usuario
-    login_url = reverse_lazy('usuarios:login')
-
-    def get_object(self):
-        return get_object_or_404(Usuario, username=self.request.user.username)
-
-
+#CRUD de usuarios
+# Deshabilitar la protección CSRF
+@method_decorator(csrf_exempt, name='dispatch')
 class CrearUsuarioView(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
     form_class = UserCreationForm
     model = Usuario
@@ -53,18 +40,16 @@ class CrearUsuarioView(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
             response = super().form_valid(form)
             messages.success(self.request, self.success_message)
             return response
+        
 
+class PerfilView(LoginRequiredMixin, DetailView):
+    template_name = 'perfil.html'
+    model = Usuario
+    login_url = reverse_lazy('usuarios:login')
 
-# Deshabilitar la protección CSRF
-@method_decorator(csrf_exempt, name='dispatch')
-class EliminarUsuarioView(View):
-    def delete(self, request, user_id):
-        try:
-            usuario = Usuario.objects.get(id=user_id)
-            usuario.delete()
-            return JsonResponse({'message': 'Usuario eliminado exitosamente'})
-        except Usuario.DoesNotExist:
-            return JsonResponse({'error': 'El usuario no existe'}, status=404)
+    def get_object(self):
+        return get_object_or_404(Usuario, username=self.request.user.username)
+
 
 class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
     modal = Usuario
@@ -82,6 +67,17 @@ class EditarUsuarioView(LoginRequiredMixin, UpdateView, PermissionRequiredMixin)
         # Asegúrate de usar 'id' en lugar de 'pk' para generar la URL de acción
         context['action'] = reverse_lazy('usuarios:editar_usuario', kwargs={'id': self.object.id})
         return context   
+
+
+class EliminarUsuarioView(View):
+    def delete(self, request, user_id):
+        try:
+            usuario = Usuario.objects.get(id=user_id)
+            usuario.delete()
+            return JsonResponse({'message': 'Usuario eliminado exitosamente'})
+        except Usuario.DoesNotExist:
+            return JsonResponse({'error': 'El usuario no existe'}, status=404)
+
 
 class ListarUsuariosView(LoginRequiredMixin, ListView, PermissionRequiredMixin):
     model = Usuario

@@ -1,30 +1,23 @@
-from django.shortcuts import render, get_object_or_404
+#Importaciones modelos
+from .models import (Lecheria, Ruta, Poblacion, Maquina, Planta, Turno, Silo, Cabezal, Producto, TipoProducto, Proveedor, Turno, Lecheria)
+from usuarios.models import Area
+from django.db.models import F, Value, CharField
+from django.db.models.functions import Concat
+#Importaciones forms
+from .forms import LecheriaForm
+#Importaciones de vistas
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-from .forms import LecheriaForm
-from .models import Lecheria,  Rotos
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
-from .forms import LecheriaForm
-from .models import Lecheria, Ruta, Poblacion, Maquina, Planta, Turno, Silo, Cabezal, Producto, TipoProducto, Proveedor
-from usuarios.models import Area
-from django.http import JsonResponse, HttpResponseNotAllowed
 from django.views import View
-from django.db.models import F, Value, CharField
-from django.forms.models import model_to_dict
-import json
+#Otras importaciones
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
-from django.db.models.functions import Concat
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.views import View
-from django.db.models import F, Value, CharField
 
 
-# Create your views here.
+
 class LecheriaListView(LoginRequiredMixin, TemplateView):
     template_name = 'lecherias/lecherias_list.html'
     login_url = reverse_lazy('usuarios:login')
@@ -154,6 +147,7 @@ class PoblacionUpdateView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         
+        
 class PoblacionDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -230,9 +224,9 @@ class AreaDeleteView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
+
+
 # vistas de maquinas
-
-
 class MaquinaListView(LoginRequiredMixin, TemplateView):
     template_name = 'maquinas/listar_maquinas.html'
     login_url = reverse_lazy('usuarios:login')
@@ -269,9 +263,7 @@ class MaquinaCreateView(LoginRequiredMixin, View):
             return JsonResponse({'id': maquina.id, 'numero': maquina.numero, 'nombre_planta': maquina.nombre_planta})
         except IntegrityError:
             return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
-        
-        # Asegurarse de que siempre se devuelva una respuesta
-        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+    
     
 class MaquinaUpdateView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
@@ -295,8 +287,7 @@ class MaquinaUpdateView(LoginRequiredMixin, View):
         except IntegrityError:
             return JsonResponse({'error': 'Ya existe una maquina con este número.'}, status=400)
         
-        # Asegurarse de que siempre se devuelva una respuesta
-        return JsonResponse({'error': 'Error desconocido.'}, status=500)
+       
 class MaquinaDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -310,9 +301,7 @@ class MaquinaDeleteView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         
-        # Asegurarse de que siempre se devuelva una respuesta
-        return JsonResponse({'status': 'error', 'message': 'Error desconocido.'}, status=500)
-
+      
 # vistas de cabezales
 class CabezalListView(LoginRequiredMixin, TemplateView):
     template_name = 'cabezales/listar_cabezales.html'
@@ -383,6 +372,9 @@ class PlantaCreateView(LoginRequiredMixin, View):
 
             #Asegurarse de que siempre se devuelva una respuesta
             return JsonResponse({'error': 'Error al crear la planta.'}, status=400)
+
+
+        
 # Vista para actualizar planta
 
 
@@ -477,12 +469,7 @@ class TurnoDataView(LoginRequiredMixin, View):
         turnos = Turno.objects.values()  # Elimina la anotación aquí
         turnos_list = list(turnos)
         return JsonResponse(turnos_list, safe=False)
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from .models import Turno
+
 
 class TurnoCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')

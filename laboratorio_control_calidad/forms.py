@@ -99,11 +99,6 @@ LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReco
 # PesoenvvacioFormSet = inlineformset_factory(EncabTablaR49, Pesoenvvacio, fields='__all__', extra=10, can_delete=False)
 # PesobrutoFormSet = inlineformset_factory(EncabTablaR49, Pesobruto, fields='__all__', extra=10, can_delete=False)
 
-from django import forms 
-from .models import producto_terminado
-from django import forms 
-from django.forms import inlineformset_factory
-from .models import *
 
 class TerminadoEncabForm(forms.ModelForm):
     
