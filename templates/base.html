@@ -54,6 +54,7 @@
    <!-- Favicon -->
   <link rel="icon" href="{% static 'img/logoLiconsaFavicon.ico' %}" type="image/x-icon" />
   {% endblock%}
+
 </head>
 {% endblock %}
 
@@ -322,7 +323,7 @@
                       <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
-                  <!-- <ul class="nav nav-treeview">
+                  <ul class="nav nav-treeview">
                 
                     <li class="nav-item">
                       <a href="{% url 'laboratorio_control_calidad:grasas_aceites_vegetales' %}" class="nav-link">
@@ -350,7 +351,7 @@
               -->
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Leche Reconstituida Por Silos R50</p>
                   </a>
@@ -483,6 +484,7 @@
                 </li>
               </ul>
               <!--Fin Seccion formato R49 Juan Carlos --> 
+ 
                
               <!-- Aun no elaborado 
               <ul class="nav nav-treeview">
@@ -498,7 +500,7 @@
                
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="#" class="nav-link">
+                  <a href="{% url 'laboratorio_control_calidad:TerminadoList' %}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
                     <p>Producto Terminado R51</p>
                   </a>
@@ -1109,7 +1111,7 @@
 
   
       <!-- Page specific script -->
-      <!-- <script>  
+      <script>  
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
@@ -1136,15 +1138,15 @@
                 "responsive": true,
             });
         });
-    </script> -->
+    </script>
 
-    <!-- <script>
+    <script>
         if (screen.width > 800) {
             document.getElementById('example2').id = '';
             document.getElementById('example3').id = '';
             console.log("cx")
         }
-    </script> -->
+    </script>
 
 
   <script>
