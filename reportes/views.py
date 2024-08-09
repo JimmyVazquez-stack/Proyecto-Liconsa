@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
 import os
-from django.db.models import Min, Max, Count, Sum, F, FloatField
+from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, Avg
 from django.shortcuts import render
 from django.views import View
 from laboratorio_control_calidad.models import *
