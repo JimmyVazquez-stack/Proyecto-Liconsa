@@ -733,6 +733,7 @@ class ProductoCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
     def post(self, request, *args, **kwargs):
+        print(request.POST) # Imprimir los datos recibidos en la consola
         data = request.POST
         nombre = data.get('nombre')
         tipo_producto_id = data.get('tipo_producto_id')
@@ -769,15 +770,14 @@ class ProductoDeleteView(LoginRequiredMixin, View):
         except Producto.DoesNotExist:
             return JsonResponse({'error': 'Producto no encontrado.'}, status=404)
 
-class ProductoUpdateView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('usuarios:login')
-
+class ProductoUpdateView(View):
     def post(self, request, *args, **kwargs):
-        producto_id = request.POST.get('producto_id')
+        producto_id = kwargs.get('pk')  # Obtener el ID del producto de la URL
         nombre = request.POST.get('nombre')
         tipo_producto_id = request.POST.get('tipo_producto_id')
 
-        if not (producto_id and nombre and tipo_producto_id):
+        # Validar que todos los campos requeridos estén presentes
+        if not nombre or not tipo_producto_id:
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
@@ -800,7 +800,6 @@ class ProductoUpdateView(LoginRequiredMixin, View):
         except TipoProducto.DoesNotExist:
             return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=404)
 
-
 class TipoProductoListView(LoginRequiredMixin, TemplateView):
     template_name = 'gestion_de_productos/listar_tipo_productos.html'
     login_url = reverse_lazy('usuarios:login')
@@ -821,15 +820,17 @@ class TipoProductoCreateView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
 
-        if not nombre:
-            return JsonResponse({'error': 'El nombre es obligatorio'}, status=400)
+        if not nombre or not descripcion:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
-            tipo_producto = TipoProducto.objects.create(nombre=nombre)
+            tipo_producto = TipoProducto.objects.create(nombre=nombre, descripcion=descripcion)
             return JsonResponse({
                 'id': tipo_producto.id,
-                'nombre': tipo_producto.nombre
+                'nombre': tipo_producto.nombre,
+                'descripcion': tipo_producto.descripcion
             })
         except IntegrityError:
             return JsonResponse({'error': 'Error al crear el tipo de producto.'}, status=400)

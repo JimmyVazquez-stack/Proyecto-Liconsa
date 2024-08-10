@@ -92,7 +92,7 @@
 
     </div>
 </div>
-<!-- Modal para añadir producto -->
+<!-- Modal para añadir/editar producto -->
 <div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -104,20 +104,22 @@
             </div>
             <div class="modal-body">
                 <form id="productoForm">
+                    <input type="hidden" id="productoId" name="producto_id">
                     <div class="form-group">
-                        <label for="nombreProducto">Nombre de Producto</label>
-                        <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" required>
+                        <label for="nombreProducto">Nombre del Producto</label>
+                        <input type="text" class="form-control" id="nombreProducto" name="nombre" required>
                     </div>
                     <div class="form-group">
                         <label for="tipoProducto">Tipo de Producto</label>
                         <div class="input-group">
-                            <select class="form-control" id="tipoProducto" name="tipoProducto" required></select>
+                            <select class="form-control" id="tipoProducto" name="tipo_producto_id" required>
+                                <!-- Opciones se cargarán dinámicamente -->
+                            </select>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-secondary" id="btnAddTipoProducto">Añadir Tipo de Producto</button>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="productoId" name="productoId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -127,7 +129,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Modal para añadir tipo de producto -->
 <div class="modal fade" id="tipoProductoModal" tabindex="-1" role="dialog" aria-labelledby="tipoProductoModalLabel" aria-hidden="true">
@@ -143,11 +144,11 @@
                 <form id="tipoProductoForm">
                     <div class="form-group">
                         <label for="nombreTipoProducto">Nombre de Tipo de Producto</label>
-                        <input type="text" class="form-control" id="nombreTipoProducto" name="nombreTipoProducto" required>
+                        <input type="text" class="form-control" id="nombreTipoProducto" name="nombre" required>
                     </div>
                     <div class="form-group">
                         <label for="descripcionTipoProducto">Descripción</label>
-                        <input type="text" class="form-control" id="descripcionTipoProducto" name="descripcionTipoProducto" required>
+                        <input type="text" class="form-control" id="descripcionTipoProducto" name="descripcion" required>
                     </div>
                 </form>
             </div>

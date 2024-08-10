@@ -70,7 +70,6 @@ $(document).ready(function() {
         ]
         
     });
-
 // Función para cargar opciones de tipos de productos en el modal de creación/edición de producto
 function loadTiposProducto(selectedTipoProductoId = null) {
     $.ajax({
@@ -99,24 +98,21 @@ function loadTiposProducto(selectedTipoProductoId = null) {
     });
 }
 
-
 // Abrir modal para añadir producto
 $("#btnAddProducto").click(function () {
     $("#productoModalLabel").text("Añadir Producto");
     $("#productoForm")[0].reset();
-    $("#productoId").val("");
-    
-    // Cargar las opciones de tipos de productos
-    loadTiposProducto();
-    
+    $("#productoId").val("");  // ID vacío para nueva creación
+    loadTiposProducto();  // Cargar opciones de tipos de productos
+    $("#btnAddTipoProducto").show();  // Mostrar el botón para añadir tipo de producto
     $("#productoModal").modal("show");
 });
-
 
 // Guardar producto (añadir o editar) con validación usando SweetAlert2
 $("#saveProducto").click(function () {
     var nombreProducto = $("#nombreProducto").val().trim();
     var tipoProductoId = $("#tipoProducto").val();
+    var productoId = $("#productoId").val();
 
     // Validar que los campos no estén vacíos
     if (!nombreProducto || !tipoProductoId) {
@@ -128,14 +124,12 @@ $("#saveProducto").click(function () {
         return;
     }
 
-    var productoId = $("#productoId").val();
     var url = productoId ? `/catalogos/productos/update/${productoId}/` : "/catalogos/productos/create/";
     var method = "POST";
 
-    // Crear un objeto de datos
     var data = {
         nombre: nombreProducto,
-        tipo_producto_id: tipoProductoId  // Asegúrate de que estás enviando el ID, no el nombre
+        tipo_producto_id: tipoProductoId
     };
 
     $.ajax({
@@ -179,7 +173,6 @@ $("#saveTipoProducto").click(function () {
     var nombreTipoProducto = $("#nombreTipoProducto").val().trim();
     var descripcionTipoProducto = $("#descripcionTipoProducto").val().trim();
 
-    // Validar que los campos no estén vacíos
     if (!nombreTipoProducto || !descripcionTipoProducto) {
         Swal.fire({
             icon: "error",
@@ -196,11 +189,13 @@ $("#saveTipoProducto").click(function () {
     $.ajax({
         url: url,
         method: method,
-        data: $("#tipoProductoForm").serialize(),
+        data: {
+            nombre: nombreTipoProducto,
+            descripcion: descripcionTipoProducto
+        },
         success: function (response) {
             $("#tipoProductoModal").modal("hide");
-            // Recargar opciones de tipos de productos en otros modales si es necesario
-            loadTiposProducto();
+            loadTiposProducto();  // Recargar tipos de productos si es necesario
             Swal.fire({
                 icon: "success",
                 title: "Guardado",
@@ -221,14 +216,11 @@ $("#saveTipoProducto").click(function () {
     });
 });
 
-
-
-// Manejadores manuales para cerrar el modal de producto
+// Manejadores manuales para cerrar el modal
 $("#productoModal .close, #productoModal .btn-secondary").click(function () {
     $("#productoModal").modal("hide");
 });
 
-// Manejadores manuales para cerrar el modal de tipo de producto
 $("#tipoProductoModal .close, #tipoProductoModal .btn-secondary").click(function () {
     $("#tipoProductoModal").modal("hide");
 });
@@ -237,17 +229,13 @@ $("#tipoProductoModal .close, #tipoProductoModal .btn-secondary").click(function
 $("#tabla_productos tbody").on("click", ".btn-edit", function () {
     var data = table.row($(this).parents("tr")).data();
     
-    // Llenar campos del formulario con los datos del producto seleccionado
+    $("#productoModalLabel").text("Editar Producto");
     $("#productoId").val(data.id);
     $("#nombreProducto").val(data.nombre);
-
-    // Cargar las opciones de tipos de productos y seleccionar la que corresponde al producto
-    loadTiposProducto(data.tipo_producto_id);
-
-    // Mostrar el modal
+    loadTiposProducto(data.tipo_producto_id);  // Seleccionar el tipo de producto adecuado
+    $("#btnAddTipoProducto").hide();  // Ocultar el botón para añadir tipo de producto
     $("#productoModal").modal("show");
 });
-
 // Confirmar eliminación usando SweetAlert2
 $("#tabla_productos tbody").on("click", ".btn-delete", function () {
     var data = table.row($(this).parents("tr")).data();
@@ -284,7 +272,6 @@ $("#tabla_productos tbody").on("click", ".btn-delete", function () {
         }
     });
 });
-
 
 
 
