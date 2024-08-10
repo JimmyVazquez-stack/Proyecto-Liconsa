@@ -749,19 +749,18 @@ class ProductoCreateView(LoginRequiredMixin, View):
             return JsonResponse({
                 'id': producto.id,
                 'nombre': producto.nombre,
-                'nombre_tipo_producto': producto.tipo_producto.nombre
+                'tipo_producto_nombre': tipo_producto.nombre  # Devolver esto si es necesario para el frontend
             })
         except IntegrityError:
             return JsonResponse({'error': 'Error al crear el producto.'}, status=400)
         except TipoProducto.DoesNotExist:
             return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=400)
 
-
 class ProductoDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    def post(self, request, *args, **kwargs):
-        producto_id = request.POST.get('producto_id')
+    def delete(self, request, *args, **kwargs):
+        producto_id = kwargs.get('producto_id')
 
         try:
             producto = get_object_or_404(Producto, id=producto_id)

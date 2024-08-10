@@ -72,7 +72,7 @@ $(document).ready(function() {
     });
 
 // Función para cargar opciones de tipos de productos en el modal de creación/edición de producto
-function loadTiposProductos(selectedTipoProductoId = null) {
+function loadTiposProducto(selectedTipoProductoId = null) {
     $.ajax({
         url: '/catalogos/tipo_producto/list/data/',
         method: 'GET',
@@ -105,9 +105,13 @@ $("#btnAddProducto").click(function () {
     $("#productoModalLabel").text("Añadir Producto");
     $("#productoForm")[0].reset();
     $("#productoId").val("");
-    loadTiposProductos();
+    
+    // Cargar las opciones de tipos de productos
+    loadTiposProducto();
+    
     $("#productoModal").modal("show");
 });
+
 
 // Guardar producto (añadir o editar) con validación usando SweetAlert2
 $("#saveProducto").click(function () {
@@ -128,10 +132,16 @@ $("#saveProducto").click(function () {
     var url = productoId ? `/catalogos/productos/update/${productoId}/` : "/catalogos/productos/create/";
     var method = "POST";
 
+    // Crear un objeto de datos
+    var data = {
+        nombre: nombreProducto,
+        tipo_producto_id: tipoProductoId  // Asegúrate de que estás enviando el ID, no el nombre
+    };
+
     $.ajax({
         url: url,
         method: method,
-        data: $("#productoForm").serialize(),
+        data: data,
         success: function (response) {
             $("#productoModal").modal("hide");
             table.ajax.reload();
@@ -155,6 +165,8 @@ $("#saveProducto").click(function () {
     });
 });
 
+
+
 // Abrir modal para añadir tipo de producto
 $("#btnAddTipoProducto").click(function () {
     $("#tipoProductoModalLabel").text("Añadir Tipo de Producto");
@@ -162,12 +174,12 @@ $("#btnAddTipoProducto").click(function () {
     $("#tipoProductoModal").modal("show");
 });
 
-// Guardar tipo de producto
+// Guardar tipo de producto con validación usando SweetAlert2
 $("#saveTipoProducto").click(function () {
     var nombreTipoProducto = $("#nombreTipoProducto").val().trim();
     var descripcionTipoProducto = $("#descripcionTipoProducto").val().trim();
 
-    // Validar que todos los campos estén llenos
+    // Validar que los campos no estén vacíos
     if (!nombreTipoProducto || !descripcionTipoProducto) {
         Swal.fire({
             icon: "error",
@@ -177,20 +189,22 @@ $("#saveTipoProducto").click(function () {
         return;
     }
 
+    var tipoProductoId = $("#tipoProductoId").val();
+    var url = tipoProductoId ? `/catalogos/tipo_producto/update/${tipoProductoId}/` : "/catalogos/tipo_producto/create/";
+    var method = "POST";
+
     $.ajax({
-        url: "/catalogos/tipos-productos/create/",
-        method: "POST",
-        data: {
-            nombre: nombreTipoProducto,
-            descripcion: descripcionTipoProducto
-        },
+        url: url,
+        method: method,
+        data: $("#tipoProductoForm").serialize(),
         success: function (response) {
             $("#tipoProductoModal").modal("hide");
-            loadTiposProductos();
+            // Recargar opciones de tipos de productos en otros modales si es necesario
+            loadTiposProducto();
             Swal.fire({
                 icon: "success",
                 title: "Guardado",
-                text: "Tipo de Producto guardado con éxito",
+                text: "Tipo de producto guardado con éxito",
             });
         },
         error: function (xhr) {
@@ -208,6 +222,7 @@ $("#saveTipoProducto").click(function () {
 });
 
 
+
 // Manejadores manuales para cerrar el modal de producto
 $("#productoModal .close, #productoModal .btn-secondary").click(function () {
     $("#productoModal").modal("hide");
@@ -217,6 +232,7 @@ $("#productoModal .close, #productoModal .btn-secondary").click(function () {
 $("#tipoProductoModal .close, #tipoProductoModal .btn-secondary").click(function () {
     $("#tipoProductoModal").modal("hide");
 });
+
 // Abrir modal para editar producto
 $("#tabla_productos tbody").on("click", ".btn-edit", function () {
     var data = table.row($(this).parents("tr")).data();
@@ -231,6 +247,7 @@ $("#tabla_productos tbody").on("click", ".btn-edit", function () {
     // Mostrar el modal
     $("#productoModal").modal("show");
 });
+
 // Confirmar eliminación usando SweetAlert2
 $("#tabla_productos tbody").on("click", ".btn-delete", function () {
     var data = table.row($(this).parents("tr")).data();
