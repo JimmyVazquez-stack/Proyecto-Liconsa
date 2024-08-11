@@ -1,6 +1,34 @@
 
 $(document).ready(function() {
-    $('#tabla_tipo_producto').DataTable({
+       // Obtener el token CSRF de las cookies
+       function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            var cookies = document.cookie.split(";");
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie("csrftoken");
+    
+        // Configurar jQuery para incluir el token CSRF en las solicitudes AJAX
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+        });
+
+
+
+    var table = $('#tabla_tipo_producto').DataTable({
         ajax: {
             url: '/catalogos/tipo_producto/list/data/',
             dataSrc: ''
@@ -44,4 +72,126 @@ $(document).ready(function() {
         ]
         
     });
+
+
+// Abrir modal para añadir tipo de producto
+$("#btnAddTipoProducto").click(function () {
+    $("#tipoProductoModalLabel").text("Añadir Tipo de Producto");
+    $("#tipoProductoForm")[0].reset();
+    $("#tipoProductoId").val("");
+    $("#tipoProductoModal").modal("show");
+});
+
+// Guardar tipo de producto (añadir o editar)
+$("#saveTipoProducto").click(function () {
+    var nombreTipoProducto = $("#nombreTipoProducto").val().trim();
+    var descripcionTipoProducto = $("#descripcionTipoProducto").val().trim();
+    var tipoProductoId = $("#tipoProductoId").val();
+
+    // Validar que los campos no estén vacíos
+    if (!nombreTipoProducto || !descripcionTipoProducto) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Todos los campos son obligatorios",
+        });
+        return;
+    }
+
+    var url = tipoProductoId ? `/catalogos/tipo_producto/update/${tipoProductoId}/` : "/catalogos/tipo_producto/create/";
+    var method = "POST";
+
+    var data = {
+        nombre: nombreTipoProducto,
+        descripcion: descripcionTipoProducto
+    };
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: data,
+        success: function (response) {
+            $("#tipoProductoModal").modal("hide");
+            table.ajax.reload();
+            Swal.fire({
+                icon: "success",
+                title: "Guardado",
+                text: "Tipo de Producto guardado con éxito",
+            });
+        },
+        error: function (xhr) {
+            var errorMessage = "Error al guardar el tipo de producto";
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: errorMessage,
+            });
+        },
+    });
+});
+
+ // Función para abrir el modal de editar TipoProducto
+ $("#tabla_tipo_producto tbody").on("click", ".btn-edit", function () {
+    var data = table.row($(this).parents("tr")).data();
+
+    $("#tipoProductoModalLabel").text("Editar Tipo de Producto");
+    $("#tipoProductoId").val(data.id);
+    $("#nombreTipoProducto").val(data.nombre);
+    $("#descripcionTipoProducto").val(data.descripcion);
+    $("#tipoProductoModal").modal("show");
+});
+
+// Función para abrir el modal de eliminar TipoProducto
+$("#tabla_tipo_producto tbody").on("click", ".btn-delete", function () {
+    var data = table.row($(this).parents("tr")).data();
+
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        customClass: {
+            confirmButton: 'btn btn-danger',
+            cancelButton: 'btn btn-secondary'
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/catalogos/tipo_producto/delete/${data.id}/`,
+                method: "POST",
+                success: function (response) {
+                    table.ajax.reload();
+                    Swal.fire(
+                        "Eliminado",
+                        "El tipo de producto ha sido eliminado.",
+                        "success"
+                    );
+                },
+                error: function () {
+                    Swal.fire(
+                        "Error",
+                        "Hubo un problema al eliminar el tipo de producto.",
+                        "error"
+                    );
+                }
+            });
+        }
+    });
+});
+
+
+// Manejadores manuales para cerrar el modal de tipo de producto
+$("#tipoProductoModal .close, #tipoProductoModal .btn-secondary").click(function () {
+    $("#tipoProductoModal").modal("hide");
+});
+
+
+
+
+
 });

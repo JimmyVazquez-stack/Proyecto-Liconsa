@@ -20,8 +20,8 @@ from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
+#uso en modelo createSilos
+from django.db import transaction
 
 
 # Create your views here.
@@ -617,8 +617,6 @@ class SiloListView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('usuarios:login')
 
 
-
-
 class DataSilosView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -630,7 +628,113 @@ class DataSilosView(LoginRequiredMixin, View):
         silos_list = list(silos)
         return JsonResponse(silos_list, safe=False)
 
-# vistas de turnos
+
+
+# Vista de creación de silo
+
+class SiloCreateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        numero = request.POST.get('numero')
+        capacidad = request.POST.get('capacidad')
+        producto_id = request.POST.get('producto_id')
+        planta_id = request.POST.get('planta_id')
+
+        if not numero or not capacidad or not producto_id or not planta_id:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            producto = get_object_or_404(Producto, id=producto_id)
+            planta = get_object_or_404(Planta, id=planta_id)
+
+            silo = Silo.objects.create(
+                numero=numero,
+                capacidad=capacidad,
+                producto=producto,
+                planta=planta
+            )
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Silo creado con éxito',
+                'id': silo.id,
+                'numero': silo.numero,
+                'capacidad': silo.capacidad,
+                'nombre_producto': silo.producto.nombre,
+                'nombre_planta': silo.planta.nombre
+            })
+        except IntegrityError as e:
+            if 'UNIQUE constraint failed: catalogos_silo.numero' in str(e):
+                return JsonResponse({'error': 'El número del silo ya existe. Por favor, elige otro número.'}, status=400)
+            return JsonResponse({'error': f'Error al crear el silo: {str(e)}'}, status=400)
+
+
+class SiloUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def get(self, request, *args, **kwargs):
+        silo_id = kwargs.get('silo_id')
+        try:
+            silo = get_object_or_404(Silo, id=silo_id)
+            response_data = {
+                'id': silo.id,
+                'numero': silo.numero,
+                'capacidad': silo.capacidad,
+                'producto_id': silo.producto.id,
+                'planta_id': silo.planta.id
+            }
+            return JsonResponse(response_data)
+        except Silo.DoesNotExist:
+            return JsonResponse({'error': 'Silo no encontrado'}, status=404)
+
+    def post(self, request, *args, **kwargs):
+        silo_id = kwargs.get('silo_id')
+        numero = request.POST.get('numero')
+        capacidad = request.POST.get('capacidad')
+        producto_id = request.POST.get('producto_id')
+        planta_id = request.POST.get('planta_id')
+
+        if not numero or not capacidad or not producto_id or not planta_id:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            silo = get_object_or_404(Silo, id=silo_id)
+            producto = get_object_or_404(Producto, id=producto_id)
+            planta = get_object_or_404(Planta, id=planta_id)
+
+            silo.numero = numero
+            silo.capacidad = capacidad
+            silo.producto = producto
+            silo.planta = planta
+            silo.save()
+
+            return JsonResponse({
+                'id': silo.id,
+                'numero': silo.numero,
+                'capacidad': silo.capacidad,
+                'nombre_producto': silo.producto.nombre,
+                'nombre_planta': silo.planta.nombre
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el silo. Es posible que el número ya exista.'}, status=400)
+
+class SiloDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        silo_id = kwargs.get('silo_id')
+
+        try:
+            silo = get_object_or_404(Silo, id=silo_id)
+            silo.delete()
+
+            return JsonResponse({'success': True})
+        except Silo.DoesNotExist:
+            return JsonResponse({'error': 'Silo no encontrado.'}, status=404)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al eliminar el silo.'}, status=400)
+
 
 
 
@@ -835,11 +939,51 @@ class TipoProductoCreateView(LoginRequiredMixin, View):
         except IntegrityError:
             return JsonResponse({'error': 'Error al crear el tipo de producto.'}, status=400)
 
+class TipoProductoUpdateView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        tipo_producto_id = kwargs.get('tipo_producto_id')
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+
+        if not nombre or not descripcion:
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
+
+        try:
+            tipo_producto = get_object_or_404(TipoProducto, id=tipo_producto_id)
+            tipo_producto.nombre = nombre
+            tipo_producto.descripcion = descripcion
+            tipo_producto.save()
+
+            return JsonResponse({
+                'id': tipo_producto.id,
+                'nombre': tipo_producto.nombre,
+                'descripcion': tipo_producto.descripcion
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al actualizar el tipo de producto.'}, status=400)
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=404)
+
+class TipoProductoDeleteView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        tipo_producto_id = kwargs.get('tipo_producto_id')
+
+        try:
+            tipo_producto = get_object_or_404(TipoProducto, id=tipo_producto_id)
+            tipo_producto.delete()
+
+            return JsonResponse({'success': True})
+        except TipoProducto.DoesNotExist:
+            return JsonResponse({'error': 'Tipo de producto no encontrado.'}, status=404)
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al eliminar el tipo de producto.'}, status=400)
 
 
 # vistas para rutas
-
-
 class RutaListView(LoginRequiredMixin, TemplateView):
     template_name = 'rutas/listar_rutas.html'
     login_url = reverse_lazy('usuarios:login')

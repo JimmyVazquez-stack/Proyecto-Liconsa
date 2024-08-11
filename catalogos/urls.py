@@ -51,6 +51,11 @@ urlpatterns = [
     #rutas a silos
     path('silos/list/', views.SiloListView.as_view(), name='silos_list'),
     path('silos/list/data/', views.DataSilosView.as_view(), name='silos_data'),
+    path('silos/create/', views.SiloCreateView.as_view(), name='silo_create'),
+    path('silos/update/<int:silo_id>/', views.SiloUpdateView.as_view(), name='silo_update'),
+    path('silos/delete/<int:silo_id>/', views.SiloDeleteView.as_view(), name='silo_delete'),
+    
+    
     #rutas a gestion de productos
     path('productos/list/', views.ProductoListView.as_view(), name='productos_list'),
     path('productos/list/data/', views.ProductoDataView.as_view(), name='productos_data'),
@@ -61,6 +66,9 @@ urlpatterns = [
     path('tipo_producto/list/', views.TipoProductoListView.as_view(), name='tipo_producto_list'),
     path('tipo_producto/list/data/', views.TipoProductoDataView.as_view(), name='tipo_producto_data'),
     path('tipo_producto/create/', views.TipoProductoCreateView.as_view(), name='tipo_producto_create'),
+    path('tipo_producto/update/<int:tipo_producto_id>/', views.TipoProductoUpdateView.as_view(), name='tipo_producto_update'),
+    path('tipo_producto/delete/<int:tipo_producto_id>/', views.TipoProductoDeleteView.as_view(), name='tipo_producto_delete'),
+
     #rutas
     path('rutas/list/', views.RutaListView.as_view(), name='rutas_list'),
     path('rutas/list/data/', views.RutaDataView.as_view(), name='rutas_data'),
