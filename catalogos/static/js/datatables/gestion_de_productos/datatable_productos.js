@@ -132,6 +132,7 @@ $("#saveProducto").click(function () {
         tipo_producto_id: tipoProductoId
     };
 
+
     $.ajax({
         url: url,
         method: method,
@@ -155,7 +156,7 @@ $("#saveProducto").click(function () {
                 title: "Error",
                 text: errorMessage,
             });
-        },
+        }
     });
 });
 
