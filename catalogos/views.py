@@ -828,6 +828,8 @@ class TurnoUpdateView(LoginRequiredMixin, View):
         turno.save()
 
         return JsonResponse({'message': 'Turno actualizado con éxito'}, status=200)
+
+
 class TurnoDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 

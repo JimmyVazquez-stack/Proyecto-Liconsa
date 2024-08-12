@@ -139,10 +139,10 @@ $('#saveTurno').click(function() {
     }
 
     // Convertir las horas a objetos Date para validación
-    var horaInicioDate = new Date('1970-01-01T' + hora_inicio + ':00');
-    var horaFinDate = new Date('1970-01-01T' + hora_fin + ':00');
-    var horaLimiteMatutino = new Date('1970-01-01T14:00:00');  // 2:00 PM
-    var horaLimiteVespertino = new Date('1970-01-01T23:59:59');  // 11:59 PM
+    var horaInicioDate = new Date('1970-01-01T' + hora_inicio + ':00Z');
+    var horaFinDate = new Date('1970-01-01T' + hora_fin + ':00Z');
+    var horaLimiteMatutino = new Date('1970-01-01T14:00:00Z');  // 2:00 PM
+    var horaLimiteVespertino = new Date('1970-01-01T23:59:59Z');  // 11:59 PM
 
     // Validación específica para turnos matutinos
     if (nombre === 'Matutino') {
@@ -158,11 +158,11 @@ $('#saveTurno').click(function() {
 
     // Validación específica para turnos vespertinos
     if (nombre === 'Vespertino') {
-        if (horaInicioDate <= horaLimiteMatutino || horaFinDate > horaLimiteVespertino) {
+        if (horaInicioDate < horaLimiteMatutino || horaFinDate > horaLimiteVespertino) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'El turno vespertino debe comenzar después de las 2:00 PM y terminar antes de las 11:59 PM',
+                text: 'El turno vespertino debe ser después de las 2:00 PM y antes de las 11:59 PM',
             });
             return;
         }

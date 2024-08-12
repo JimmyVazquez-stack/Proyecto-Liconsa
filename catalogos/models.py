@@ -163,7 +163,7 @@ class Turno(models.Model):
         ('Matutino', 'Matutino'),
         ('Vespertino', 'Vespertino'),
     ]
-    nombre = models.CharField(max_length=100, unique=True)
+    nombre = models.CharField(max_length=100, unique=True, choices=TURNOS_CHOICES)
     descripcion = models.TextField()
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
@@ -181,13 +181,23 @@ class Turno(models.Model):
         # Define la hora límite para el turno matutino
         hora_limite = time(14, 0)  # 2:00 PM
 
-        # Verifica si el turno es matutino y alguna de las horas excede la hora límite
+        # Validación para turnos matutinos
         if self.nombre == 'Matutino':
+            if isinstance(self.hora_inicio, str):
+                self.hora_inicio = datetime.strptime(self.hora_inicio, '%H:%M').time()
+            if isinstance(self.hora_fin, str):
+                self.hora_fin = datetime.strptime(self.hora_fin, '%H:%M').time()
+
             if self.hora_inicio >= hora_limite or self.hora_fin > hora_limite:
                 raise ValidationError('El turno matutino no puede tener horas de inicio o fin después de las 2:00 PM.')
 
-        # Verifica si el turno es vespertino y alguna de las horas no cumple con el rango esperado
+        # Validación para turnos vespertinos
         if self.nombre == 'Vespertino':
+            if isinstance(self.hora_inicio, str):
+                self.hora_inicio = datetime.strptime(self.hora_inicio, '%H:%M').time()
+            if isinstance(self.hora_fin, str):
+                self.hora_fin = datetime.strptime(self.hora_fin, '%H:%M').time()
+
             if self.hora_inicio < hora_limite or self.hora_fin <= hora_limite:
                 raise ValidationError('El turno vespertino debe comenzar después de las 2:00 PM y terminar antes de las 11:59 PM.')
 
@@ -196,8 +206,7 @@ class Turno(models.Model):
         super().save(*args, **kwargs)  # Llama al método save original
 
     class Meta:
-        verbose_name_plural = "Turnos"
-        
+        verbose_name_plural = "Turnos"    
         
 class Silo(models.Model):
     numero = models.IntegerField()
