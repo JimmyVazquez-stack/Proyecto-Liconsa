@@ -30,6 +30,9 @@ urlpatterns = [
     #rutas a cabezales
     path('cabezales/list/', views.CabezalListView.as_view(), name='cabezales_list'),
     path('cabezales/list/data/', views.CabezalDataView.as_view(), name='cabezales_data'),
+    path('cabezales/create/', views.CabezalCreateView.as_view(), name='crear_cabezal'),
+    path('cabezales/update/<int:pk>/', views.CabezalUpdateView.as_view(), name='actualizar_cabezal'),
+    path('cabezales/delete/<int:pk>/', views.CabezalDeleteView.as_view(), name='eliminar_cabezal'),
     #rutas a plantas
     path('plantas/list/', views.PlantaListView.as_view(), name='plantas_list'),
     path('plantas/list/data/', views.PlantaDataView.as_view(), name='plantas_data'),

@@ -114,14 +114,37 @@ class Cabezal(models.Model):
     )
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = "Cabezales"
+        unique_together = ('nombre', 'maquina')  # Asegurar unicidad por máquina
+
     def clean(self):
         super().clean()
-        if self.nombre in ['A', 'B'] and self.maquina.numero != 1:
-            raise ValidationError('Los nombres A y B solo pueden ser asignados a la máquina 1.')
-        elif self.nombre in ['C', 'D'] and self.maquina.numero != 2:
-            raise ValidationError('Los nombres C y D solo pueden ser asignados a la máquina 2.')
-        elif self.nombre in ['E', 'F'] and self.maquina.numero != 3:
-            raise ValidationError('Los nombres E y F solo pueden ser asignados a la máquina 3.')
+
+        # Convertir a mayúsculas para la validación de unicidad
+        self.nombre = self.nombre.upper()
+
+        # Definir las letras permitidas para cada máquina
+        letras_permitidas = {
+            1: ['A', 'B'],
+            2: ['C', 'D'],
+            3: ['E', 'F'],
+            # Permitir letras adicionales si es necesario
+        }
+
+        # Validar letras adicionales
+        letras_adicionales = 'GHIJKLMNOPQRSTUVWXYZ'
+
+        # Validar el nombre del cabezal y la máquina
+        if self.maquina.numero in letras_permitidas:
+            if self.nombre not in letras_permitidas[self.maquina.numero] + list(letras_adicionales):
+                raise ValidationError(f'El cabezal {self.nombre} no es válido para la máquina {self.maquina.numero}.')
+        elif self.nombre not in letras_adicionales:
+            raise ValidationError('El nombre del cabezal no está permitido.')
+
+        # Comprobar unicidad del nombre del cabezal para la misma máquina
+        if Cabezal.objects.filter(maquina=self.maquina, nombre__iexact=self.nombre).exclude(pk=self.pk).exists():
+            raise ValidationError(f'El cabezal {self.nombre} ya existe para la máquina {self.maquina.numero}.')
 
     def save(self, *args, **kwargs):
         self.clean()
