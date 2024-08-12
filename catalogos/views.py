@@ -665,10 +665,9 @@ class SiloCreateView(LoginRequiredMixin, View):
                 'nombre_planta': silo.planta.nombre
             })
         except IntegrityError as e:
-            if 'UNIQUE constraint failed: catalogos_silo.numero' in str(e):
-                return JsonResponse({'error': 'El número del silo ya existe. Por favor, elige otro número.'}, status=400)
+            if 'UNIQUE constraint failed' in str(e):
+                return JsonResponse({'error': 'El número del silo ya existe para esta planta. Por favor, elige otro número.'}, status=400)
             return JsonResponse({'error': f'Error al crear el silo: {str(e)}'}, status=400)
-
 
 class SiloUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
@@ -703,6 +702,10 @@ class SiloUpdateView(LoginRequiredMixin, View):
             producto = get_object_or_404(Producto, id=producto_id)
             planta = get_object_or_404(Planta, id=planta_id)
 
+            # Validar que el número de silo es único en la planta, excluyendo el silo actual
+            if Silo.objects.exclude(id=silo_id).filter(numero=numero, planta=planta).exists():
+                return JsonResponse({'error': 'El número del silo ya existe en esta planta'}, status=400)
+
             silo.numero = numero
             silo.capacidad = capacidad
             silo.producto = producto
@@ -710,6 +713,8 @@ class SiloUpdateView(LoginRequiredMixin, View):
             silo.save()
 
             return JsonResponse({
+                'success': True,
+                'message': 'Silo actualizado con éxito',
                 'id': silo.id,
                 'numero': silo.numero,
                 'capacidad': silo.capacidad,
@@ -837,7 +842,6 @@ class ProductoCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
     def post(self, request, *args, **kwargs):
-        print(request.POST) # Imprimir los datos recibidos en la consola
         data = request.POST
         nombre = data.get('nombre')
         tipo_producto_id = data.get('tipo_producto_id')

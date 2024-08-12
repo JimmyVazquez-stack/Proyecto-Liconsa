@@ -194,15 +194,16 @@ class Turno(models.Model):
     class Meta:
         verbose_name_plural = "Turnos"
         
+
 class Silo(models.Model):
-    numero = models.IntegerField(unique=True) #Numero de silo unico
+    numero = models.IntegerField()
     capacidad = models.DecimalField(max_digits=10, decimal_places=2)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
-    
 
     def __str__(self):
         return str(self.numero)
     
     class Meta:
         verbose_name_plural = "Silos"
+        unique_together = ('numero', 'planta')  # Asegura que el número de silo sea único solo dentro de una planta

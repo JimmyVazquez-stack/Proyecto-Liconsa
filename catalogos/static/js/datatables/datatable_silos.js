@@ -73,47 +73,6 @@ $(document).ready(function() {
         
     });
 
-    function openSiloModal(siloId) {
-        if (siloId) {
-            // Modo edición
-            $("#siloModalLabel").text("Editar Silo");
-            $("#saveSilo").data("id", siloId); // Guarda el ID del silo en el botón de guardar
-            $.ajax({
-                url: `/catalogos/silos/${siloId}/`,
-                method: "GET",
-                success: function (data) {
-                    // Rellena los campos del formulario con los datos del silo
-                    $("#numeroSilo").val(data.numero);
-                    $("#capacidadSilo").val(data.capacidad);
-                    $("#productoSilo").val(data.producto_id);
-                    $("#plantaSilo").val(data.planta_id);
-    
-                    // Ocultar botones de añadir producto y planta
-                    $("#btnAddProducto").hide();
-                    $("#btnAddPlanta").hide();
-                    
-                    $("#siloModal").modal("show");
-                },
-                error: function (xhr) {
-                    console.error("Error al cargar los datos del silo:", xhr);
-                }
-            });
-        } else {
-            // Modo creación
-            $("#siloModalLabel").text("Añadir Silo");
-            $("#saveSilo").removeData("id"); // Elimina el ID del silo del botón de guardar
-    
-            // Mostrar botones de añadir producto y planta
-            $("#btnAddProducto").show();
-            $("#btnAddPlanta").show();
-    
-            $("#siloModal").modal("show");
-        }
-    }
-    
-    // Llama a openSiloModal con el ID del silo para abrir en modo edición
-    // Llama a openSiloModal() sin parámetros para abrir en modo creación
-    
 
 
 // Función para cargar opciones de tipos de productos en el modal de creación/edición de producto
@@ -150,17 +109,16 @@ function loadTiposProducto(selectedTipoProductoId = null) {
 
 }
 
-
-    // Función para mostrar/ocultar botones según el modo (crear/editar)
-    function toggleAddButtons(isEditMode) {
-        if (isEditMode) {
-            $("#btnAddProducto").hide();
-            $("#btnAddPlanta").hide();
-        } else {
-            $("#btnAddProducto").show();
-            $("#btnAddPlanta").show();
-        }
+// Función para mostrar/ocultar botones según el modo (crear/editar)
+function toggleAddButtons(isEditMode) {
+    if (isEditMode) {
+        $("#btnAddProducto").hide();
+        $("#btnAddPlanta").hide();
+    } else {
+        $("#btnAddProducto").show();
+        $("#btnAddPlanta").show();
     }
+}
     
 
 // Eventos que se ejecutan al cargar la página
@@ -198,14 +156,97 @@ $('#siloModal').on('show.bs.modal', function (event) {
 
 
 
-//Abrir modal creacion de silo
+// Abrir modal creación de silo
 $("#btnAddSilo").click(function () {
     $("#siloModalLabel").text("Añadir Silo");
     $("#siloForm")[0].reset();  // Resetea el formulario
     $("#siloId").val('');  // Limpia el campo oculto
+
+    // Mostrar los botones de "Añadir Producto" y "Añadir Planta"
+    $("#btnAddProducto").show();
+    $("#btnAddPlanta").show();
+
+    // Mostrar el modal
     $("#siloModal").modal("show");
-    openSiloModal();
 });
+
+
+// Abrir modal para editar silo
+$("#tabla_silos tbody").on("click", ".btn-edit", function () {
+    var data = table.row($(this).parents("tr")).data();
+
+    if (data) {
+        // Mostrar el modal de inmediato
+        $("#siloModal").modal("show");
+
+        // Llenar los campos con la información existente
+        $("#siloModalLabel").text("Editar Silo");
+        $("#siloId").val(data.id); // Establecer el ID del silo
+        $("#numeroSilo").val(data.numero);
+        $("#capacidadSilo").val(data.capacidad);
+
+        // Cargar opciones para productos y plantas
+        loadOptions().done(function() {
+            // Establecer el valor seleccionado en los selectores
+            $('#productoSilo').val(data.producto_id).trigger('change');
+            $('#plantaSilo').val(data.planta_id).trigger('change');
+
+            // Ocultar botones de "Añadir Producto" y "Añadir Planta" al editar
+            $("#btnAddProducto").hide();
+            $("#btnAddPlanta").hide();
+        }).fail(function() {
+            console.error('Error al cargar opciones');
+        });
+    } else {
+        console.error('No se encontraron datos para la fila seleccionada');
+    }
+});
+
+
+// Función para cargar opciones de productos y plantas
+function loadOptions() {
+    var productos = $.ajax({
+        url: '/catalogos/productos/list/data', // URL para cargar los productos
+        method: 'GET',
+        dataType: 'json'
+    });
+
+    var plantas = $.ajax({
+        url: '/catalogos/plantas/list/data', // URL para cargar las plantas
+        method: 'GET',
+        dataType: 'json'
+    });
+
+    return $.when(productos, plantas).done(function(productosResponse, plantasResponse) {
+        var productosData = productosResponse[0];
+        var plantasData = plantasResponse[0];
+
+        var $productoSelect = $('#productoSilo');
+        var $plantaSelect = $('#plantaSilo');
+
+        // Vaciar los selectores
+        $productoSelect.empty();
+        $plantaSelect.empty();
+
+        // Llenar el selector de productos
+        $.each(productosData, function(index, producto) {
+            $productoSelect.append($('<option>', {
+                value: producto.id,
+                text: producto.nombre
+            }));
+        });
+
+        // Llenar el selector de plantas
+        $.each(plantasData, function(index, planta) {
+            $plantaSelect.append($('<option>', {
+                value: planta.id,
+                text: planta.nombre
+            }));
+        });
+    }).fail(function() {
+        console.error('Error al cargar opciones');
+    });
+}
 
 // Guardar o actualizar silo
 $("#saveSilo").click(function () {
@@ -213,27 +254,9 @@ $("#saveSilo").click(function () {
     var capacidadSilo = $("#capacidadSilo").val().trim();
     var productoId = $("#productoSilo").val();
     var plantaId = $("#plantaSilo").val();
-    var siloId = $("#siloId").val(); // En caso de edición, obtener el ID del silo
+    var siloId = $("#siloId").val(); // Obtener el ID del silo
 
-    // Validar que los campos no estén vacíos
-    if (!numeroSilo || !capacidadSilo || !productoId || !plantaId) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Todos los campos son obligatorios",
-        });
-        return;
-    }
-
-    // Validar que los campos numéricos son válidos
-    if (isNaN(capacidadSilo) || capacidadSilo <= 0) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Capacidad debe ser un número positivo",
-        });
-        return;
-    }
+  
 
     var url = siloId ? `/catalogos/silos/update/${siloId}/` : "/catalogos/silos/create/";
     var method = "POST";
@@ -250,8 +273,9 @@ $("#saveSilo").click(function () {
         method: method,
         data: data,
         success: function (response) {
-            closeModal(); // Cierra el modal al guardar con éxito
-            table.ajax.reload();
+            // Manejo de éxito
+            $("#siloModal").modal("hide");
+            table.ajax.reload(); // Actualiza la tabla con los nuevos datos
             Swal.fire({
                 icon: "success",
                 title: "Guardado",
@@ -259,6 +283,7 @@ $("#saveSilo").click(function () {
             });
         },
         error: function (xhr) {
+            // Manejo de error
             var errorMessage = "Error al guardar el silo";
             if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
                 errorMessage = xhr.responseJSON.error;
@@ -275,28 +300,9 @@ $("#saveSilo").click(function () {
 
 
 
-// Abrir modal para editar silo
-$("#tabla_silos tbody").on("click", ".btn-edit", function () {
-    var data = table.row($(this).parents("tr")).data();
 
-    $("#siloModalLabel").text("Editar Silo");
-    $("#siloId").val(data.id);
 
-    // Cargar productos y plantas y luego asignar los valores
-    loadProductos(data.producto_id, function() {
-        $("#productoSilo").val(data.producto_id);
-    });
 
-    loadPlantas(data.planta_id, function() {
-        $("#plantaSilo").val(data.planta_id);
-    });
-
-    // Asignar otros valores que no dependan de AJAX
-    $("#numeroSilo").val(data.numero);
-    $("#capacidadSilo").val(data.capacidad);
-
-    $("#siloModal").modal("show");
-});
 
 
 
@@ -369,8 +375,6 @@ $("#btnAddProducto").on("click", function () {
 });
 
 
-
-
 // Abrir modal para añadir tipo de producto
 $("#btnAddTipoProducto").click(function () {
     $("#tipoProductoModalLabel").text("Añadir Tipo de Producto");
@@ -383,8 +387,6 @@ $("#btnAddTipoProducto").click(function () {
 $("#tipoProductoModal .close, #tipoProductoModal .btn-secondary").click(function () {
     $("#tipoProductoModal").modal("hide");
 });
-
-
 
 
 // Guardar tipo de producto (añadir o editar)
@@ -518,7 +520,6 @@ function loadProductos() {
 }
 
 
-
 function loadPlantas() {
     $.ajax({
         url: '/catalogos/plantas/list/data/',
@@ -572,8 +573,6 @@ function loadTiposProducto(selectedTipoProductoId = null) {
     });
 }
 
-
-
 // Llamar a estas funciones al abrir el modal
 $('#siloModal').on('show.bs.modal', function() {
     loadProductos();
@@ -594,61 +593,6 @@ $("#btnAddPlanta").click(function() {
 function closeModal() {
     $('#siloModal').modal('hide'); // Cierra el modal
 }
-
-// Ejemplo de uso después de guardar o editar
-$("#saveSilo").click(function () {
-    var numeroSilo = $("#numeroSilo").val().trim();
-    var capacidadSilo = $("#capacidadSilo").val().trim();
-    var productoId = $("#productoSilo").val();
-    var plantaId = $("#plantaSilo").val();
-    var siloId = $("#siloId").val(); // En caso de edición, obtener el ID del silo
-
-    // Validar que los campos no estén vacíos
-    if (!numeroSilo || !capacidadSilo || !productoId || !plantaId) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Todos los campos son obligatorios",
-        });
-        return;
-    }
-
-    var url = siloId ? `/catalogos/silos/update/${siloId}/` : "/catalogos/silos/create/";
-    var method = siloId ? "POST" : "POST";
-
-    var data = {
-        numero: numeroSilo,
-        capacidad: capacidadSilo,
-        producto_id: productoId,
-        planta_id: plantaId
-    };
-
-    $.ajax({
-        url: url,
-        method: method,
-        data: data,
-        success: function (response) {
-            closeModal(); // Cierra el modal al guardar con éxito
-            table.ajax.reload();
-            Swal.fire({
-                icon: "success",
-                title: "Guardado",
-                text: "Silo guardado con éxito",
-            });
-        },
-        error: function (xhr) {
-            var errorMessage = "Error al guardar el silo";
-            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-            }
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: errorMessage,
-            });
-        },
-    });
-});
 
 // Evento al hacer clic en el botón de cancelar
 $('#siloModal .btn-secondary').click(function () {
@@ -673,67 +617,66 @@ $("#productoModal .close, #productoModal .btn-secondary").click(function () {
 
 
 
-    // Manejadores manuales para cerrar el modal
-    $('#plantaModal .close, #plantaModal .btn-secondary').click(function() {
-        $('#plantaModal').modal('hide');
-    });
+// Manejadores manuales para cerrar el modal
+$('#plantaModal .close, #plantaModal .btn-secondary').click(function() {
+    $('#plantaModal').modal('hide');
+});
 
-        // Guardar planta (añadir o editar) con validación usando SweetAlert2
-        $('#savePlanta').click(function() {
-            var nombre = $('#nombre').val().trim();
-            var ubicacion = $('#ubicacion').val().trim();
-            var correo = $('#correo').val().trim();
-            var contacto = $('#contacto').val().trim();
-            var telefono = $('#telefono').val().trim();
-    
-            // Validar que los campos no estén vacíos
-            if (!nombre || !ubicacion || !correo || !contacto || !telefono) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Todos los campos son obligatorios',
-                });
-                return;
-            }
-    
-            var plantaId = $('#plantaId').val();
-            var url = plantaId ? `/catalogos/plantas/update/${plantaId}/` : '/catalogos/plantas/create/';
-            var method = 'POST';
-    
-            $.ajax({
-                url: url,
-                method: method,
-                data: $('#plantaForm').serialize(),
-                success: function(response) {
-                    $('#plantaModal').modal('hide');
-                    table.ajax.reload();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Guardado',
-                        text: 'Planta guardada con éxito',
-                    });
-                },
-                error: function(xhr) {
-                    var errorMessage = 'Error al guardar la planta';
-                    if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessage,
-                    });
-                }
-            });
+// Guardar planta (añadir o editar) con validación usando SweetAlert2
+$('#savePlanta').click(function() {
+    var nombre = $('#nombre').val().trim();
+    var ubicacion = $('#ubicacion').val().trim();
+    var correo = $('#correo').val().trim();
+    var contacto = $('#contacto').val().trim();
+    var telefono = $('#telefono').val().trim();
+
+    // Validar que los campos no estén vacíos
+    if (!nombre || !ubicacion || !correo || !contacto || !telefono) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Todos los campos son obligatorios',
         });
+        return;
+    }
 
-        // Manejador para el botón "Cancelar" del modal de tipo de producto
+    var plantaId = $('#plantaId').val();
+    var url = plantaId ? `/catalogos/plantas/update/${plantaId}/` : '/catalogos/plantas/create/';
+    var method = 'POST';
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: $('#plantaForm').serialize(),
+        success: function(response) {
+            $('#plantaModal').modal('hide');
+            table.ajax.reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Planta guardada con éxito',
+            });
+        },
+        error: function(xhr) {
+            var errorMessage = 'Error al guardar la planta';
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            });
+        }
+    });
+});
+
+// Manejador para el botón "Cancelar" del modal de tipo de producto
 $("#tipoProductoModal .btn-secondary").click(function () {
-    // Cierra el modal actual
-    $("#tipoProductoModal").modal("hide");
-
-    // Abre el modal anterior, por ejemplo, el modal de productos
-    $("#productoModal").modal("show");
+// Cierra el modal actual
+$("#tipoProductoModal").modal("hide");
+// Abre el modal anterior, por ejemplo, el modal de productos
+$("#productoModal").modal("show");
 });
 
 });

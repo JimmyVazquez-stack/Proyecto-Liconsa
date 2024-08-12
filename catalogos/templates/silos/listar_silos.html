@@ -109,13 +109,14 @@
             </div>
             <div class="modal-body">
                 <form id="siloForm">
+                    <input type="hidden" id="siloId" name="silo_id"> <!-- Campo oculto para el ID del silo -->
                     <div class="form-group">
                         <label for="numeroSilo">Número de Silo</label>
-                        <input type="text" class="form-control" id="numeroSilo" name="numero" required>
+                        <input type="number" class="form-control" id="numeroSilo" name="numero" required>
                     </div>
                     <div class="form-group">
                         <label for="capacidadSilo">Capacidad</label>
-                        <input type="text" class="form-control" id="capacidadSilo" name="capacidad" required>
+                        <input type="number" class="form-control" id="capacidadSilo" name="capacidad" step="0.01" required>
                     </div>
                     <div class="form-group">
                         <label for="productoSilo">Producto</label>
@@ -139,11 +140,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="saveSilo">Guardar Silo</button>
+                <button type="button" class="btn btn-primary" id="saveSilo">Guardar</button>
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Modal para añadir/editar producto -->
