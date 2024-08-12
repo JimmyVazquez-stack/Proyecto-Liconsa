@@ -236,11 +236,11 @@ class pesoenvvacior49_create(generic.CreateView):
     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html'
     context_object_name = 'pesoenvvacior49'
     form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
 
 class pesoenvvacior49_update(generic.UpdateView):
     model = Pesoenvvacio
-    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Update.html' 
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html' 
     form_class = PesoenvvacioForm
     success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
     context_object_name = 'pesoenvvacior49'
@@ -263,11 +263,11 @@ class pesobrutor49_create(generic.CreateView):
     template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html'
     context_object_name = 'pesobrutor49'
     form_class = PesobrutoForm
-    success_url = reverse_lazy("laboratorio_control_calidad:pesobrutor49_list")
+    success_url = reverse_lazy("laboratorio_control_calidad:encabezador49_create")
 
 class pesobrutor49_update(generic.UpdateView):
     model = Pesobruto
-    template_name = 'crud_VolumenNetoR49/pesoBruto_Update.html' 
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html' 
     form_class = PesobrutoForm
     success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
     context_object_name = 'pesobrutor49'
@@ -546,7 +546,7 @@ class PesoBrutor49CreateView(generic.CreateView):
     template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html'
     context_object_name = 'pesoBrutor49'
     form_class = PesobrutoForm
-    success_url = reverse_lazy("laboratorio_control_calidad:pesoBrutor49_List")
+    success_url = reverse_lazy("laboratorio_control_calidad:encabezador49_create")
 
 class PesoBrutor49UpdateView(generic.UpdateView):
     model = Pesobruto
@@ -574,7 +574,7 @@ class PesoEnvVacior49CreateView(generic.CreateView):
     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html'
     context_object_name = 'pesoEnvVacior49'
     form_class = PesoenvvacioForm
-    success_url = reverse_lazy("laboratorio_control_calidad:pesoEnvVacior49_List")
+    success_url = reverse_lazy("laboratorio_control_calidad:encabezador49_create")
 
 class PesoEnvVacior49UpdateView(generic.UpdateView):
     model = Pesoenvvacio
