@@ -2,3 +2,28 @@
     max-height: 400px; /* Ajusta esta altura según sea necesario */
     overflow-y: auto; /* Habilita el desplazamiento vertical */
 }
+
+/* Color de fondo de las pestañas */
+.custom-tab {
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
+}
+
+/* Color de fondo y texto cuando la pestaña está activa */
+.custom-tab.active {
+    background-color: #0056b3; /* Color de fondo cuando está activa */
+    color: white; /* Color del texto cuando está activa */
+}
+
+/* Cambia el color al pasar el ratón sobre la pestaña */
+.custom-tab:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.tab-content {
+    background-color: #f8f9fa; /* Cambiar el color de fondo */
+    border: 1px solid #dee2e6; /* Agregar un borde */
+    padding: 20px; /* Agregar padding */
+    border-radius: 5px; /* Bordes redondeados */
+}
