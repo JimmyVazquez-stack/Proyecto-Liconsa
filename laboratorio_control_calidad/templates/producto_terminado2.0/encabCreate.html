@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Modificar Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" name="submit-encab-form" class="btn btn-success">Guardar</button>
+          <a href="{% url 'laboratorio_control_calidad:pt_encabView' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-body bg-light">
+      <div class="col-xl-12 mt-3 p-3">
+        <div class="table-responsive">
+          <div class="d-flex justify-content-start mb-3">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modal-xl">
+              Nuevo Registro
+            </button>
+            <div id="example_filter"></div>
+          </div>
+          <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+            <thead class="thead-light" style="font-size: 14px">
+              <tr>
+                <th>FOLIO</th>
+                <th>HORA DE MUESTREO</th>
+                <th>TIPO DE MUESTRA</th>
+                <th>VOLUMEN (L)</th>
+                <th>ASPECTO</th>
+                <th>SABOR</th>
+                <th>OLOR</th>
+                <th>TEMPERATURA (°C)</th>
+                <th>ÁCIDEZ g/L</th>
+                <th>DENSIDAD g/mL</th>
+                <th>S.G. g/L</th>
+                <th>S.N.G. g/L</th>
+                <th>S. T. g/L</th>
+                <th>PROTEÍNA g/L</th>
+                <th>OPCIONES</th>
+              </tr>
+            </thead>
+            <tbody style="font-size: 14px">
+              {% for item in term %}
+              <tr>
+                <td>{{ item.encabezado }}</td>
+                <td>{{ item.lotCad }}{{ item.planta }}{{ item.turno }}{{ item.silo }}{{ item.maquina }}{{ item.hora }}</td>
+                <td>{{ item.producto }}</td>
+                <td>{{ item.volumen }}</td>
+                <td>{{ item.aspecto }}</td>
+                <td>{{ item.sabor }}</td>
+                <td>{{ item.olor }}</td>
+                <td>{{ item.temperatura }}</td>
+                <td>{{ item.acidez }}</td>
+                <td>{{ item.densidad }}</td>
+                <td>{{ item.sg }}</td>
+                <td>{{ item.sng }}</td>
+                <td>{{ item.st }}</td>
+                <td>{{ item.proteina }}</td>
+                <td>
+                  <a href="?term_id={{ item.id }}" class="btn btn-warning"><i class="fa fa-pencil"></i></a>        
+                  <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pt_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para agregar/editar registro -->
+<div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-xl">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% if edit_mode %}Editar Registro{% else %}Nuevo Registro{% endif %}</h4>
+        <a href="{{ request.path }}" class="close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        {% if edit_mode %}
+            <input type="hidden" name="term_id" value="{{ nuevo_form.instance.id }}">
+        {% endif %}
+        <div class="modal-body">
+          {% if nuevo_form.errors %}
+            <div class="alert alert-danger">
+              <ul>
+                {% for field in nuevo_form %}
+                  {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in nuevo_form.non_field_errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.lotCad.label_tag }}
+                {{ nuevo_form.lotCad }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.planta.label_tag }}
+                {{ nuevo_form.planta }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.turno.label_tag }}
+                {{ nuevo_form.turno }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.silo.label_tag }}
+                {{ nuevo_form.silo }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.maquina.label_tag }}
+                {{ nuevo_form.maquina }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.hora.label_tag }}
+                {{ nuevo_form.hora }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.producto.label_tag }}
+                {{ nuevo_form.producto }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.volumen.label_tag }}
+                {{ nuevo_form.volumen }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.aspecto.label_tag }}
+                {{ nuevo_form.aspecto }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.sabor.label_tag }}
+                {{ nuevo_form.sabor }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.olor.label_tag }}
+                {{ nuevo_form.olor }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.temperatura.label_tag }}
+                {{ nuevo_form.temperatura }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.acidez.label_tag }}
+                {{ nuevo_form.acidez }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.densidad.label_tag }}
+                {{ nuevo_form.densidad }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.sg.label_tag }}
+                {{ nuevo_form.sg }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.sng.label_tag }}
+                {{ nuevo_form.sng }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.st.label_tag }}
+                {{ nuevo_form.st }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.proteina.label_tag }}
+                {{ nuevo_form.proteina }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.encabezado.label_tag }}
+                {{ nuevo_form.encabezado }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="submit" class="btn btn-primary" name="submit-nuevo-form">Guardar</button>
+          <a href="{{ request.path }}" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

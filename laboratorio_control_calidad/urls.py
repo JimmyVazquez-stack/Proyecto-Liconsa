@@ -28,11 +28,22 @@ urlpatterns = [
     # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilos - [Start] - #
 
     path('Leche_Reconstituida_Por_Silos/list', LecheReconsSilosView.as_view(), name='Leche_Recons_Silos_List'),
-    
     path('Leche_Reconstituida_Por_Silos/delete/<int:pk>', LecheReconsSilosDelete.as_view(), name='Leche_Recons_Silos_Delete'),
     path('Leche_Reconstituida_Por_Silos/update/<int:pk>', LecheReconsSilosUpdate.as_view(), name='Leche_Recons_Silos_Update'),
     path('Leche_Reconstituida_Por_Silos/Silo/delete/<int:pk>', LecheReconsSilosDeleteSilo.as_view(), name='Leche_Recons_Silos_Delete_Silo'),
-    # - [End] - rutas para el CRUD de LecheReconstituidaPor - [End] - #
 
+    # - [End] - rutas para el CRUD de LecheReconstituidaPor - [End] - #
+    
+    # PT 2.0 ENCAB-------------------------------------------
+    path('pt_encabView', EncabView.as_view(), name='pt_encabView'),
+    path('pt_encabCreate', EncabCreate.as_view(), name='pt_encabCreate'),     
+    path('pt_encabUpdate/<int:pk>', EncabUpdate.as_view(), name='pt_encabUpdate'),
+    
+    # PT 2.0 ------------------------------------------------
+    path('pt_View', TerminadoView.as_view(), name='pt_View'),
+    path('pt_Create', TerminadoCreate.as_view(), name='pt_Create'),     
+    path('pt_Update/<int:pk>', TerminadoUpdate.as_view(), name='pt_Update'),
+    path('pt_Delete/<int:pk>', PTerminadoDelete.as_view(), name='pt_Delete'),
 
 ]
+

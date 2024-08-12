@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Producto terminado{% endblock %}
+{% block principal %}
+{% block informacion%}
+   
+
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Producto terminado</h5>
+                        <p>En esta sección se derfinen los permisos de edición de cada registro.</p>
+                        <p>Seleccione alguna opción.</p>
+                    </div>
+
+                    {% block contenido %}
+                    <form action="" method="post">
+                       {% csrf_token %}
+                       {{ form.as_p }}
+                       <button type="submit" class="btn btn-success">Guardar</button>
+                       <a href="{% url 'laboratorio_control_calidad:TerminadoList' %}" class="btn btn-danger">Cancelar</a>
+                   </form>
+               {% endblock %}
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+        
+
+
+    </div>
+</div>
+    {%endblock%}
+
+   
+
+{% endblock %}
