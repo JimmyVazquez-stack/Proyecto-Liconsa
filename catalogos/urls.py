@@ -55,7 +55,6 @@ urlpatterns = [
     path('silos/update/<int:silo_id>/', views.SiloUpdateView.as_view(), name='silo_update'),
     path('silos/delete/<int:silo_id>/', views.SiloDeleteView.as_view(), name='silo_delete'),
     
-    
     #rutas a gestion de productos
     path('productos/list/', views.ProductoListView.as_view(), name='productos_list'),
     path('productos/list/data/', views.ProductoDataView.as_view(), name='productos_data'),

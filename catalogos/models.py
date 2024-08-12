@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError 
-from datetime import time
+from datetime import datetime, time
+
 '''
 Importamos ValidationError para poder validar los datos que se ingresan en los campos de los modelos.
 '''
@@ -155,17 +156,18 @@ class Producto(models.Model):
     class Meta:
         verbose_name_plural = "Productos"
 
+
+
 class Turno(models.Model):
     TURNOS_CHOICES = [
         ('Matutino', 'Matutino'),
         ('Vespertino', 'Vespertino'),
-        # Agrega más turnos aquí si es necesario
     ]
-    nombre = models.CharField(max_length=100, choices=TURNOS_CHOICES)
-    descripcion = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField()
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
-    activo = models.BooleanField(default=True)
+    estatus = models.BooleanField(default=True)
 
     def __str__(self):
         if self.nombre == 'Matutino':
@@ -173,7 +175,6 @@ class Turno(models.Model):
         elif self.nombre == 'Vespertino':
             return "Y"
         else:
-            # Retorna una nomenclatura genérica si se agregan más turnos en el futuro
             return self.get_nombre_display()
 
     def clean(self):
@@ -181,11 +182,14 @@ class Turno(models.Model):
         hora_limite = time(14, 0)  # 2:00 PM
 
         # Verifica si el turno es matutino y alguna de las horas excede la hora límite
-        if self.nombre == 'matutino' and (self.hora_inicio >= hora_limite or self.hora_fin > hora_limite):
-            raise ValidationError('El turno matutino no puede tener horas de inicio o fin después de las 2:00 PM.')
+        if self.nombre == 'Matutino':
+            if self.hora_inicio >= hora_limite or self.hora_fin > hora_limite:
+                raise ValidationError('El turno matutino no puede tener horas de inicio o fin después de las 2:00 PM.')
 
-        if self.nombre == 'vespertino' and (self.hora_inicio < hora_limite or self.hora_fin <= hora_limite):
-            raise ValidationError('El turno vespertino no puede tener horas de inicio o fin antes de las 2:00 PM.')
+        # Verifica si el turno es vespertino y alguna de las horas no cumple con el rango esperado
+        if self.nombre == 'Vespertino':
+            if self.hora_inicio < hora_limite or self.hora_fin <= hora_limite:
+                raise ValidationError('El turno vespertino debe comenzar después de las 2:00 PM y terminar antes de las 11:59 PM.')
 
     def save(self, *args, **kwargs):
         self.clean()  # Llama a la validación personalizada
@@ -194,7 +198,7 @@ class Turno(models.Model):
     class Meta:
         verbose_name_plural = "Turnos"
         
-
+        
 class Silo(models.Model):
     numero = models.IntegerField()
     capacidad = models.DecimalField(max_digits=10, decimal_places=2)

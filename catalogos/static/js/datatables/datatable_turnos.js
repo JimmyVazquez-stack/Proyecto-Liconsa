@@ -36,13 +36,16 @@ $(document).ready(function() {
             { data: 'hora_inicio' },
             { data: 'hora_fin' },
             {
-                data: null,
+                data: 'estatus',
                 render: function (data, type, row) {
-                    if (data) {
-                        return '<i class="fas fa-check-circle" style="color: green;"></i>';
-                    } else {
-                        return '<i class="fas fa-times-circle" style="color: red;"></i>';
+                    if (type === 'display') {
+                        if (data) {
+                            return '<i class="fas fa-check-circle" style="color: green;" title="Activo"></i>';
+                        } else {
+                            return '<i class="fas fa-times-circle" style="color: red;" title="Inactivo"></i>';
+                        }
                     }
+                    return data;  // Devuelve el dato sin formato para otros tipos de renderizado
                 }
             },
             {
@@ -79,89 +82,136 @@ $(document).ready(function() {
         ]
     });
 
-      // Abrir modal para añadir turno
-      $('#btnAddTurno').click(function() {
-        $('#turnoModalLabel').text('Añadir Turno');
-        $('#turnoForm')[0].reset();
-        $('#turnoId').val('');
-        $('#turnoModal').modal('show');
-    });
+  // Abrir modal para añadir turno
+$('#btnAddTurno').click(function() {
+    $('#turnoModalLabel').text('Añadir Turno');
+    $('#turnoForm')[0].reset(); // Resetea el formulario
+    $('#nombre').val(''); // Selecciona la opción por defecto
+    $('#activo').prop('checked', true); // Asume que el turno está activo por defecto
+    $('#turnoId').val(''); // Limpia el ID del turno
+    $('#turnoModal').modal('show');
+});
 
-    // Guardar turno (añadir o editar) con validación usando SweetAlert2
-    $('#saveTurno').click(function() {
-        var nombre = $('#nombre').val().trim();
-        var descripcion = $('#descripcion').val().trim();
-        var hora_inicio = $('#hora_inicio').val().trim();
-        var hora_fin = $('#hora_fin').val().trim();
 
-        // Validar que los campos no estén vacíos
-        if (!nombre || !descripcion || !hora_inicio || !hora_fin) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Todos los campos son obligatorios',
-            });
-            return;
-        }
+// Abrir modal para editar turno
+$('#tabla_turnos tbody').on('click', '.btn-edit', function() {
+    var data = table.row($(this).parents('tr')).data();
+    
+    // Configurar el título del modal
+    $('#turnoModalLabel').text('Editar Turno');
+    
+    // Rellenar los campos del formulario con los datos del turno
+    $('#nombre').val(data.nombre);
+    $('#descripcion').val(data.descripcion);
+    $('#hora_inicio').val(data.hora_inicio.substring(0, 5));  // Ajustar formato de hora (HH:MM)
+    $('#hora_fin').val(data.hora_fin.substring(0, 5));  // Ajustar formato de hora (HH:MM)
+    
+    // Establecer el estado del checkbox
+    $('#estatus').prop('checked', data.estatus); 
+    
+    // Guardar el ID del turno para la edición
+    $('#turnoId').val(data.id);
+    
+    // Mostrar el modal
+    $('#turnoModal').modal('show');
+});
 
-        // Validar que la hora de inicio sea menor que la hora de fin
-        if (hora_inicio >= hora_fin) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La hora de inicio debe ser menor que la hora de fin',
-            });
-            return;
-        }
 
-        var turnoId = $('#turnoId').val();
-        var url = turnoId ? `/catalogos/turnos/update/${turnoId}/` : '/catalogos/turnos/create/';
-        var method = 'POST';
 
-        $.ajax({
-            url: url,
-            method: method,
-            data: $('#turnoForm').serialize(),
-            success: function(response) {
-                $('#turnoModal').modal('hide');
-                table.ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Guardado',
-                    text: 'Turno guardado con éxito',
-                });
-            },
-            error: function(xhr) {
-                var errorMessage = 'Error al guardar el turno';
-                if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessage,
-                });
-            }
+
+
+// Guardar turno (añadir o editar) con validación usando SweetAlert2
+$('#saveTurno').click(function() {
+    var nombre = $('#nombre').val().trim();
+    var descripcion = $('#descripcion').val().trim();
+    var hora_inicio = $('#hora_inicio').val().trim();
+    var hora_fin = $('#hora_fin').val().trim();
+    var estatus = $('#estatus').is(':checked');  // Obtener el estado del checkbox
+
+    // Validar que los campos no estén vacíos
+    if (!nombre || !descripcion || !hora_inicio || !hora_fin) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Todos los campos son obligatorios',
         });
-    });
+        return;
+    }
 
-        // Manejadores manuales para cerrar el modal
-        $('#turnoModal .close, #turnoModal .btn-secondary').click(function() {
+    // Convertir las horas a objetos Date para validación
+    var horaInicioDate = new Date('1970-01-01T' + hora_inicio + ':00');
+    var horaFinDate = new Date('1970-01-01T' + hora_fin + ':00');
+    var horaLimiteMatutino = new Date('1970-01-01T14:00:00');  // 2:00 PM
+    var horaLimiteVespertino = new Date('1970-01-01T23:59:59');  // 11:59 PM
+
+    // Validación específica para turnos matutinos
+    if (nombre === 'Matutino') {
+        if (horaInicioDate >= horaLimiteMatutino || horaFinDate > horaLimiteMatutino) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El turno matutino debe ser entre las 00:00 AM y las 2:00 PM',
+            });
+            return;
+        }
+    }
+
+    // Validación específica para turnos vespertinos
+    if (nombre === 'Vespertino') {
+        if (horaInicioDate <= horaLimiteMatutino || horaFinDate > horaLimiteVespertino) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El turno vespertino debe comenzar después de las 2:00 PM y terminar antes de las 11:59 PM',
+            });
+            return;
+        }
+    }
+
+    // Obtener el ID del turno si se está editando
+    var turnoId = $('#turnoId').val();
+    var url = turnoId ? `/catalogos/turnos/update/${turnoId}/` : '/catalogos/turnos/create/';
+    var method = 'POST';
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: $('#turnoForm').serialize() + '&estatus=' + estatus,
+        success: function(response) {
             $('#turnoModal').modal('hide');
-        });
+            table.ajax.reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Turno guardado con éxito',
+            });
+        },
+        error: function(xhr) {
+            var errorMessage = 'Error al guardar el turno';
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            });
+        }
+    });
+});
+
+
+
+
+
+
+// Manejadores manuales para cerrar el modal
+$('#turnoModal .close, #turnoModal .btn-secondary').click(function() {
+    $('#turnoModal').modal('hide');
+});
     
 
-    // Abrir modal para editar turno
-    $('#tabla_turnos tbody').on('click', '.btn-edit', function() {
-        var data = table.row($(this).parents('tr')).data();
-        $('#turnoModalLabel').text('Editar Turno');
-        $('#nombre').val(data.nombre);
-        $('#descripcion').val(data.descripcion);
-        $('#hora_inicio').val(data.hora_inicio);
-        $('#hora_fin').val(data.hora_fin);
-        $('#turnoId').val(data.id);
-        $('#turnoModal').modal('show');
-    });
+
 
     // Confirmar eliminación usando SweetAlert2
     $('#tabla_turnos tbody').on('click', '.btn-delete', function() {

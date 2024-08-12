@@ -112,11 +112,11 @@
                 <form id="turnoForm">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input list="tipo_turno_options" class="form-control" id="nombre" name="nombre" required>
-                        <datalist id="tipo_turno_options">
-                            <option value="Matutino">
-                            <option value="Vespertino">
-                        </datalist>
+                        <select class="form-control" id="nombre" name="nombre" required>
+                            <option value="">Seleccione un turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="descripcion">Descripción</label>
@@ -130,6 +130,13 @@
                         <label for="hora_fin">Hora de Fin</label>
                         <input type="time" class="form-control" id="hora_fin" name="hora_fin" required>
                     </div>
+                    <div class="form-group">
+                        <label for="estatus">Activo</label>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="estatus" name="estatus">
+                            <label class="custom-control-label" for="estatus">Sí</label>
+                        </div>
+                    </div>
                     <input type="hidden" id="turnoId" name="turnoId">
                 </form>
             </div>
@@ -140,6 +147,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 

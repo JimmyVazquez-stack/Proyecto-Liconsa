@@ -22,6 +22,12 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.mixins import LoginRequiredMixin
 #uso en modelo createSilos
 from django.db import transaction
+#importacion para modelo turno
+from django.utils.dateparse import parse_time
+from datetime import time, datetime
+from django.core.exceptions import ValidationError
+
+
 
 
 # Create your views here.
@@ -745,11 +751,9 @@ class SiloDeleteView(LoginRequiredMixin, View):
 
 # vistas de turnos
 
-
 class TurnoListView(LoginRequiredMixin, TemplateView):
     template_name = 'turnos/listar_turnos.html'
     login_url = reverse_lazy('usuarios:login')
-
 
 
 class TurnoDataView(LoginRequiredMixin, View):
@@ -759,12 +763,7 @@ class TurnoDataView(LoginRequiredMixin, View):
         turnos = Turno.objects.values()  # Elimina la anotación aquí
         turnos_list = list(turnos)
         return JsonResponse(turnos_list, safe=False)
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.views import View
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from .models import Turno
+
 
 class TurnoCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
@@ -774,18 +773,34 @@ class TurnoCreateView(LoginRequiredMixin, View):
         descripcion = request.POST.get('descripcion')
         hora_inicio = request.POST.get('hora_inicio')
         hora_fin = request.POST.get('hora_fin')
+        estatus = request.POST.get('estatus') == 'true'  # Convertir el valor del checkbox a booleano
 
         if not nombre or not descripcion or not hora_inicio or not hora_fin:
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
-        turno = Turno.objects.create(
+        # Validar formato de hora
+        try:
+            hora_inicio = datetime.strptime(hora_inicio, '%H:%M').time()
+            hora_fin = datetime.strptime(hora_fin, '%H:%M').time()
+        except ValueError:
+            return JsonResponse({'error': 'Formato de hora inválido. Use HH:MM'}, status=400)
+
+        # Validar que el nombre del turno no exista
+        if Turno.objects.filter(nombre=nombre).exists():
+            return JsonResponse({'error': 'Ya existe un turno con ese nombre'}, status=400)
+
+        # Crear el nuevo turno
+        Turno.objects.create(
             nombre=nombre,
             descripcion=descripcion,
             hora_inicio=hora_inicio,
-            hora_fin=hora_fin
+            hora_fin=hora_fin,
+            estatus=estatus
         )
-        return JsonResponse({'message': 'Turno creado con éxito', 'turno_id': turno.id}, status=201)
-    
+
+        return JsonResponse({'message': 'Turno creado con éxito'}, status=200)
+
+
 class TurnoUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -795,20 +810,24 @@ class TurnoUpdateView(LoginRequiredMixin, View):
         descripcion = request.POST.get('descripcion')
         hora_inicio = request.POST.get('hora_inicio')
         hora_fin = request.POST.get('hora_fin')
-        estatus = request.POST.get('estatus')  # Obtener el valor del campo estatus
+        estatus = request.POST.get('estatus') == 'true'  # Convertir el valor del checkbox a booleano
 
-        if not nombre or not descripcion or not hora_inicio or not hora_fin or estatus is None:
+        if not nombre or not descripcion or not hora_inicio or not hora_fin:
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
+        # Validar que el nombre del turno no exista para otros turnos
+        if Turno.objects.exclude(pk=pk).filter(nombre=nombre).exists():
+            return JsonResponse({'error': 'Ya existe un turno con ese nombre'}, status=400)
+
+        # Actualizar el turno
         turno.nombre = nombre
         turno.descripcion = descripcion
         turno.hora_inicio = hora_inicio
         turno.hora_fin = hora_fin
-        turno.estatus = estatus  # Actualizar el campo estatus
+        turno.estatus = estatus
         turno.save()
 
         return JsonResponse({'message': 'Turno actualizado con éxito'}, status=200)
-
 class TurnoDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
