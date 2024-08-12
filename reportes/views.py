@@ -466,8 +466,6 @@ class VolumenNetoView(View):
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk') # Asumiendo que el pk se pasa como un argumento en la URL
         
-        
-        
         # CALCULOS ENCABEZADO
         datosEncabezado = EncabTablaR49.objects.filter(pk=pk)
         calculosEncabezado = datosEncabezado.aggregate(
@@ -567,7 +565,7 @@ class CalculosR49DataView(LoginRequiredMixin, View):
             {
                 
                 'valor': dato.valor,
-                'resultado': (dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada if densidadPonderada else None
+                'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
             }
             for dato in datosPesoBruto
         ]
