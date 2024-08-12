@@ -34,6 +34,14 @@ urlpatterns = [
 
     # - [End] - rutas para el CRUD de LecheReconstituidaPor - [End] - #
     
+
+    path('producto_terminadoList/', TerminadoEncabView.as_view(), name='TerminadoList'),
+    path('producto_terminadoCreate/', TerminadoEncabCreate.as_view(), name='producto_terminadoCreate'),
+    path('encab_update/<int:pk>',TerminadoEncabUpdate.as_view(), name='encab_update'),
+    path('Terminado_delete/<int:pk>', TerminadoDelete.as_view(), name='Terminado_delete'),
+    path('permisos/<int:pk>', permisos.as_view(), name='permisos'),
+    path('modificar/<int:pk>', permisos.as_view(), name='modificar'),
+
     # PT 2.0 ENCAB-------------------------------------------
     path('pt_encabView', EncabView.as_view(), name='pt_encabView'),
     path('pt_encabCreate', EncabCreate.as_view(), name='pt_encabCreate'),     
