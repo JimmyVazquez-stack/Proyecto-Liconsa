@@ -43,7 +43,7 @@ class DensidadptForm(forms.ModelForm):
 class PesoenvvacioForm(forms.ModelForm):
     class Meta:
         model = Pesoenvvacio
-        fields = '__all__'
+        fields = ['fechaHora','cabezal','maquina','planta','producto','proveedor','peso']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
