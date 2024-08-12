@@ -108,7 +108,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in densidadr49 %}
+                    {% for item in datosDensidad %}
                     <tr>
                         <td>{{ item.fechaHora }}</td>
                         <td>{{ item.cabezal }}</td>
@@ -148,7 +148,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in pesoEnvVacior49 %}
+                    {% for item in datosPesoEnvVacio %}
                     <tr>
                         <td>{{item.fechaHora}}</td>
                         <td>{{item.cabezal}}</td>
@@ -170,6 +170,7 @@
     </div>
 
 </div>
+
 {% endblock %}
 {% endblock %}
 {% block javascript %}
