@@ -1058,8 +1058,10 @@
   {% block javascript%}
 
   <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js'%}"></script>
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <!-- Bootstrap 4 -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
   <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
   <!-- jQuery UI 1.11.4 -->
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
@@ -1104,12 +1106,11 @@
   <script src="https://unpkg.com/feather-icons"></script>
 
   <script src="{% static 'js/datatables/EspecificDataTableScript.js'%}"></script>
-   
+   <script src="{% static 'js/sweetalert/sweetalert2.all.min.js'%}"></script>
   
   <script>
     feather.replace()
   </script>
-  
 
 
 </body>
