@@ -26,6 +26,8 @@ from django.db import transaction
 from django.utils.dateparse import parse_time
 from datetime import time, datetime
 from django.core.exceptions import ValidationError
+from django.http import QueryDict
+
 
 
 
@@ -323,8 +325,6 @@ class MaquinaDataView(LoginRequiredMixin, View):
 class MaquinaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    login_url = reverse_lazy('usuarios:login')
-
     def post(self, request, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
@@ -346,13 +346,17 @@ class MaquinaCreateView(LoginRequiredMixin, View):
             return JsonResponse({'error': 'La planta seleccionada no existe.'}, status=400)
         except IntegrityError:
             return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
-
-        return JsonResponse({'error': 'Error desconocido.'}, status=500)
-
+        except Exception as e:
+            return JsonResponse({'error': f'Error desconocido: {str(e)}'}, status=500)
 
 class MaquinaUpdateView(LoginRequiredMixin, View):
-    def post(self, request, pk, *args, **kwargs):
+    def put(self, request, pk, *args, **kwargs):
         data = request.POST
+
+        # Cambiar el acceso a data para usar request.body si se está usando PUT
+        if request.method == 'PUT':
+            data = QueryDict(request.body)
+
         numero = data.get('numero')
         planta_id = data.get('nombre_planta')
 
@@ -361,12 +365,12 @@ class MaquinaUpdateView(LoginRequiredMixin, View):
 
         try:
             planta = Planta.objects.get(id=planta_id)
-            
+
             # Verificar si ya existe una máquina con el mismo número en la misma planta, excluyendo la actual
             if Maquina.objects.filter(numero=numero, planta=planta).exclude(pk=pk).exists():
                 return JsonResponse({'error': 'Ya existe una máquina con este número en la planta seleccionada.'}, status=400)
 
-            maquina = Maquina.objects.get(pk=pk)
+            maquina = get_object_or_404(Maquina, pk=pk)
             maquina.numero = numero
             maquina.planta = planta
             maquina.save()
@@ -379,6 +383,7 @@ class MaquinaUpdateView(LoginRequiredMixin, View):
             return JsonResponse({'error': 'Error al guardar la máquina.'}, status=400)
 
         return JsonResponse({'error': 'Error desconocido.'}, status=500)
+
 class MaquinaDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 

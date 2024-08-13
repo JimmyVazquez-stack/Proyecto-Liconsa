@@ -97,15 +97,15 @@ class Proveedor(models.Model):
         verbose_name_plural = "Proveedores"
         
 class Maquina(models.Model):
-    numero = models.IntegerField(unique=True)  #Numero de maquina unico
+    numero = models.IntegerField()
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
-    
 
     def __str__(self):  
-        return f" {self.numero} - {self.planta} "
-    
+        return f"{self.numero} - {self.planta}"
+
     class Meta:
-        verbose_name_plural = "Maquinas"
+        verbose_name_plural = "Máquinas"
+        unique_together = ('numero', 'planta')  # Asegura que el número sea único por planta
 
 class Cabezal(models.Model):
     nombre = models.CharField(

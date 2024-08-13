@@ -116,6 +116,36 @@ function loadMachines() {
         }
     });
 }
+   // Función para cargar las máquinas en el select del modal
+   function loadMachines() {
+    $.ajax({
+        url: "/catalogos/maquinas/list/data/",  // Asegúrate de que la URL es correcta
+        method: "GET",
+        success: function(data) {
+            var $maquinaSelect = $("#maquina");
+            var $message = $("#maquinaMessage");
+
+            $maquinaSelect.empty();
+            if (data.length === 0) {
+                $maquinaSelect.append('<option value="">No hay máquinas disponibles</option>');
+                $message.text("No hay máquinas disponibles.").css("color", "red");
+            } else {
+                $maquinaSelect.append('<option value="">Seleccione una máquina</option>');
+                $.each(data, function(index, maquina) {
+                    $maquinaSelect.append('<option value="' + maquina.id + '">' + maquina.nombre + '</option>');
+                });
+                $message.text('').css('color', 'black');
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudieron cargar las máquinas.",
+            });
+        }
+    });
+}
 
 
 
