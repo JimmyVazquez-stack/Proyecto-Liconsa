@@ -1,0 +1,181 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{%block title %} Producto Terminado {% endblock %}
+{% block principal %} 
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Leche Reonstituida Producto Terminado</h5>
+                        <p>
+                            En esta sección se presentan los resultados de los análisis de 
+                            producto terminado.
+                        </p>
+                        <p>
+                            Para ver los resultados de un análisis, seleccione el análisis
+                            deseado en el menú.
+                        </p>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+{% endblock %} 
+{%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title"></h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <a href="{% url 'laboratorio_control_calidad:producto_terminadoCreate' %}" class="btn btn-primary">Nuevo
+                                    Registro</a>
+                                    
+                              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
+                                      Generar Reporte Rango de Fechas
+                              </button>
+                                                                 
+                                    
+
+                                <div id="example_filter"></div>
+                            </div>
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                                <thead class="thead-light" style="font-size: 14px">
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Fecha</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px">
+                                    {% for item in terminadoEncab %}
+                                    <tr>
+                                        <td>{{item.folio}}</td>
+                                        <td>{{item.fecha}}</td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encab_update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:Terminado_delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            <a class="btn btn-info" href="{% url 'reportes:reporte_Rx51' item.id %}"><i class="far fa-file-pdf"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
+
+<!-- /.modal -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Selecciona el rango de fechas del reporte</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="get" action="{% url 'reportes:reporte_Rx51' 1 %}">
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="fecha-inicial">Fecha Inicial</label>
+                <input type="date" class="form-control" id="fecha-inicial" name="fecha-inicial" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha-final">Fecha Final</label>
+                <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+            </div>
+            <div class="form-group">
+                <label for="producto">Producto</label>
+                <select class="form-control" id="producto" name="producto" required>
+                    <option value="todos">Todos</option>
+                    <option value="2">LPD</option>
+                    <option value="3">MLGVRG</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+{%endblock%} 
+{% endblock %} 
+<!-- SweetAlert2 -->
+<script src="{% static 'plugins/sweetalert2/sweetalert2.min.js'%}"></script>
+
+<!-- Page specific script alerts -->
+<script>
+    $(function() {
+      var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+  
+      $('.swalDefaultSuccess').click(function() {
+        Toast.fire({
+          icon: 'success',
+          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+        })
+      });
+      $('.swalDefaultInfo').click(function() {
+        Toast.fire({
+          icon: 'info',
+          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+        })
+      });
+      $('.swalDefaultError').click(function() {
+        Toast.fire({
+          icon: 'error',
+          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+        })
+      });
+      $('.swalDefaultWarning').click(function() {
+        Toast.fire({
+          icon: 'warning',
+          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+        })
+      });
+      $('.swalDefaultQuestion').click(function() {
+        Toast.fire({
+          icon: 'question',
+          title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+        })
+      });
+  
+    });
+</script>

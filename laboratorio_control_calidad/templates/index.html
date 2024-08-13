@@ -7,16 +7,14 @@ Inicio
 
 
 
-
 {%block principal%}
 <!-- Content Header (Page header) -->
 <div class="content-header ">
-  <div class="container-fluid">
+  <div class="container-fluid mt-3">
     <div class="row mb-2">
-      <div class="col-sm-6">
+      <div class="col-12 text-center">
         <h1 class="m-0">Panel General</h1>
       </div><!-- /.col -->
-
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
 </div>
@@ -26,7 +24,7 @@ Inicio
 <section class="content">
   <div class="container-fluid">
     <!-- Small boxes (Stat box) -->
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col-lg-3 col-6">
         <!-- small box -->
         <div class="small-box bg-info">
@@ -57,20 +55,27 @@ Inicio
         </div>
       </div>
       <!-- ./col -->
-      <div class="col-lg-3 col-6">
-        <!-- small box -->
-        <div class="small-box bg-warning">
-          <div class="inner">
-            <h3>44</h3>
 
-            <p>Registrar usuario</p>
+      <!-- Codigo para small box de registro de usuarios, mostrar usuarios totales registrados-->
+      <!--{% if  puede_agregar_usuario %} -->
+      <!-- <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning" id="smallBoxClickable">
+          <div class="inner">
+            <h3>{{total_usuarios}} </h3>
+
+            <p>Usuarios registrados</p>
           </div>
           <div class="icon">
             <i class="ion ion-person-add"></i>
           </div>
-          <a href="#" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
+
+          <a href="{% url 'usuarios:crear_usuario'%}" class="small-box-footer">Registrar un usuario <i
+              class="fas fa-arrow-circle-right"></i></a>
         </div>
-      </div>
+
+      </div> -->
+      <!-- {% endif %} -->
+
       <!-- ./col -->
       <div class="col-lg-3 col-6">
         <!-- small box -->
@@ -114,5 +119,14 @@ Inicio
     <!-- /.row (main row) -->
   </div><!-- /.container-fluid -->
 </section>
-<!-- /.content -->
+<!--
+<script>
+  var urlListarUsuarios = '{% url "usuarios:listar_usuarios" %}';
+</script>
+<script>
+  document.getElementById('smallBoxClickable').addEventListener('click', function () {
+    window.location.href = urlListarUsuarios;
+  });
+</script>
+-->
 {%endblock%}

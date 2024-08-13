@@ -62,7 +62,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "SAV-C",
     "welcome_sign": "Bienvenido a SAV-C",
     "user_avatar": None,
-    "show_ui_builder": True,
+    "show_ui_builder": False,
     "navigation_expanded": True,
 
     "topmenu_links": [
@@ -71,7 +71,8 @@ JAZZMIN_SETTINGS = {
 
     "custom_app_names":
     {
-        "producto_no_conforme": "Productonforme",
+        
+        "laboratorio_control_calidad": "Control de calidad",
     },
     
 }
@@ -135,6 +136,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'usuarios.context_processors.user_group_processor',
             ],
         },
     },
@@ -178,7 +180,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-mx'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 

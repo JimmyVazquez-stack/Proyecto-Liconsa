@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{%block title %} Productos {% endblock %}
+
+{% block principal %}
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Registro de Productos</h5>
+                        <p>En esta sección se presenta el listado de productos.</p>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+
+    </div>
+</div>
+{% endblock %}
+
+{%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
+                    <h3 class="card-title">Listado de Productos</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <!-- Paginacion mensual-->
+                    <!-- <ul class="pagination pagination-month justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                        <ul id="pagination" class="pagination pagination-month justify-content-center">
+                            <li class="page-item"></li>
+                            <li class="page-item"></li>
+                        </ul>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    </ul> -->
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <button id="btnAddProducto" class="btn btn-primary">
+                                    Añadir Producto
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div id="example_filter"></div>
+                            </div>
+                            <table id="tabla_productos" class="table  table-bordered bg-light table-hover"
+                                style="width:100%;">
+                                <thead class="thead-light" style="font-size: 14px;">
+                                    <tr>
+                                        <th>Nombre de producto</th>
+                                        <th>Tipo de producto</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot style="font-size: 14px;">
+                                    <tr>
+                                        <th>Nombre de producto</th>
+                                        <th>Tipo de producto</th>
+                                        <th>Opciones</th>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+<!-- Modal para añadir/editar producto -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Añadir Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productoForm">
+                    <input type="hidden" id="productoId" name="producto_id">
+                    <div class="form-group">
+                        <label for="nombreProducto">Nombre del Producto</label>
+                        <input type="text" class="form-control" id="nombreProducto" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoProducto">Tipo de Producto</label>
+                        <div class="input-group">
+                            <select class="form-control" id="tipoProducto" name="tipo_producto_id" required>
+                                <!-- Opciones se cargarán dinámicamente -->
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" id="btnAddTipoProducto">Añadir Tipo de Producto</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveProducto">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para añadir tipo de producto -->
+<div class="modal fade" id="tipoProductoModal" tabindex="-1" role="dialog" aria-labelledby="tipoProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tipoProductoModalLabel">Añadir Tipo de Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tipoProductoForm">
+                    <div class="form-group">
+                        <label for="nombreTipoProducto">Nombre de Tipo de Producto</label>
+                        <input type="text" class="form-control" id="nombreTipoProducto" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionTipoProducto">Descripción</label>
+                        <input type="text" class="form-control" id="descripcionTipoProducto" name="descripcion" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveTipoProducto">Guardar Tipo de Producto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{%endblock%}
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+<script src="{% static 'js/datatables/gestion_de_productos/datatable_productos.js' %}"></script>
+
+
+
+{% endblock %}

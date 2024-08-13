@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{%block title %} Turnos {% endblock %}
+
+{% block principal %}
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="callout callout-info">
+                        <h5>Registro de Turnos</h5>
+                        <p>En esta sección se presenta el listado de Turnos.</p>
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+
+
+    </div>
+</div>
+{% endblock %}
+
+{%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
+                    <h3 class="card-title">Listado de Turnos</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <!-- Paginacion mensual-->
+                    <!-- <ul class="pagination pagination-month justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">«</a></li>
+                        <ul id="pagination" class="pagination pagination-month justify-content-center">
+                            <li class="page-item"></li>
+                            <li class="page-item"></li>
+                        </ul>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    </ul> -->
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <button id="btnAddTurno" class="btn btn-primary">
+                                    Añadir Turno
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div id="example_filter"></div>
+                            </div>
+                            <table id="tabla_turnos" class="table  table-bordered bg-light table-hover"
+                                style="width:100%;">
+                                <thead class="thead-light" style="font-size: 14px;">
+                                    <tr>
+                                        <th>Nombre de turno</th>
+                                        <th>Descripción</th>
+                                        <th>Hora de inicio de turno</th>
+                                        <th>Hora de fin de turno</th>
+                                        <th>Estatus</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot style="font-size: 14px;">
+                                    <tr>
+                                        <th>Nombre de turno</th>
+                                        <th>Descripción</th>
+                                        <th>Hora de inicio de turno</th>
+                                        <th>Hora de fin de turno</th>
+                                        <th>Estatus</th>                              
+                                        <th>Opciones</th>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+<!-- Modal para Añadir/Editar Turno -->
+<div class="modal fade" id="turnoModal" tabindex="-1" aria-labelledby="turnoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="turnoModalLabel">Añadir Turno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="turnoForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <select class="form-control" id="nombre" name="nombre" required>
+                            <option value="">Seleccione un turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora_inicio">Hora de Inicio</label>
+                        <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora_fin">Hora de Fin</label>
+                        <input type="time" class="form-control" id="hora_fin" name="hora_fin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estatus">Activo</label>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="estatus" name="estatus">
+                            <label class="custom-control-label" for="estatus">Sí</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="turnoId" name="turnoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveTurno">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{%endblock%}
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+<script src="{% static 'js/datatables/datatable_turnos.js' %}"></script>
+
+
+
+{% endblock %}

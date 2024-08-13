@@ -4,6 +4,10 @@
 $(document).ready(function() {
     $('#rotos').DataTable({
         ajax: {
+<<<<<<< HEAD
+            url: '/catalogos/lecherias/list/data/',
+=======
+>>>>>>> 028cbab0fb47dbe932537953c429f277cddd49a7
             url: '/producto_no_conforme/lecherias/data/',
             dataSrc: ''
         },
@@ -21,6 +25,10 @@ $(document).ready(function() {
             { data: 'nombre_poblacion' },
             { data: 'rotos_reportados' },
         ],
+<<<<<<< HEAD
+
+=======
+>>>>>>> 028cbab0fb47dbe932537953c429f277cddd49a7
         pageLength: 5,
         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todo"]],
         language: {
@@ -43,6 +51,16 @@ $(document).ready(function() {
                 defaultContent: "", 
             }
         ],
+<<<<<<< HEAD
+        buttons: [
+            {
+                extend: 'pdf',
+                className: 'btn btn-success',
+                text: 'Generar PDF'
+            }
+        ],
+=======
+>>>>>>> 028cbab0fb47dbe932537953c429f277cddd49a7
     });
 });
 
@@ -174,6 +192,9 @@ $(document).ready(function() {
             
         });
     });
+<<<<<<< HEAD
+
+=======
 $(document).ready(function(){
     $('#rotos1').DataTable ({
         
@@ -186,3 +207,4 @@ $(document).ready(function(){
         paging: false
     });
 });
+>>>>>>> 028cbab0fb47dbe932537953c429f277cddd49a7

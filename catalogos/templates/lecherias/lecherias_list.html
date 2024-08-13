@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Lecherías {% endblock %}
+
+{% block principal %}
+{% block informacion %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Registro de Lecherías</h5>
+                        <p>En esta sección se presenta el listado de lecherías.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block datatable %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-center align-items-center bg-gray-dark">
+                    <h3 class="card-title">Listado de Lecherías</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <button id="btnAddLecheria" class="btn btn-primary">
+                                    Añadir Lechería
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div id="example_filter"></div>
+                            </div>
+                            <table id="tabla_lecherias" class="table table-bordered bg-light table-hover" style="width:100%;">
+                                <thead class="thead-light" style="font-size: 14px;">
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Nombre</th>
+                                        <th>Responsable</th>
+                                        <th>Teléfono</th>
+                                        <th>Dirección</th>
+                                        <th>Nombre de Ruta</th>
+                                        <th>Población</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tfoot style="font-size: 14px;">
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Nombre</th>
+                                        <th>Responsable</th>
+                                        <th>Teléfono</th>
+                                        <th>Dirección</th>
+                                        <th>Nombre de Ruta</th>
+                                        <th>Población</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
+
+<!-- Modal para Añadir/Editar Lechería -->
+<div class="modal fade" id="lecheriaModal" tabindex="-1" role="dialog" aria-labelledby="lecheriaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lecheriaModalLabel">Añadir Lechería</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="lecheriaForm">
+                    <div class="form-group">
+                        <label for="numero">Número</label>
+                        <input type="text" class="form-control" id="numero" name="numero" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="responsable">Responsable</label>
+                        <input type="text" class="form-control" id="responsable" name="responsable" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre_ruta">Nombre de Ruta</label>
+                        <input type="text" class="form-control" id="nombre_ruta" name="nombre_ruta" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="poblacion">Población</label>
+                        <select class="form-control" id="poblacion" name="poblacion" required>
+                            <option value="">Seleccione una población</option>
+                            <!-- Opciones cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <input type="hidden" id="lecheriaId" name="lecheriaId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveLecheria">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- Script para inicializar DataTables -->
+<script src="{% static 'js/datatables/datatable_lecherias.js' %}"></script>
+{% endblock %}
