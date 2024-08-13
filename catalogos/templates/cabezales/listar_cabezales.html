@@ -95,6 +95,7 @@
 
     </div>
 </div>
+
 <!-- Modal para Añadir/Editar Cabezal -->
 <div class="modal fade" id="cabezalModal" tabindex="-1" aria-labelledby="cabezalModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -110,6 +111,9 @@
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <small class="form-text text-muted" style="background-color: #eaf5f5; padding: 5px; border-radius: 3px;">
+                            Introduzca una letra única para el cabezal, que será utilizada para identificar el cabezal en combinación con la máquina seleccionada.
+                        </small>
                     </div>
                     <div class="form-group">
                         <label for="maquina">Máquina</label>
@@ -123,9 +127,8 @@
                                 </button>
                             </div>
                         </div>
-                        <small id="maquinaMessage" class="form-text text-muted"></small>
                     </div>
-                    <input type="hidden" id="cabezalId" name="cabezalId">
+                    <input type="hidden" id="cabezalId" name="cabezal_id">
                 </form>
             </div>
             <div class="modal-footer">
@@ -135,6 +138,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Modal para Añadir/Editar Máquina -->
 <div class="modal fade" id="maquinaModal" tabindex="-1" aria-labelledby="maquinaModalLabel" aria-hidden="true">
@@ -165,7 +169,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" id="cancelMaquinaModal" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="saveMaquina">Guardar</button>
             </div>
         </div>
@@ -184,29 +188,28 @@
             </div>
             <div class="modal-body">
                 <form id="plantaForm">
-                    <input type="hidden" id="plantaId" name="id">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <input type="text" class="form-control" id="nombrePlanta" name="nombre" required>
                     </div>
                     <div class="mb-3">
                         <label for="ubicacion" class="form-label">Ubicación</label>
-                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                        <input type="text" class="form-control" id="ubicacionPlanta" name="ubicacion" required>
                     </div>
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo</label>
-                        <input type="email" class="form-control" id="correo" name="correo" required>
+                        <input type="email" class="form-control" id="correoPlanta" name="correo" required>
                     </div>
                     <div class="mb-3">
                         <label for="contacto" class="form-label">Contacto</label>
-                        <input type="text" class="form-control" id="contacto" name="contacto" required>
+                        <input type="text" class="form-control" id="contactoPlanta" name="contacto" required>
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        <input type="text" class="form-control" id="telefonoPlanta" name="telefono" required>
                     </div>
                     <input type="hidden" id="plantaId" name="plantaId">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" id="cancelPlantaModal" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="savePlanta">Guardar</button>
                 </form>
             </div>

@@ -421,84 +421,72 @@ class CabezalDataView(LoginRequiredMixin, View):
         return JsonResponse(cabezales_list, safe=False)
 
 
-class CabezalCreateView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('usuarios:login')
 
+class CabezalCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        data = request.POST
-        nombre = data.get('nombre').upper().strip()
-        maquina_id = data.get('maquina')
+        nombre = request.POST.get('nombre').upper()  # Convertir a mayúsculas
+        maquina_id = request.POST.get('maquina')
 
         if not (nombre and maquina_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
             maquina = Maquina.objects.get(id=maquina_id)
-
-            # Validar que el nombre del cabezal sea único para la máquina seleccionada
-            if Cabezal.objects.filter(nombre=nombre, maquina=maquina).exists():
-                return JsonResponse({'error': 'Ya existe un cabezal con este nombre en la máquina seleccionada.'}, status=400)
-
-            # Validar el formato del nombre del cabezal
-            if nombre not in ['A', 'B', 'C', 'D', 'E', 'F'] and (not nombre.isalpha() or len(nombre) != 1):
-                return JsonResponse({'error': 'El nombre del cabezal debe ser una letra de la A a la F.'}, status=400)
-
-            cabezal = Cabezal.objects.create(nombre=nombre, maquina=maquina)
-            return JsonResponse({'id': cabezal.id, 'nombre': cabezal.nombre, 'maquina': maquina.numero})
+            cabezal = Cabezal(nombre=nombre, maquina=maquina)
+            cabezal.full_clean()  # Llamar clean para validaciones
+            cabezal.save()
+            return JsonResponse({'status': 'success', 'id': cabezal.id})
         except Maquina.DoesNotExist:
-            return JsonResponse({'error': 'La máquina seleccionada no existe.'}, status=400)
-        except IntegrityError:
-            return JsonResponse({'error': 'Error al guardar el cabezal.'}, status=400)
+            return JsonResponse({'error': 'Máquina no encontrada.'}, status=404)
+        except ValidationError as e:
+            # Convertir los errores a un formato más legible sin nombres de campos
+            errors = []
+            for messages in e.message_dict.values():
+                errors.extend(messages)
+            return JsonResponse({'error': ' '.join(errors)}, status=400)
+
+
 
 
 class CabezalUpdateView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('usuarios:login')
-
-    def post(self, request, pk, *args, **kwargs):
-        data = request.POST
-        nombre = data.get('nombre').upper().strip()
-        maquina_id = data.get('maquina')
+    def post(self, request, id, *args, **kwargs):
+        nombre = request.POST.get('nombre').upper()  # Convertir a mayúsculas
+        maquina_id = request.POST.get('maquina')
 
         if not (nombre and maquina_id):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
             maquina = Maquina.objects.get(id=maquina_id)
-
-            # Validar que el nombre del cabezal sea único para la máquina seleccionada, excluyendo la actual
-            if Cabezal.objects.filter(nombre=nombre, maquina=maquina).exclude(pk=pk).exists():
-                return JsonResponse({'error': 'Ya existe un cabezal con este nombre en la máquina seleccionada.'}, status=400)
-
-            # Validar el formato del nombre del cabezal
-            if nombre not in ['A', 'B', 'C', 'D', 'E', 'F'] and (not nombre.isalpha() or len(nombre) != 1):
-                return JsonResponse({'error': 'El nombre del cabezal debe ser una letra de la A a la F.'}, status=400)
-
-            cabezal = Cabezal.objects.get(pk=pk)
+            cabezal = Cabezal.objects.get(pk=id)
             cabezal.nombre = nombre
             cabezal.maquina = maquina
+            cabezal.full_clean()  # Llamar clean para validaciones
             cabezal.save()
-            return JsonResponse({'id': cabezal.id, 'nombre': cabezal.nombre, 'maquina': maquina.numero})
+            return JsonResponse({'status': 'success', 'id': cabezal.id})
         except Maquina.DoesNotExist:
-            return JsonResponse({'error': 'La máquina seleccionada no existe.'}, status=400)
+            return JsonResponse({'error': 'Máquina no encontrada.'}, status=404)
         except Cabezal.DoesNotExist:
             return JsonResponse({'error': 'Cabezal no encontrado'}, status=404)
-        except IntegrityError:
-            return JsonResponse({'error': 'Error al guardar el cabezal.'}, status=400)
+        except ValidationError as e:
+            # Convertir los errores a un formato más legible sin nombres de campos
+            errors = []
+            for messages in e.message_dict.values():
+                errors.extend(messages)
+            return JsonResponse({'error': ' '.join(errors)}, status=400)
+
+
 
 class CabezalDeleteView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('usuarios:login')
-
-    def delete(self, request, *args, **kwargs):
-        id = kwargs.get('id')
+    def delete(self, request, id, *args, **kwargs):
         try:
             cabezal = Cabezal.objects.get(pk=id)
             cabezal.delete()
-            return JsonResponse({'status': 'success', 'message': 'Cabezal eliminado'})
+            return JsonResponse({'status': 'success'})
         except Cabezal.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Cabezal no encontrado'}, status=404)
+            return JsonResponse({'error': 'Cabezal no encontrado'}, status=404)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
+            return JsonResponse({'error': str(e)}, status=400)
 
 
 # vistas de plantas

@@ -31,7 +31,7 @@ urlpatterns = [
     path('cabezales/list/', views.CabezalListView.as_view(), name='cabezales_list'),
     path('cabezales/list/data/', views.CabezalDataView.as_view(), name='cabezales_data'),
     path('cabezales/create/', views.CabezalCreateView.as_view(), name='crear_cabezal'),
-    path('cabezales/update/<int:pk>/', views.CabezalUpdateView.as_view(), name='actualizar_cabezal'),
+    path('cabezales/update/<int:id>/', views.CabezalUpdateView.as_view(), name='actualizar_cabezal'),
     path('cabezales/delete/<int:id>/', views.CabezalDeleteView.as_view(), name='cabezal_delete'),
     #rutas a plantas
     path('plantas/list/', views.PlantaListView.as_view(), name='plantas_list'),
