@@ -2,7 +2,7 @@
 from .models import *
 from .forms import *
 #Importaciones de vistas genéricas
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import TemplateView, DeleteView, FormView
 from django.views import generic 
 from django.views import View
 #Importaciones de redirecciones
@@ -214,14 +214,14 @@ class densidadr49_update(generic.UpdateView):
     model = Densidadpt
     template_name = 'crud_VolumenNetoR49/densidad_Create.html' 
     form_class = DensidadptForm
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
     context_object_name = 'densidadr49'
 
 class densidadr49_delete(generic.DeleteView):
     model = Densidadpt
     template_name = 'crud_VolumenNetoR49/densidad_Delete.html'
     context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
 
 
 ### complementarias a formato R49 PESO ENVASE VACIO# 
@@ -242,7 +242,7 @@ class pesoenvvacior49_update(generic.UpdateView):
     model = Pesoenvvacio
     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html' 
     form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
     context_object_name = 'pesoenvvacior49'
 
 class pesoenvvacior49_delete(generic.DeleteView):
@@ -276,7 +276,7 @@ class pesobrutor49_delete(generic.DeleteView):
     model = Pesobruto
     template_name = 'crud_VolumenNetoR49/pesoBruto_Delete.html'
     context_object_name = 'pesobrutor49'
-    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
 
     login_url = reverse_lazy('usuarios:login')
     
@@ -504,12 +504,6 @@ class Densidadr49ListView(generic.ListView):
      template_name = 'crud_VolumenNetoR49/densidad_List.html'
      context_object_name = 'densidadr49'
 
-# class Densidadr49CreateView(generic.CreateView):
-#     model = Densidadpt
-#     template_name = 'crud_VolumenNetoR49/densidad_Create.html'
-#     context_object_name = 'densidadr49'
-#     form_class = DensidadptForm
-#     success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_List")
 
 class Densidadr49CreateView(TemplateView):
     template_name = 'crud_VolumenNetoR49/densidad_Create.html'
@@ -597,22 +591,39 @@ class EncabR49ListView(generic.ListView):
      template_name = 'encabezador49V2_List.html'
      context_object_name = 'EncabR49'
 
-# class EncabR49CreateView(generic.CreateView):
-#     model = EncabR49V2
-#     template_name = 'encabezador49V2_Create.html'
-#     context_object_name = 'EncabR49'
-#     form_class = EncabR49V2Form
-#     success_url = reverse_lazy("laboratorio_control_calidad:encabezador49V2_Create")
 
-
-
-#Pasar el context de los datos de los modelos ala vista create para que se muestren llenas las tablas
-class EncabR49CreateView(TemplateView):
+class EncabR49CreateView(FormView):
     template_name = 'encabezador49V2_Create.html'
-    
+    form_class = EncabR49V2Form
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')  # Redirige a una vista después de guardar
+
+    def form_valid(self, form):
+        # Guarda el formulario (crea una instancia del modelo y guarda en la base de datos)
+        form.save()
+        # Puedes realizar otras acciones aquí, como enviar notificaciones
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = EncabR49V2Form()
+        context['datosPesoBruto'] = Pesobruto.objects.all()
+        context['datosDensidad'] = Densidadpt.objects.all()
+        context['datosPesoEnvVacio'] = Pesoenvvacio.objects.all()
+        return context
+
+
+class EncabR49UpdateView(FormView):
+    template_name = 'encabezador49V2_Create.html'
+    form_class = EncabR49V2Form
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')  # Redirige a una vista después de guardar
+
+    def form_valid(self, form):
+        # Guarda el formulario (crea una instancia del modelo y guarda en la base de datos)
+        form.save()
+        # Puedes realizar otras acciones aquí, como enviar notificaciones
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['datosPesoBruto'] = Pesobruto.objects.all()
         context['datosDensidad'] = Densidadpt.objects.all()
         context['datosPesoEnvVacio'] = Pesoenvvacio.objects.all()
@@ -620,19 +631,11 @@ class EncabR49CreateView(TemplateView):
 
 
 
-
-class EncabR49UpdateView(generic.UpdateView):
-    model = EncabR49V2
-    template_name = 'encabezador49V2_Update.html' 
-    form_class = EncabR49V2Form
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49V2_Update')
-    context_object_name = 'EncabR49'
-
 class EncabR49DeleteView(generic.DeleteView):
     model = EncabR49V2
     template_name = 'encabezador49V2_Delete.html'
     context_object_name = 'EncabR49'
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49V2_Delete')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_delete')
 #)
 # END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
 
