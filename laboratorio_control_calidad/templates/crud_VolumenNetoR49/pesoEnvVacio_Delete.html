@@ -3,11 +3,13 @@
 {% block principal %}
 
 {% block contenido %}
+<div class="container mt-5">
     <form action="" method="post">
         {% csrf_token %}
-        <h2>Seguro de eliminar el registro : {{ pesoenvvacior49.hora}}?</h2>
+        <h2>Seguro de eliminar el registro : {{ pesoenvvacior49.peso}}?</h2>
         <button type="submit" class="btn btn-danger">Si, eliminar</button>
         <a href="{% url 'laboratorio_control_calidad:encabezador49_create' %}" class="btn btn-success">No, Cancelar</a>
     </form>
+</div>
 {% endblock %}
 {% endblock %}
