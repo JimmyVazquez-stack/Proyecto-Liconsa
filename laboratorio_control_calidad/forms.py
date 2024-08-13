@@ -59,6 +59,9 @@ class PesobrutoForm(forms.ModelForm):
         
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class' : 'form-control'})
+from django.forms import inlineformset_factory
+from .models import *
+from .models import producto_terminado
 
 class LecheReconsSilosEncabForm(forms.ModelForm):
     class Meta:
@@ -89,6 +92,10 @@ LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReco
 DensidadptFormSet = inlineformset_factory(EncabTablaR49, Densidadpt, fields='__all__', extra=6, can_delete=False)
 PesoenvvacioFormSet = inlineformset_factory(EncabTablaR49, Pesoenvvacio, fields='__all__', extra=6, can_delete=False)
 PesobrutoFormSet = inlineformset_factory(EncabTablaR49, Pesobruto, fields='__all__', extra=6, can_delete=False)
+LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
+
+
+
 
 
 class TerminadoEncabForm(forms.ModelForm):
@@ -99,9 +106,10 @@ class TerminadoEncabForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({'class' : 'form-control'})
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control', 'id': field, 'name': field})
+
+
 
 class TerminadoForm(forms.ModelForm):
     
@@ -141,3 +149,4 @@ class permisosForm(forms.ModelForm):
         
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False) 
 LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
+TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False)    

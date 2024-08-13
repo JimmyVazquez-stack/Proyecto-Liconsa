@@ -1,0 +1,44 @@
+% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Genera Un Nuevo Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" id="editar-form">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ form.instance.pk }}">
+            <div class="row">
+                {% for field in form %}
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

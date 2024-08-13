@@ -46,6 +46,7 @@ body{
     display: flex; /* Hace que las tablas se alineen en filas */
     flex-wrap: wrap; /* Hace que las tablas se envuelvan en la siguiente línea si no hay suficiente espacio */
     justify-content: space-between; /* Añade espacio entre las tablas */
+    margin-bottom: 20px; /* Añadir espacio debajo de la tabla */
 }
 .contenedor-tablas .table {
     flex-grow: 1; /* Hace que las tablas crezcan para ocupar el espacio disponible */
@@ -62,6 +63,8 @@ body{
 .contenedor-autorizacion {
     display: flex; /* Hace que las secciones se alineen en filas */
     justify-content: space-between; /* Añade espacio entre las secciones */
+    margin-top: 20px; /* Añadir espacio encima del contenedor de autorización */
+    clear: both; /* Asegurar que el contenedor no se superponga a otros elementos flotantes */
 }
 .contenedor-autorizacion .seccion {
     width: 45%; /* Ajusta el ancho de las secciones al 45% del ancho del contenedor */
@@ -78,3 +81,4 @@ body{
     background-color: #000000; /* Color de fondo opcional */
     color: #ddd;
 }
+

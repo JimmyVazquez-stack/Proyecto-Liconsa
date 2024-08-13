@@ -1,30 +1,280 @@
-{% extends 'base.html' %}
-{% block title %}Hipoclorito de Sodio{% endblock %}
-{% block principal %}
-{%block informacion%}
-<div class="container-fluid p-4">
-    <div class="row">
-        <div class="col-xl-12 mt-1">
-            <div class="card card-default">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-bullhorn"></i>
-                        Información
-                    </h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+</head>
+<body>
 
-                    <div class="callout callout-info">
+<div class="header-container">
+        <table>
+            <tr>
+                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
+            </tr>
 
-                        <h5>Reporte Mensual para el Laboratorio de control de calidad</h5>
-                        <p>En esta sección se recaba toda la informacion obtenida de blalblabla</p>
-                        
-                    </div>
-                </div>
-            </div>
+            <tr>
+                <th>REPORTE MENSUAL - PERIODO:</th>
+            </tr>
+
+            <tr>
+                <th>PRODUCTO: LECHE PARCIALMENTE DESCREMADA </th>
+            </tr> 
+            
+        </table>
+        <div class="right-image">
+            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
         </div>
+</div>
+   
+<div class="contenedor-tablas">
+
+    <table class="table table-bordered bg-light table-hover">
+            <thead>
+                <tr>
+                    <th colspan="22" class="encabezado-tabla">COMPOSICION FISIOQUIMICA</th>
+                </tr>
+                <tr>
+                    <th rowspan="3">Puntos de Evaluación</th>
+                    <th rowspan="3">Número de Muestras</th>
+                    <th colspan="4">Densidad</th>
+                    <th colspan="4">Grasa</th>
+                    <th colspan="4">SNG</th>
+                    <th colspan="4">Proteínas</th>
+                    <th colspan="4">Temperatura</th>
+                </tr>
+                <tr>
+                    <th colspan="4">g/ml</th>
+                    <th colspan="4">%</th>
+                    <th colspan="4">%</th>
+                    <th colspan="4">%</th>
+                    <th colspan="4">°C</th>
+                <tr>
+                    <th>x</th>
+                    <th>%FLE</th>
+                    <th>vMAX</th>
+                    <th>vMIN</th>
+                    <th>x</th>
+                    <th>%FLE</th>
+                    <th>vMAX</th>
+                    <th>vMIN</th>
+                    <th>x</th>
+                    <th>%FLE</th>
+                    <th>vMAX</th>
+                    <th>vMIN</th>
+                    <th>x</th>
+                    <th>%FLE</th>
+                    <th>vMAX</th>
+                    <th>vMIN</th>
+                    <th>x</th>
+                    <th>%FLE</th>
+                    <th>vMAX</th>
+                    <th>vMIN</th>
+                </tr>
+            </thead>
+    
+            <tbody>
+                <tr>
+                    <td>{{ punto_evaluacion }}</td>
+                    <td>{{ numero_muestras }}</td>
+                    <td>{{ densidad_promedio|floatformat:2 }}</td>
+                    <td>{{ densidad_fle }}</td>
+                    <td>{{ densidad_maximo }}</td>
+                    <td>{{ densidad_minimo }}</td>
+                    <td>{{ grasas_promedio|floatformat:2 }}</td>
+                    <td>{{ grasas_fle }}</td>
+                    <td>{{ grasas_maximo }}</td>
+                    <td>{{ grasas_minimo }}</td>
+                    <td>{{ sng_promedio }}</td>
+                    <td>{{ sng_fle }}</td>
+                    <td>{{ sng_maximo }}</td>
+                    <td>{{ sng_minimo }}</td>
+                    <td>{{ proteina_promedio|floatformat:2 }}</td>
+                    <td>{{ proteina_fle }}</td>
+                    <td>{{ proteina_maximo }}</td>
+                    <td>{{ proteina_minimo }}</td>
+                    <td>{{ temperatura_promedio|floatformat:2 }}</td>
+                    <td>{{ temperatura_fle }}</td>
+                    <td>{{ temperatura_maximo }}</td>
+                    <td>{{ temperatura_minimo }}</td>
+                </tr>
+            </tbody>
+    </table>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr>
+                <th colspan="2" class="encabezado-tabla">DATOS DE PRODUCIÓN</th>
+            </tr>
+            <tr>
+                <th>Producción real</th>
+                <th>Producción ventas</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ produccion_real }}</td>
+                <td>{{ produccion_ventas }}</td>
+            </tr>
+    </table>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr>
+                <th colspan="6" class="encabezado-tabla">CONTROL DE ENVASADO</th>
+            </tr>
+            <tr>
+                <th rowspan="3">n</th>
+                <th colspan="5">Contenido neto</th>
+            </tr>
+            <tr>
+                <th colspan="5">ml</th>
+            </tr>
+            <tr>
+                <th>X</th>
+                <th>fli</th>
+                <th>CND-2T</th>
+                <th>máximo</th>
+                <th>mínimo</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ n }}</td>
+                <td>{{ contenido_neto_promedio }}</td>
+                <td>{{ contenido_neto_fli }}</td>
+                <td>{{ contenido_neto_cnd2t }}</td>
+                <td>{{ contenido_neto_maximo }}</td>
+                <td>{{ contenido_neto_minimo }}</td>
+            </tr>
+
+    </table>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr>
+                <th colspan="8" class="encabezado-tabla">CALIDAD MICROBIOLOGICA</th>
+            </tr>
+            <tr>
+                <th rowspan="3">Puntos de evaluacion</th>
+                <th rowspan="3">Número de muestras</th>
+                <th colspan="3">Oragnismos coliformes</th>
+                <th colspan="3">Aerobias</th>
+            </tr>
+            <tr>
+                <th colspan="3">UFC/ml</th>
+                <th colspan="3">UFC/ml</th>
+            </tr>
+            <tr>
+                <th>X</th>
+                <th>Fle</th>
+                <th>Máximo</th>
+                <th>X</th>
+                <th>Fle</th>
+                <th>Máximo</th>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ punto_evaluacion }}</td>
+                <td>{{ numero_muestras }}</td>
+                <td>{{ coliformes_promedio }}</td>
+                <td>{{ coliformes_fli }}</td>
+                <td>{{ coliformes_maximo }}</td>
+                <td>{{ aerobias_promedio }}</td>
+                <td>{{ aerobias_fli }}</td>
+                <td>{{ aerobias_maximo }}</td>
+            </tr>
+
+    </table>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr>
+                <th colspan="6" class="encabezado-tabla">OBSERVACIONES</th>
+            </tr>
+            <tr>
+                <th>Peso de envase vacio</th>
+                <th>n</th>
+                <th>x</th>
+                <th>V.MAX</th>
+                <th>V.MIN</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr>
+                <td></td>
+                <td>{{ peso_envase_vacio_n }}</td>
+                <td>{{ peso_envase_vacio_x }}</td>
+                <td>{{ peso_envase_vacio_vmax }}</td>
+                <td>{{ peso_envase_vacio_vmin }}</td>
+            </tr>
+            <tr>
+                <td colspan="6">INFO</td>
+            </tr>
+        </tbody>
+
+        </thead>
+    </table>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr>
+                <th colspan="8" class="encabezado-tabla">ANALISIS COMPLEMENTARIOS</th>
+            </tr>
+            <tr>
+                <th rowspan="2">Puntos de evaluación</th>
+                <th colspan="4">PH</th>
+                <th colspan="3">NEUTRALIZANTES</th>
+            </tr>
+            <tr>
+                <th>n</th>
+                <th>x</th>
+                <th>V.MAX</th>
+                <th>V.MIN</th>
+                <th>n</th>
+                <th>Positivo</th>
+                <th>Negativo</th>
+            </tr>
+
+            <tbody>
+                <tr>
+                    <td>{{ punto_evaluacion }}</td>
+                    <td>{{ ph_n }}</td>
+                    <td>{{ ph_x }}</td>
+                    <td>{{ ph_vmax }}</td>
+                    <td>{{ ph_vmin }}</td>
+                    <td>{{ neutrales_n }}</td>
+                    <td>{{ neutrales_positivo }}</td>
+                    <td>{{ neutrales_negativo }}</td>
+                </tr>
+                <tr>
+                    <td colspan="8">INFO</td>
+                </tr>
+            </tbody>
+        </thead>
+    </table>
+</div>
+
+<div class="contenedor-autorizacion">
+    <div class="seccion">
+        <p>Nombre de la persona que elaboró</p>
+        <hr>
+        <p>Elaboró</p>
+    </div>
+
+    <div class="seccion">
+        <p>Nombre de la persona que autorizó</p>
+        <hr>
+        <p>Autorizó</p>
     </div>
 </div>
-    {%endblock%}
-{% endblock %}
+
+</body>
+</html>
+

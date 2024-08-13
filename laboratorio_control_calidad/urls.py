@@ -53,5 +53,17 @@ urlpatterns = [
     path('Terminado_delete/<int:pk>', TerminadoDelete.as_view(), name='Terminado_delete'),
     path('permisos/<int:pk>', permisos.as_view(), name='permisos'),
     path('modificar/<int:pk>', permisos.as_view(), name='modificar'),
+
+    # PT 2.0 ENCAB-------------------------------------------
+    path('pt_encabView', EncabView.as_view(), name='pt_encabView'),
+    path('pt_encabCreate', EncabCreate.as_view(), name='pt_encabCreate'),     
+    path('pt_encabUpdate/<int:pk>', EncabUpdate.as_view(), name='pt_encabUpdate'),
+    
+    # PT 2.0 ------------------------------------------------
+    path('pt_View', TerminadoView.as_view(), name='pt_View'),
+    path('pt_Create', TerminadoCreate.as_view(), name='pt_Create'),     
+    path('pt_Update/<int:pk>', TerminadoUpdate.as_view(), name='pt_Update'),
+    path('pt_Delete/<int:pk>', PTerminadoDelete.as_view(), name='pt_Delete'),
+
 ]
-  
+
