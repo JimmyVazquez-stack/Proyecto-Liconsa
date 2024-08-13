@@ -1,181 +1,187 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %} Registros FormatoR49{% endblock %}
+
 {% block principal %}
+    {% block informacion %}
+    <div class="card-header bg-gray-dark">
+        <h3 class="card-title">
+            <i class="fas fa-table"></i>
+        </h3>
+    
+        <div class="container container-data d-flex align-items-center flex-column" >
+            <form method="post" class="m-1">
+                {% csrf_token %}
+                {{ form.as_p }}
 
-{% block informacion %}
-<div class="card-header bg-gray-dark">
-    <h3 class="card-title">
-        <i class="fas fa-table"></i>
-        Información
-    </h3>
-</div>
-<div class="container container-data d-flex align-items-center flex-column"></div>
-    <form id="formulario" action="" method="post" class="m-4">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <button type="submit" class="btn btn-success">Guardar</button>
-    </form>
-
-<h3>Registros de formato R49</h3>
-
-<div class="card-body">
-{% endblock %}
-
-{% block datatable %}
-<!-- Pestañas -->
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="pesoBruto-tab" data-toggle="tab" href="#pesoBruto" role="tab" aria-controls="pesoBruto" aria-selected="true">Peso Bruto</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="densidad-tab" data-toggle="tab" href="#densidad" role="tab" aria-controls="densidad" aria-selected="false">Densidad</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="pesoEnvVacio-tab" data-toggle="tab" href="#pesoEnvVacio" role="tab" aria-controls="pesoEnvVacio" aria-selected="false">Peso Env. Vacio</a>
-    </li>
-</ul>
-
-<!-- Contenido de las Pestañas -->
-<div class="tab-content mt-3">
-    <!-- Contenido de la Pestaña Peso Bruto -->
-    <div class="tab-pane fade show active" id="pesoBruto" role="tabpanel" aria-labelledby="pesoBruto-tab">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
-                <thead class="thead-light" style="font-size: 14px;">
-                    <tr>
-                        <th>Fecha y Hora</th>
-                        <th>Cabezal</th>
-                        <th>Maquina</th>
-                        <th>Planta</th>
-                        <th>Producto</th>
-                        <th>Valor</th>
-                        <th>Usuario que registra:</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in datosPesoBruto %}
-                    <tr>
-                        <td>{{ item.fechaHora }}</td>
-                        <td>{{ item.cabezal }}</td>
-                        <td>{{ item.maquina }}</td>
-                        <td>{{ item.planta }}</td>
-                        <td>{{ item.producto }}</td>
-                        <td>{{ item.valor }}</td>
-                        <td>
-                            {% if user_info %}
-                                {{ user_info.username }} <!-- Nombre del usuario -->
-                                {% if user_groups %}
-                                    /
-                                    {% for group in user_groups %}
-                                        {{ group.name }} <!-- Nombre del grupo -->
-                                    {% endfor %}
-                                {% endif %}
-                            {% else %}
-                                Usuario no autenticado
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesobrutor49_update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesobrutor49_delete' item.id %}"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="{% url 'laboratorio_control_calidad:pesobrutor49_create' %}" class="btn btn-primary">Nuevo registro</a>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </form>
+            <h3>Registros de formato R49</h3>
         </div>
     </div>
+    
+    
+    {% endblock %}
 
-    <!-- Contenido de la Pestaña Densidad -->
-    <div class="tab-pane fade" id="densidad" role="tabpanel" aria-labelledby="densidad-tab">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed" id="example2" aria-describedby="example2_info">
-                <thead class="thead-light" style="font-size: 14px;">
-                    <tr>
-                        <th>Fecha y Hora</th>
-                        <th>Cabezal</th>
-                        <th>Planta</th>
-                        <th>Producto</th>
-                        <th>Silo</th>
-                        <th>Turno</th>
-                        <th>Linea</th>
-                        <th>Densidad</th>
-                        <th>Volumen</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in datosDensidad %}
-                    <tr>
-                        <td>{{ item.fechaHora }}</td>
-                        <td>{{ item.cabezal }}</td>
-                        <td>{{ item.planta }}</td>
-                        <td>{{ item.producto }}</td>
-                        <td>{{ item.silo }}</td>
-                        <td>{{ item.turno }}</td>
-                        <td>{{ item.linea }}</td>
-                        <td>{{ item.densidad }}</td>
-                        <td>{{ item.volumen }}</td>
-                        <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_delete' item.id %}"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="{% url 'laboratorio_control_calidad:densidadr49_create' %}" class="btn btn-primary">Nuevo registro</a>
+    {% block datatable %}
+        <!-- Pestañas -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pesoBruto-tab" data-toggle="tab" href="#pesoBruto" role="tab" aria-controls="pesoBruto" aria-selected="true">Peso Bruto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="densidad-tab" data-toggle="tab" href="#densidad" role="tab" aria-controls="densidad" aria-selected="false">Densidad</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pesoEnvVacio-tab" data-toggle="tab" href="#pesoEnvVacio" role="tab" aria-controls="pesoEnvVacio" aria-selected="false">Peso Env. Vacio</a>
+            </li>
+        </ul>
+
+        <!-- Contenido de las Pestañas -->
+        <div class="tab-content mt-3">
+            <!-- Contenido de la Pestaña Peso Bruto -->
+            <div class="tab-pane fade show active" id="pesoBruto" role="tabpanel" aria-labelledby="pesoBruto-tab">
+                <div class="table-responsive">
+                    <table id="tablaPesoBruto" class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline"  aria-describedby="tablaPesoBruto_info">
+                        <thead class="thead-light" style="font-size: 14px;">
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Cabezal</th>
+                                <th>Maquina</th>
+                                <th>Planta</th>
+                                <th>Producto</th>
+                                <th>Valor</th>
+                                <th>Usuario que registra:</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in datosPesoBruto %}
+                            <tr>
+                                <td>{{ item.fechaHora }}</td>
+                                <td>{{ item.cabezal }}</td>
+                                <td>{{ item.maquina }}</td>
+                                <td>{{ item.planta }}</td>
+                                <td>{{ item.producto }}</td>
+                                <td>{{ item.valor }}</td>
+                                <td>
+                                    {% if user_info %}
+                                        {{ user_info.username }} <!-- Nombre del usuario -->
+                                        {% if user_groups %}
+                                            /
+                                            {% for group in user_groups %}
+                                                {{ group.name }} <!-- Nombre del grupo -->
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% else %}
+                                        Usuario no autenticado
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesobrutor49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesobrutor49_delete' item.id %}" > <i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'laboratorio_control_calidad:pesobrutor49_create' %}" class="btn btn-primary">Nuevo registro</a>
+                </div>
+            </div>
+
+            <!-- Contenido de la Pestaña Densidad -->
+            <div class="tab-pane fade" id="densidad" role="tabpanel" aria-labelledby="densidad-tab">
+                <div class="table-responsive">
+                    <table id="tablaDensidad" class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline"  aria-describedby="tablaDensidad_info">
+                        <thead class="thead-light" style="font-size: 14px;">
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Cabezal</th>
+                                <th>Planta</th>
+                                <th>Producto</th>
+                                <th>Silo</th>
+                                <th>Turno</th>
+                                <th>Linea</th>
+                                <th>Densidad</th>
+                                <th>Volumen</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in datosDensidad %}
+                            <tr>
+                                <td>{{ item.fechaHora }}</td>
+                                <td>{{ item.cabezal }}</td>
+                                <td>{{ item.planta }}</td>
+                                <td>{{ item.producto }}</td>
+                                <td>{{ item.silo }}</td>
+                                <td>{{ item.turno }}</td>
+                                <td>{{ item.linea }}</td>
+                                <td>{{ item.densidad }}</td>
+                                <td>{{ item.volumen }}</td>
+                                <td>
+                                    <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_delete' item.id %}" > <i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'laboratorio_control_calidad:densidadr49_create' %}" class="btn btn-primary">Nuevo registro</a>
+                </div>
+            </div>
+
+            <!-- Contenido de la Pestaña Peso Envase Vacio -->
+            <div class="tab-pane fade" id="pesoEnvVacio" role="tabpanel" aria-labelledby="pesoEnvVacio-tab">
+                <div class="table-responsive">
+                    <table id="tablaPesoEnvVacio" class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline"  aria-describedby="tablaPesoEnvVacio_info">
+                        <thead class="thead-light" style="font-size: 14px;">
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Cabezal</th>
+                                <th>Maquina</th>
+                                <th>Planta</th>
+                                <th>Producto</th>
+                                <th>Proveedor</th>
+                                <th>Peso</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in datosPesoEnvVacio %}
+                            <tr>
+                                <td>{{ item.fechaHora }}</td>
+                                <td>{{ item.cabezal }}</td>
+                                <td>{{ item.maquina }}</td>
+                                <td>{{ item.planta }}</td>
+                                <td>{{ item.producto }}</td>
+                                <td>{{ item.proveedor }}</td>
+                                <td>{{ item.peso }}</td>
+                                <td>
+                                    <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_update' item.id %}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_delete' item.id %}" ><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                        <a href="{% url 'laboratorio_control_calidad:pesoenvvacior49_create' %}" class="btn btn-primary">Nuevo registro</a>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Contenido de la Pestaña Peso Envase Vacio -->
-    <div class="tab-pane fade show active" id="pesoEnvVacio" role="tabpanel" aria-labelledby="pesoEnvVacio-tab">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed" id="example3" aria-describedby="example3_info">
-                <thead class="thead-light" style="font-size: 14px;">
-                    <tr>
-                        <th>Fecha y Hora</th>
-                        <th>Cabezal</th>
-                        <th>Maquina</th>
-                        <th>Planta</th>
-                        <th>Producto</th>
-                        <th>Proveedor</th>
-                        <th>Peso</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in datosPesoEnvVacio %}
-                    <tr>
-                        <td>{{item.fechaHora}}</td>
-                        <td>{{item.cabezal}}</td>
-                        <td>{{item.maquina}}</td>
-                        <td>{{item.planta}}</td>
-                        <td>{{item.producto}}</td>
-                        <td>{{item.proveedor}}</td>
-                        <td>{{item.peso}}</td>
-                        <td>
-                            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_update' item.id %}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoenvvacior49_delete' item.id %}"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <a href="{% url 'laboratorio_control_calidad:pesoenvvacior49_create' %}" class="btn btn-primary">Nuevo registro</a>
-        </div>
-    </div>
-
-</div>
-
+    {% endblock %}
 {% endblock %}
-{% endblock %}
+
 {% block javascript %}
-{{ block.super }}
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {{ block.super }}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   
+    <!--datatables-->
+    <script src="{% static 'js/datatables/external-libraries.js' %}"></script>
+    <script src="{% static 'js/datatables/datatables-config.js' %}"></script>
+    <!--Tabs estilos-->
+    <script src="{% static 'css/styles.css' %}"></script>
 {% endblock %}
