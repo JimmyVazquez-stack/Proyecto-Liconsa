@@ -285,11 +285,13 @@ $(document).on("click", "#btnAddMaquina", function () {
     // Cierra el modal de cabezal antes de abrir el modal de máquina
     $("#cabezalModal").modal("hide");
 
-    // Espera un breve momento para asegurar que el modal de cabezal esté cerrado
-    setTimeout(function() {
+    // Usa el evento 'hidden.bs.modal' para asegurarte de que el modal de cabezal se haya cerrado antes de abrir el modal de máquina
+    $('#cabezalModal').on('hidden.bs.modal', function () {
         $("#maquinaModal").modal("show");
-    }, 300); // Ajusta el tiempo si es necesario
+        $('#cabezalModal').off('hidden.bs.modal'); // Limpiar el manejador del evento para evitar múltiples ejecuciones
+    });
 });
+
 
 
 
