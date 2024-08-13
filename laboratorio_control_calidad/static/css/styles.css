@@ -4,9 +4,9 @@
 }
 
 /* Color de fondo de las pestañas */
-.custom-tab {
+.custom-tabs {
     background-color: #007bff; /* Color de fondo */
-    color: white; /* Color del texto */
+    color: rgb(0, 0, 0); /* Color del texto */
 }
 
 /* Color de fondo y texto cuando la pestaña está activa */
@@ -26,4 +26,23 @@
     border: 1px solid #dee2e6; /* Agregar un borde */
     padding: 20px; /* Agregar padding */
     border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Cambiar el color del texto de las pestañas */
+.custom-tabs .nav-link {
+    color: #007bff; /* Cambia esto al color deseado */
+}
+
+/* Cambiar el color del texto de la pestaña activa */
+.custom-tabs .nav-link.active {
+    color: #ff5733; /* Cambia esto al color deseado para la pestaña activa */
+}
+
+/* Cambiar el color de fondo de las pestañas */
+.custom-tabs .nav-link {
+    background-color: #f8f9fa; /* Cambia esto al color de fondo deseado */
+}
+
+.custom-tabs .nav-link.active {
+    background-color: #e9ecef; /* Cambia esto al color de fondo deseado para la pestaña activa */
 }
