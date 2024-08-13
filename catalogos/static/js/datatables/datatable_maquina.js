@@ -327,5 +327,7 @@ $('#tabla_maquinas tbody').on('click', '.btn-delete', function() {
 });
 
 
+
+
 });
     

@@ -79,7 +79,7 @@ $(document).ready(function () {
 // Función para cargar las máquinas en el select del modal
 function loadMachines() {
     $.ajax({
-        url: "/catalogos/maquinas/list/data", // URL para obtener la lista de máquinas
+        url: "/catalogos/maquinas/list/data",
         method: "GET",
         success: function(data) {
             var $maquinaSelect = $("#maquina");
@@ -87,22 +87,12 @@ function loadMachines() {
 
             $maquinaSelect.empty();
             if (data.length === 0) {
-                $maquinaSelect.append(
-                    '<option value="">No hay máquinas disponibles</option>'
-                );
+                $maquinaSelect.append('<option value="">No hay máquinas disponibles</option>');
                 $message.text("No hay máquinas disponibles.").css("color", "red");
             } else {
-                $maquinaSelect.append(
-                    '<option value="">Seleccione una máquina</option>'
-                );
+                $maquinaSelect.append('<option value="">Seleccione una máquina</option>');
                 $.each(data, function(index, maquina) {
-                    $maquinaSelect.append(
-                        '<option value="' +
-                            maquina.id +
-                            '">' +
-                            maquina.nombre_planta + ' - ' + maquina.numero +
-                            "</option>"
-                    );
+                    $maquinaSelect.append('<option value="' + maquina.id + '">' + maquina.nombre_planta + ' - ' + maquina.numero + '</option>');
                 });
                 $message.text("Seleccione una máquina.").css("color", "black");
             }
@@ -116,163 +106,63 @@ function loadMachines() {
         }
     });
 }
-   // Función para cargar las máquinas en el select del modal
-   function loadMachines() {
+
+// Abrir modal para añadir cabezal
+$("#btnAddCabezal").click(function() {
+    $("#cabezalId").val(""); // Limpiar el ID del cabezal
+    $("#cabezalModalLabel").text("Añadir Cabezal");
+    $("#cabezalForm")[0].reset();
+    loadMachines(); // Cargar máquinas cuando se abre el modal
+    $("#cabezalModal").modal("show");
+});
+
+// Mostrar el modal de edición de cabezales
+$(document).on("click", ".btn-edit-cabezal", function() {
+    var cabezalId = $(this).data("id");
     $.ajax({
-        url: "/catalogos/maquinas/list/data/",  // Asegúrate de que la URL es correcta
+        url: "/catalogos/cabezales/" + cabezalId + "/edit/",
         method: "GET",
         success: function(data) {
-            var $maquinaSelect = $("#maquina");
-            var $message = $("#maquinaMessage");
-
-            $maquinaSelect.empty();
-            if (data.length === 0) {
-                $maquinaSelect.append('<option value="">No hay máquinas disponibles</option>');
-                $message.text("No hay máquinas disponibles.").css("color", "red");
-            } else {
-                $maquinaSelect.append('<option value="">Seleccione una máquina</option>');
-                $.each(data, function(index, maquina) {
-                    $maquinaSelect.append('<option value="' + maquina.id + '">' + maquina.nombre + '</option>');
-                });
-                $message.text('').css('color', 'black');
-            }
+            $("#cabezalId").val(data.id);
+            $("#nombre").val(data.nombre);
+            $("#maquina").val(data.maquina_id);
+            $("#cabezalModalLabel").text("Editar Cabezal");
+            loadMachines(); // Cargar máquinas cuando se abre el modal
+            $("#cabezalModal").modal("show");
         },
         error: function() {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: "No se pudieron cargar las máquinas.",
-            });
-        }
-    });
-}
-
-
-
- // Abrir modal para añadir máquina
-$("#btnAddMaquina").click(function () {
-    $("#maquinaModalLabel").text("Añadir Máquina");
-    $("#maquinaForm")[0].reset();
-    $("#maquinaId").val("");
-    loadPlantas();
-    $("#maquinaModal").modal("show");
-});
-
-// Abrir modal para añadir cabezal
-$("#btnAddCabezal").click(function () {
-    $("#cabezalId").val(""); // Limpiar el ID del cabezal
-    $("#cabezalModal").modal("show");
-    loadMachines(); // Cargar máquinas cuando se abre el modal
-});
-
-    // Mostrar el modal de edición de cabezales
-    $(document).on("click", ".btn-edit-cabezal", function () {
-        var cabezalId = $(this).data("id");
-        $.ajax({
-        url: "/catalogos/cabezales/" + cabezalId + "/edit/", // URL para obtener los datos del cabezal
-        method: "GET",
-        success: function (data) {
-            $("#cabezalId").val(data.id);
-            $("#nombre").val(data.nombre);
-            $("#maquina").val(data.maquina_id);
-            $("#cabezalModal").modal("show");
-            loadMachines(); // Cargar máquinas cuando se abre el modal
-        },
-        error: function () {
-            Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "No se pudieron cargar los datos del cabezal.",
+                text: "No se pudieron cargar los datos del cabezal.",
             });
         },
-        });
     });
+});
 
-    // Guardar o actualizar el cabezal
-    $("#saveCabezal").click(function () {
-        var cabezalId = $("#cabezalId").val();
-        var url = cabezalId
-        ? "/catalogos/cabezales/update/" + cabezalId + "/"
-        : "/catalogos/cabezales/create/";
-        var method = cabezalId ? "POST" : "POST";
-        var data = $("#cabezalForm").serialize();
+// Guardar o actualizar el cabezal
+$("#saveCabezal").click(function() {
+    var cabezalId = $("#cabezalId").val();
+    var url = cabezalId ? "/catalogos/cabezales/update/" + cabezalId + "/" : "/catalogos/cabezales/create/";
+    var method = "POST";
+    var data = $("#cabezalForm").serialize();
 
-        $.ajax({
+    $.ajax({
         url: url,
         method: method,
         data: data,
-        success: function (response) {
+        success: function(response) {
             $("#cabezalModal").modal("hide");
             table.ajax.reload(); // Recargar la tabla de cabezales
             Swal.fire({
-            icon: "success",
-            title: "Guardado",
-            text: "Cabezal guardado con éxito.",
-            });
-        },
-        error: function (xhr) {
-            var errorMessage = "Error al guardar el cabezal.";
-            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-            errorMessage = xhr.responseJSON.error;
-            }
-            Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: errorMessage,
-            });
-        },
-        });
-    });
-
-    $(function () {
-        // Abrir modal para añadir planta desde el modal de máquina
-        $("#btnAddPlanta").click(function () {
-        $("#plantaModal").modal("show");
-        });
-
-        // Guardar planta con validación usando SweetAlert2
-        $("#savePlanta").click(function () {
-        var nombre = $("#nombre").val().trim();
-        var ubicacion = $("#ubicacion").val().trim();
-        var correo = $("#correo").val().trim();
-        var contacto = $("#contacto").val().trim();
-        var telefono = $("#telefono").val().trim();
-
-        // Validar que todos los campos no estén vacíos
-        if (!nombre || !ubicacion || !correo || !contacto || !telefono) {
-            Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Todos los campos son obligatorios",
-            });
-            return;
-        }
-
-        $.ajax({
-            url: "/catalogos/plantas/create/",
-            method: "POST",
-            data: $("#plantaForm").serialize(),
-            success: function (response) {
-            // Añadir la nueva planta al dropdown
-            var newOption = new Option(response.nombre, response.id, true, true);
-            $("#nombre_planta").append(newOption).trigger("change");
-
-            Swal.fire({
                 icon: "success",
                 title: "Guardado",
-                text: "Planta guardada con éxito",
-            }).then(() => {
-                // Cerrar solo el modal de añadir planta y mantener el modal de máquina abierto
-                $("#plantaModal").modal("hide");
+                text: "Cabezal guardado con éxito.",
             });
-            },
-            error: function (xhr) {
-            var errorMessage = "Error al guardar la planta";
-            if (
-                xhr.status === 400 &&
-                xhr.responseJSON &&
-                xhr.responseJSON.error
-            ) {
+        },
+        error: function(xhr) {
+            var errorMessage = "Error al guardar el cabezal.";
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
                 errorMessage = xhr.responseJSON.error;
             }
             Swal.fire({
@@ -280,63 +170,119 @@ $("#btnAddCabezal").click(function () {
                 title: "Error",
                 text: errorMessage,
             });
-            },
-        });
-        });
+        },
     });
+});
 
-    // Guardar máquina (añadir o editar) con validación usando SweetAlert2
-    $("#saveMaquina").click(function () {
-        var numero = $("#numero").val().trim();
-        var planta = $("#planta").val();
+// Abrir modal para añadir máquina desde el modal de cabezal
+$(document).on("click", "#btnAddMaquina", function() {
+    $("#maquinaModalLabel").text("Añadir Máquina");
+    $("#maquinaForm")[0].reset();
+    loadPlantas(); // Asumiendo que tienes una función para cargar las plantas
+    $("#maquinaModal").modal("show");
+});
 
-        // Validar que los campos no estén vacíos
-        if (!numero || !planta) {
+// Guardar máquina (añadir o editar) con validación usando SweetAlert2
+$("#saveMaquina").click(function() {
+    var numero = $("#numero").val().trim();
+    var planta = $("#planta").val();
+
+    // Validar que los campos no estén vacíos
+    if (!numero || !planta) {
         Swal.fire({
             icon: "error",
             title: "Error",
             text: "Todos los campos son obligatorios",
         });
         return;
-        }
+    }
 
-        var maquinaId = $("#maquinaId").val();
-        var url = maquinaId
-        ? `/catalogos/maquinas/update/${maquinaId}/`
-        : "/catalogos/maquinas/create/";
-        var method = "POST"; // Usamos POST para ambos casos
+    var maquinaId = $("#maquinaId").val();
+    var url = maquinaId ? `/catalogos/maquinas/update/${maquinaId}/` : "/catalogos/maquinas/create/";
+    var method = "POST"; // Usamos POST para ambos casos
 
-        $.ajax({
+    $.ajax({
         url: url,
         method: method,
         data: $("#maquinaForm").serialize(),
-        success: function (response) {
+        success: function(response) {
             $("#maquinaModal").modal("hide");
-            table.ajax.reload();
+            loadMachines(); // Actualizar la lista de máquinas
             Swal.fire({
-            icon: "success",
-            title: "Guardado",
-            text: "Máquina guardada con éxito",
+                icon: "success",
+                title: "Guardado",
+                text: "Máquina guardada con éxito",
             });
         },
-        error: function (xhr) {
+        error: function(xhr) {
             var errorMessage = "Error al guardar la máquina";
             if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-            errorMessage = xhr.responseJSON.error;
+                errorMessage = xhr.responseJSON.error;
             }
             Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: errorMessage,
+                icon: "error",
+                title: "Error",
+                text: errorMessage,
             });
         },
-        });
     });
+});
 
-// Manejadores manuales para cerrar los modales
-$("#maquinaModal .close, #maquinaModal .btn-secondary, #cabezalModal .close, #cabezalModal .btn-secondary").click(function () {
-    $("#maquinaModal").modal("hide");
-    $("#cabezalModal").modal("hide");
+// Cerrar modales manualmente
+$(".modal .close, .modal .btn-secondary").click(function() {
+    $(this).closest('.modal').modal('hide');
+});
+
+
+// Confirmar eliminación usando SweetAlert2 para cabezales
+$('#tabla_cabezales tbody').on('click', '.btn-delete', function() {
+    var data = table.row($(this).parents('tr')).data();
+    var cabezalId = data ? data.id : null; // Obtener el ID del cabezal desde los datos de la fila
+
+    if (!cabezalId) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener el ID del cabezal.',
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'red',
+        cancelButtonColor: 'gray',
+        confirmButtonText: 'Sí, eliminarlo!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/catalogos/cabezales/delete/${cabezalId}/`,
+                method: 'DELETE', // Cambiar el método a DELETE
+                data: {
+                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val() // Incluye el token CSRF
+                },
+                success: function(response) {
+                    table.ajax.reload(); // Recargar la tabla de cabezales
+                    Swal.fire(
+                        'Eliminado!',
+                        'El cabezal ha sido eliminado.',
+                        'success'
+                    );
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al eliminar el cabezal',
+                    });
+                }
+            });
+        }
+    });
 });
 
 

@@ -450,6 +450,7 @@ class CabezalCreateView(LoginRequiredMixin, View):
         except IntegrityError:
             return JsonResponse({'error': 'Error al guardar el cabezal.'}, status=400)
 
+
 class CabezalUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -484,11 +485,11 @@ class CabezalUpdateView(LoginRequiredMixin, View):
         except IntegrityError:
             return JsonResponse({'error': 'Error al guardar el cabezal.'}, status=400)
 
-
 class CabezalDeleteView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    def delete(self, request, id, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
         try:
             cabezal = Cabezal.objects.get(pk=id)
             cabezal.delete()
@@ -497,7 +498,6 @@ class CabezalDeleteView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'error', 'message': 'Cabezal no encontrado'}, status=404)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
 
 
 
