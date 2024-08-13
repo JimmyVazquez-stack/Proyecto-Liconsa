@@ -1,81 +1,69 @@
-
-
  
 {% load static %} 
-{%block title %} Formatos R49 {% endblock %}
+{% block title %}  {% endblock %}
 
+<!-- Bootstrap CSS DT-->
+<link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css' %}">
+<!-- Datatables bootstrap 4 CSS -->
+<link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css' %}">
 
-   
-    <!-- Bootstrap CSS DT-->
-    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
-    <!-- Datatables bootstrap 4 CSS -->
-    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
-    
-    <!-- Script para datos de json calculos R49 Juan Carlos -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- Script para datos de json calculos R49 Juan Carlos -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
 
-<div class="header-container">
-        <table>
-            <tr>
-                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
-            </tr>
-          
-        </table>
-        <div class="right-image">
-            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo">
-        </div>
-</div>
-   
-<div class="contenedor-tablas">
-    <table class="table table-bordered bg-light table-hover">
-        <thead>
-            <h2>Listado de valores peso Neto</h2>
-            <tr>
-                <th>>Resultados Peso Neto</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for peso in pesos %}
-            <tr>
-                <td>{{ peso.valor }}</td>
-            </tr>
-            {% endfor %}
-             
-        </tbody>
+    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; background-color: #585f58; padding: 10px; color: white;">
+    <table>
+        <tr>
+            <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
+        </tr>
     </table>
-     <!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
-    <script>
-        $(document).ready(function() {
-            $.ajax({
-                url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    // Agregar la fila con los datos obtenidos
-                    $('#reportTable').DataTable({
-                        data: [
-                            [
-                                
-                                data.resultadoOperacion
-                            ]
-                        ],
-                        columns: [
-                            
-                            { title: "Resultado Operación" }
-                        ]
-                    });
-                }
-            });
-        });
-    </script>
+    <div class="right-image">
+        <img src="{% static 'img/liconsalogo.png' %}" alt="Logo" style="width: 40px; height: auto;">
+    </div>
+</div>
+ 
+<h3>Listado de valores peso neto</h3>
+<div class="contenedor-tablas" >
+    <div class="table-responsive">
+        <table id="reportTable" class="table table-bordered bg-light table-hover">
+            <thead>
+                
+                <tr>
+                    <th>Valor Peso Bruto</th>
+                    <th>Resultado Operación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí irán los datos cargados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
 </div>
 
-
+<!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var tableData = data.resultadosPesoNeto.map(function(item) {
+                    return [item.valor, item.resultado];
+                });
+                
+                $('#reportTable').DataTable({
+                    data: tableData,
+                    columns: [
+                        { title: "Valor Peso Bruto" },
+                        { title: "Resultado Operación" }
+                    ]
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>
-
-
-
