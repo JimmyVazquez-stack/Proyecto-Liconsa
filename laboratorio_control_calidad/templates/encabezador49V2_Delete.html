@@ -31,7 +31,7 @@
              
                 <form action="" method="post">
                     {% csrf_token %}
-                    <h2>Seguro de eliminar el Registro con fecha: {{ EncabTablaR49.fecha}}?</h2>
+                    <h2>Seguro de eliminar el Registro con fecha: {{ EncabR49.id}}?</h2>
                     <button type="submit" class="btn btn-danger">Si, eliminar</button>
                     <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-success">No, Cancelar</a>
                 </form>
