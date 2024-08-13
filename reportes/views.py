@@ -584,4 +584,4 @@ class CalculosR49DataView(LoginRequiredMixin, View):
     
 
 # END PRUEBAS USANDO JSON RESPONSE EN CALCULOS DENSIDAD------------------------------------------|
-        return render(request, 'reporte_Rx51.html', context)
+        
