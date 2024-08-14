@@ -47,8 +47,8 @@ urlpatterns = [
     #Formato con encabezado
     path('encabezador49V2_Create/', EncabR49CreateView.as_view(), name='encabezador49_create'),
     path('encabezador49V2_list/', EncabR49ListView.as_view(), name='encabezador49_list'),
-    path('encabezador49V2_delete/<int:pk>', EncabR49DeleteView.as_view(), name='encabezador49_delete'),
-    path('encabezador49V2_update/<int:pk>', EncabR49UpdateView.as_view(), name='encabezador49_update'),
+    path('encabezador49V2_delete/<int:pk>/', EncabR49DeleteView.as_view(), name='encabezador49_delete'),
+    path('encabezador49V2_update/<int:pk>/', EncabR49UpdateView.as_view(), name='encabezador49_update'),
 
 
     #Rutas para el CRUD de FormatoR49
