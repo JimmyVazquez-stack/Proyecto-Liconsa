@@ -475,9 +475,12 @@ class EncabR49UpdateView(generic.UpdateView):
         # Manejar los formularios de forma dinámica
         context['form_peso_bruto'] = self._get_related_form(Pesobruto, PesobrutoForm, 'peso_bruto_id', encab_object)
         context['form_densidad'] = self._get_related_form(Densidadpt, DensidadptForm, 'densidad_id', encab_object)
-        context['form_pesoEnvVacio'] = self._get_related_form(Pesoenvvacio, PesoenvvacioForm, 'pesoEnvVacio_id', encab_object)
+        context['form_pesoenvvacio'] = self._get_related_form(Pesoenvvacio, PesoenvvacioForm, 'pesoEnvVacio_id', encab_object)
 
         context['form'] = self.get_form()  # Formulario principal
+
+        context['edit_mode'] = bool(self.request.GET.get('peso_bruto_id') or self.request.GET.get('densidad_id') or self.request.GET.get('pesoEnvVacio_id'))
+
         return context
 
     def _get_related_form(self, model, form_class, param_name, encab_object):
