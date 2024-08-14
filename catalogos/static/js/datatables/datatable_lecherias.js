@@ -66,6 +66,7 @@ $(document).ready(function() {
             },
         }
     });
+// ==================== Funciones de carga ====================
 
 // Función para cargar opciones de población
 function loadPoblaciones(selectedPoblacion) {
@@ -73,202 +74,243 @@ function loadPoblaciones(selectedPoblacion) {
         url: '/catalogos/poblaciones/list/data',
         method: 'GET',
         success: function(response) {
-            var poblacionSelect = $('#poblacion');
-            poblacionSelect.empty();
-            poblacionSelect.append('<option value="">Seleccione una población</option>');
-            response.forEach(function(poblacion) {
-                var selected = poblacion.id == selectedPoblacion ? 'selected' : '';
-                var displayText = `${poblacion.nombre} (${poblacion.municipio}, ${poblacion.estado})`;
-                poblacionSelect.append(`<option value="${poblacion.id}" ${selected}>${displayText}</option>`);
-            });
+            var $poblacionSelect = $('#poblacion');
+            $poblacionSelect.empty();
+            
+            if (response.length === 0) {
+                $poblacionSelect.append('<option value="">No hay ninguna población disponible</option>');
+            } else {
+                $poblacionSelect.append('<option value="">Seleccione una población</option>');
+                response.forEach(function(poblacion) {
+                    var selected = poblacion.id == selectedPoblacion ? 'selected' : '';
+                    var displayText = `${poblacion.nombre} (${poblacion.municipio}, ${poblacion.estado})`;
+                    $poblacionSelect.append(`<option value="${poblacion.id}" ${selected}>${displayText}</option>`);
+                });
+            }
         },
         error: function(xhr) {
-            console.error('Error al cargar las poblaciones:', xhr);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron cargar las poblaciones.',
+            });
         }
     });
 }
+
 
 
 // Función para cargar opciones de rutas
 function loadRutas(selectedRuta) {
     $.ajax({
-        url: '/catalogos/rutas/list/data', // Ajusta la URL según tu configuración
+        url: '/catalogos/rutas/list/data',
         method: 'GET',
         success: function(response) {
-            var rutaSelect = $('#ruta');
-            rutaSelect.empty();
-            rutaSelect.append('<option value="">Seleccione una ruta</option>');
-            response.forEach(function(ruta) {
-                var selected = ruta.id == selectedRuta ? 'selected' : '';
-                rutaSelect.append(`<option value="${ruta.id}" ${selected}>${ruta.numero} - ${ruta.nombre}</option>`);
-            });
+            var $rutaSelect = $('#ruta');
+            $rutaSelect.empty();
+            
+            if (response.length === 0) {
+                $rutaSelect.append('<option value="">No hay ninguna ruta disponible</option>');
+            } else {
+                $rutaSelect.append('<option value="">Seleccione una ruta</option>');
+                response.forEach(function(ruta) {
+                    var selected = ruta.id == selectedRuta ? 'selected' : '';
+                    $rutaSelect.append(`<option value="${ruta.id}" ${selected}>${ruta.numero} - ${ruta.nombre}</option>`);
+                });
+            }
         },
         error: function(xhr) {
-            console.error('Error al cargar las rutas:', xhr);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron cargar las rutas.',
+            });
         }
     });
 }
 
-    // Abrir modal para añadir ruta
-    $('#btnAddRuta').click(function() {
-        $('#rutaModalLabel').text('Añadir Ruta');
-        $('#rutaForm')[0].reset();
-        $('#rutaId').val('');
-        $('#rutaModal').modal('show');
-    });
+// ==================== Eventos de Modales ====================
 
-    // Guardar ruta (añadir o editar) con validación usando SweetAlert2
-    $('#saveRuta').click(function() {
-        var nombre = $('#nombre').val().trim();
-        var numero = $('#numero').val().trim();
-    
-        // Validar que los campos no estén vacíos
-        if (!nombre || !numero) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Todos los campos son obligatorios',
-            });
-            return;
-        }
-    
-        var rutaId = $('#rutaId').val();
-        console.log(rutaId); // Para depuración
-        var url = rutaId ? `/catalogos/rutas/update/${rutaId}/` : '/catalogos/rutas/create/';
-        var method = 'POST';
-    
-        $.ajax({
-            url: url,
-            method: method,
-            data: $('#rutaForm').serialize(),
-            success: function(response) {
-                $('#rutaModal').modal('hide');
-                table.ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Guardado',
-                    text: 'Ruta guardada con éxito',
-                });
-            },
-            error: function(xhr) {
-                var errorMessage = 'Error al guardar la ruta';
-                if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: errorMessage,
-                });
-            }
-        });
-    });
-
-
-// Abrir modal para añadir población
-$("#btnAddPoblacion").click(function () {
-    $("#poblacionModalLabel").text("Añadir Población");
-    $("#poblacionForm")[0].reset();
-    $("#poblacionId").val("");
-    $("#poblacionModal").modal("show");
-});
-
-  // Guardar población (añadir o editar) con validación usando SweetAlert2
-  $("#savePoblacion").click(function () {
-    var nombre = $("#nombre").val().trim();
-    var municipio = $("#municipio").val().trim();
-    var estado = $("#estado").val().trim();
-
-    // Validar que los campos no estén vacíos
-    if (!nombre || !municipio || !estado) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Todos los campos son obligatorios",
-      });
-      return;
+// Abrir modal para añadir ruta
+$('#btnAddRuta').click(function() {
+    // Cerrar el modal de lechería si está abierto
+    if ($('#lecheriaModal').hasClass('show')) {
+        $('#lecheriaModal').modal('hide');
     }
 
-    var poblacionId = $("#poblacionId").val();
-    var url = poblacionId
-      ? `/catalogos/poblaciones/update/${poblacionId}/`
-      : "/catalogos/poblaciones/create/";
-    var method = "POST";
+    $('#rutaModalLabel').text('Añadir Ruta');
+    $('#rutaForm')[0].reset();
+    $('#rutaId').val('');
+    $('#rutaModal').modal('show');
+});
 
-    $.ajax({
-      url: url,
-      method: method,
-      data: $("#poblacionForm").serialize(),
-      success: function (response) {
-        $("#poblacionModal").modal("hide");
-        table.ajax.reload();
-        Swal.fire({
-          icon: "success",
-          title: "Guardado",
-          text: "Población guardada con éxito",
-        });
-      },
-      error: function (xhr) {
-        var errorMessage = "Error al guardar la población";
-        if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
-          errorMessage = xhr.responseJSON.error;
-        }
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: errorMessage,
-        });
-      },
-    });
-  });
+// Abrir modal para añadir población
+$('#btnAddPoblacion').click(function() {
+    // Cerrar el modal de lechería si está abierto
+    if ($('#lecheriaModal').hasClass('show')) {
+        $('#lecheriaModal').modal('hide');
+    }
 
+    $('#poblacionModalLabel').text('Añadir Población');
+    $('#poblacionForm')[0].reset();
+    $('#poblacionId').val('');
+    $('#poblacionModal').modal('show');
+});
 
 // Abrir modal para añadir lechería
 $('#btnAddLecheria').click(function() {
-    // Cerrar el modal de población si está abierto
+    // Cerrar los modales de población y ruta si están abiertos
     if ($('#poblacionModal').hasClass('show')) {
         $('#poblacionModal').modal('hide');
     }
-    // Cerrar el modal de rutas si está abierto
     if ($('#rutaModal').hasClass('show')) {
         $('#rutaModal').modal('hide');
     }
-    
-    // Configurar el modal para añadir lechería
+
     $('#lecheriaModalLabel').text('Añadir Lechería');
     $('#lecheriaForm')[0].reset();
     $('#lecheriaId').val('');
-    $('#btnAddPoblacion').show(); // Mostrar el botón para añadir población
-    $('#btnAddRuta').show(); // Mostrar el botón para añadir ruta
+    $('#btnAddPoblacion').show();
+    $('#btnAddRuta').show();
     $('#lecheriaModal').modal('show');
-    
-    // Cargar las opciones de población y ruta
     loadPoblaciones(); // Cargar opciones de población
     loadRutas(); // Cargar opciones de ruta
 });
 
 
+// Cerrar modales cuando se presiona cancelar o cerrar
+$('#cancelMaquinaModal, #cancelPlantaModal, #saveCabezal, #saveMaquina, #savePlanta').click(function() {
+    $(this).closest('.modal').modal('hide');
+});
+
+$('.modal').on('click', '[data-dismiss="modal"]', function() {
+    $(this).closest('.modal').modal('hide');
+});
+
+
+
 // Abrir modal para editar lechería
 $('#tabla_lecherias tbody').on('click', '.btn-edit', function() {
     var data = table.row($(this).parents('tr')).data();
+    
+    // Actualiza la interfaz del modal para edición
     $('#lecheriaModalLabel').text('Editar Lechería');
     $('#numero').val(data.numero);
     $('#nombre').val(data.nombre);
     $('#responsable').val(data.responsable);
     $('#telefono').val(data.telefono);
     $('#direccion').val(data.direccion);
-    $('#poblacion').val(data.poblacion); // Cambiar si es necesario
-    $('#ruta').val(data.ruta); // Cambiar si es necesario
     $('#lecheriaId').val(data.id);
-    $('#btnAddPoblacion').hide(); // Ocultar el botón para añadir población
-    $('#btnAddRuta').hide(); // Ocultar el botón para añadir ruta
-    $('#lecheriaModal').modal('show');
+    $('#btnAddPoblacion').hide();
+    $('#btnAddRuta').hide();
     
-    // Cargar las opciones de población y ruta
-    loadPoblaciones(data.poblacion); // Cargar opciones de población con la seleccionada
-    loadRutas(data.ruta); // Cargar opciones de ruta con la seleccionada
+    // Mostrar el modal antes de cargar las opciones para asegurar la visualización correcta
+    $('#lecheriaModal').modal('show');
+
+    // Cargar opciones de población y establecer la opción seleccionada
+    loadPoblaciones(data.poblacion_id); // Asume que `data.poblacion_id` contiene el ID correcto
+    loadRutas(data.ruta_id); // Asume que `data.ruta_id` contiene el ID correcto
 });
-// Guardar lechería (añadir o editar)
+
+
+// ==================== Guardar y Eliminar ====================
+
+// Guardar ruta (añadir o editar) con validación usando SweetAlert2
+$('#saveRuta').click(function() {
+    var nombre = $('#nombreRuta').val().trim();
+    var numero = $('#numeroRuta').val().trim();
+
+    if (!nombre || !numero) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Todos los campos son obligatorios',
+        });
+        return;
+    }
+
+    var rutaId = $('#rutaId').val();
+    var url = rutaId ? `/catalogos/rutas/update/${rutaId}/` : '/catalogos/rutas/create/';
+    var method = 'POST';
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: {
+            nombre: nombre,
+            numero: numero
+        },
+        success: function(response) {
+            $('#rutaModal').modal('hide');
+            table.ajax.reload();
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Ruta guardada con éxito',
+            });
+        },
+        error: function(xhr) {
+            var errorMessage = 'Error al guardar la ruta';
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            });
+        }
+    });
+});
+
+
+// Guardar población (añadir o editar) con validación usando SweetAlert2
+$("#savePoblacion").click(function () {
+    var nombre = $("#nombrePoblacion").val().trim();
+    var municipio = $("#municipioPoblacion").val().trim();
+    var estado = $("#estadoPoblacion").val().trim();
+
+    if (!nombre || !municipio || !estado) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Todos los campos son obligatorios",
+        });
+        return;
+    }
+
+    var poblacionId = $("#poblacionId").val();
+    var url = poblacionId ? `/catalogos/poblaciones/update/${poblacionId}/` : "/catalogos/poblaciones/create/";
+    var method = "POST";
+
+    $.ajax({
+        url: url,
+        method: method,
+        data: $("#poblacionForm").serialize(),
+        success: function (response) {
+            $("#poblacionModal").modal("hide");
+            table.ajax.reload();
+            Swal.fire({
+                icon: "success",
+                title: "Guardado",
+                text: "Población guardada con éxito",
+            });
+        },
+        error: function (xhr) {
+            var errorMessage = "Error al guardar la población";
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: errorMessage,
+            });
+        },
+    });
+});
+
+// Guardar lechería (añadir o editar) con validación usando SweetAlert2
 $('#saveLecheria').click(function() {
     var numero = $('#numero').val().trim();
     var nombre = $('#nombre').val().trim();
@@ -278,7 +320,6 @@ $('#saveLecheria').click(function() {
     var ruta = $('#ruta').val().trim();
     var poblacion = $('#poblacion').val().trim();
 
-    // Validar que los campos no estén vacíos
     if (!numero || !nombre || !responsable || !telefono || !direccion || !ruta || !poblacion) {
         Swal.fire({
             icon: 'error',
@@ -288,7 +329,6 @@ $('#saveLecheria').click(function() {
         return;
     }
 
-    // Validar que el número sea único y de 10 dígitos
     var numberPattern = /^\d{10}$/;
     if (!numberPattern.test(numero)) {
         Swal.fire({
@@ -301,7 +341,7 @@ $('#saveLecheria').click(function() {
 
     var lecheriaId = $('#lecheriaId').val();
     var url = lecheriaId ? `/catalogos/lecherias/update/${lecheriaId}/` : '/catalogos/lecherias/create/';
-    var method = lecheriaId ? 'POST' : 'POST';
+    var method = 'POST';
 
     $.ajax({
         url: url,
@@ -330,70 +370,80 @@ $('#saveLecheria').click(function() {
     });
 });
 
+// Mostrar el modal de confirmación y establecer el ID de la lechería
+$('#tabla_lecherias tbody').on('click', '.btn-delete', function () {
+    var data = table.row($(this).parents('tr')).data();
+    var lecheriaId = data ? data.id : null;
 
-// Confirmar eliminación usando SweetAlert2
-$("#tabla_lecherias tbody").on("click", ".btn-delete", function () {
-    var data = table.row($(this).parents("tr")).data();
-    
-    // Verificar que 'data' tenga un campo 'id'
-    if (!data || !data.id) {
+    if (!lecheriaId) {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'ID de lechería no encontrado.',
+            text: 'No se pudo obtener el ID de la lechería.',
+        });
+        return;
+    }
+
+    // Establecer el ID de la lechería en el campo oculto
+    $('#lecheriaId').val(lecheriaId);
+
+    // Mostrar el modal de confirmación
+    $('#modalEliminarLecheria').modal('show');
+});
+
+// Confirmar eliminación usando SweetAlert2 para lecherías
+$('#tabla_lecherias tbody').on('click', '.btn-delete', function () {
+    var data = table.row($(this).parents('tr')).data();
+    var lecheriaId = data ? data.id : null;
+
+    if (!lecheriaId) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener el ID de la lechería.',
         });
         return;
     }
 
     Swal.fire({
-        title: "¿Estás seguro?",
-        text: `¿Deseas eliminar la lechería número ${data.numero} con nombre ${data.nombre}?`,
-        icon: "warning",
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "red", // Color personalizado para el botón de confirmar (ej. rojo)
-        cancelButtonColor: "gray" // Color personalizado para el botón de cancelar (ej. gris)
+        confirmButtonColor: 'red',
+        cancelButtonColor: 'gray',
+        confirmButtonText: 'Sí, eliminarla!',
+        cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `/catalogos/lecherias/delete/${data.id}/`, // Utiliza 'data.id' como el pk
-                method: "DELETE",
+                url: `/catalogos/lecherias/delete/${lecheriaId}/`,
+                method: 'DELETE',
+                data: {
+                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val()
+                },
                 success: function (response) {
-                    table.ajax.reload(); // Recargar la tabla después de eliminar
+                    table.ajax.reload();
                     Swal.fire(
-                        "Eliminado",
-                        "Lechería eliminada exitosamente",
-                        "success"
+                        'Eliminada!',
+                        'La lechería ha sido eliminada.',
+                        'success'
                     );
                 },
                 error: function (xhr) {
-                    var errorMessage = "Hubo un problema al eliminar la lechería.";
-                    if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
+                    var errorMessage = "Error al eliminar la lechería.";
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
                     }
-                    Swal.fire(
-                        "Error",
-                        errorMessage,
-                        "error"
-                    );
-                },
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage,
+                    });
+                }
             });
         }
     });
-});
-
-
-
-
-// Cerrar modales cuando se presiona cancelar, cerrar, o guardar
-$('#cancelLecheriaModal, #cancelPoblacionModal, #saveLecheria, #savePoblacion').click(function() {
-    $(this).closest('.modal').modal('hide');
-});
-
-// Cerrar modales cuando se presiona el botón de cerrar del modal
-$('.modal').on('click', '[data-dismiss="modal"]', function() {
-    $(this).closest('.modal').modal('hide');
 });
 
 

@@ -8,7 +8,7 @@ urlpatterns = [
     path('lecherias/list/data/', views.LecheriaDataView.as_view(), name='lecherias_data'),
     path('lecherias/create/', views.LecheriaCreateView.as_view(), name='create_lecheria'),
     path('lecherias/update/<int:pk>/', views.LecheriaUpdateView.as_view(), name='update_lecheria'),
-    path('lecherias/delete/<int:pk>/', views.LecheriaDeleteView.as_view(), name='delete_lecheria'),
+    path('lecherias/delete/<int:id>/', views.LecheriaDeleteView.as_view(), name='eliminar_lecheria'),  
     #rutas a poblaciones
     path('poblaciones/list/', views.PoblacionListView.as_view(), name='poblaciones_list'),
     path('poblaciones/list/data/', views.DataPoblacionView.as_view(), name='poblaciones_data'),
