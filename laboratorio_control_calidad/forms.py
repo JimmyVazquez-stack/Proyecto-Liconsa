@@ -3,16 +3,16 @@ from .models import *
 from django.forms import inlineformset_factory
 
 
-class EncabTablaR49Form(forms.ModelForm):
-    class Meta:
-        model = EncabTablaR49
-        fields = '__all__'
+# class EncabTablaR49Form(forms.ModelForm):
+#     class Meta:
+#         model = EncabTablaR49
+#         fields = '__all__'
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
         
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({'class' : 'form-control'})
+#         for field in iter(self.fields):
+#             self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
 
 #Enabezado ara formularios simples(noformset)
@@ -32,7 +32,7 @@ class EncabR49V2Form(forms.ModelForm):
 class DensidadptForm(forms.ModelForm):
     class Meta:
         model = Densidadpt
-        fields = ['fechaHora','cabezal', 'planta', 'producto', 'silo', 'turno', 'linea', 'densidad','volumen']
+        fields = ['fechaHora','cabezal', 'planta', 'producto', 'silo', 'turno', 'linea', 'densidad','volumen','encabezado']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,7 +43,7 @@ class DensidadptForm(forms.ModelForm):
 class PesoenvvacioForm(forms.ModelForm):
     class Meta:
         model = Pesoenvvacio
-        fields = ['fechaHora','cabezal','maquina','planta','producto','proveedor','peso']
+        fields = ['fechaHora','cabezal','maquina','planta','producto','proveedor','peso','encabezado']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -54,7 +54,7 @@ class PesoenvvacioForm(forms.ModelForm):
 class PesobrutoForm(forms.ModelForm):
     class Meta:
         model = Pesobruto
-        fields = ['fechaHora', 'cabezal', 'maquina', 'planta', 'producto', 'valor', 'usuario']
+        fields = ['fechaHora', 'cabezal', 'maquina', 'planta', 'producto', 'valor', 'usuario','encabezado']
         
     def clean_valor(self):
         valor = self.cleaned_data.get('valor')
