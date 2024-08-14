@@ -48,25 +48,25 @@
                             <table id="tabla_lecherias" class="table table-bordered bg-light table-hover" style="width:100%;">
                                 <thead class="thead-light" style="font-size: 14px;">
                                     <tr>
-                                        <th>Número</th>
-                                        <th>Nombre</th>
+                                        <th>Número de lechería</th>
+                                        <th>Nombre de lecheriía</th>
                                         <th>Responsable</th>
                                         <th>Teléfono</th>
                                         <th>Dirección</th>
-                                        <th>Nombre de Ruta</th>
-                                        <th>Población</th>
+                                        <th>Número y nombre de ruta</th>
+                                        <th>Localidad</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
                                 <tfoot style="font-size: 14px;">
                                     <tr>
-                                        <th>Número</th>
-                                        <th>Nombre</th>
+                                        <th>Número de lechería</th>
+                                        <th>Nombre de lechería</th>
                                         <th>Responsable</th>
                                         <th>Teléfono</th>
                                         <th>Dirección</th>
-                                        <th>Nombre de Ruta</th>
-                                        <th>Población</th>
+                                        <th>Número y nombre de ruta</th>
+                                        <th>Localidad</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </tfoot>
@@ -80,7 +80,7 @@
     <div class="row"></div>
 </div>
 
-<!-- Modal para Añadir/Editar Lechería -->
+<!-- Modal para añadir/editar lechería -->
 <div class="modal fade" id="lecheriaModal" tabindex="-1" role="dialog" aria-labelledby="lecheriaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -92,12 +92,13 @@
             </div>
             <div class="modal-body">
                 <form id="lecheriaForm">
+                    <input type="hidden" id="lecheriaId" name="id">
                     <div class="form-group">
                         <label for="numero">Número</label>
-                        <input type="text" class="form-control" id="numero" name="numero" required>
+                        <input type="text" class="form-control" id="numero" name="numero" maxlength="10" required>
                     </div>
                     <div class="form-group">
-                        <label for="nombre">Nombre</label>
+                        <label for="nombre">Nombre de lechería</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
                     <div class="form-group">
@@ -113,17 +114,27 @@
                         <input type="text" class="form-control" id="direccion" name="direccion" required>
                     </div>
                     <div class="form-group">
-                        <label for="nombre_ruta">Nombre de Ruta</label>
-                        <input type="text" class="form-control" id="nombre_ruta" name="nombre_ruta" required>
+                        <label for="poblacion">Población</label>
+                        <div class="input-group">
+                            <select id="poblacion" name="poblacion" class="form-control" required>
+                                <!-- Opciones de población cargadas aquí -->
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" id="btnAddPoblacion">Añadir Población</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="poblacion">Población</label>
-                        <select class="form-control" id="poblacion" name="poblacion" required>
-                            <option value="">Seleccione una población</option>
-                            <!-- Opciones cargadas dinámicamente -->
-                        </select>
+                        <label for="ruta">Ruta</label>
+                        <div class="input-group">
+                            <select id="ruta" name="ruta" class="form-control" required>
+                                <!-- Opciones de ruta cargadas aquí -->
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary" id="btnAddRuta">Añadir Ruta</button>
+                            </div>
+                        </div>
                     </div>
-                    <input type="hidden" id="lecheriaId" name="lecheriaId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -133,6 +144,76 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal para Añadir/Editar Población -->
+<div class="modal fade" id="poblacionModal" tabindex="-1" role="dialog" aria-labelledby="poblacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="poblacionModalLabel">Añadir Población</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="poblacionForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre de Población</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="municipio">Municipio</label>
+                        <input type="text" class="form-control" id="municipio" name="municipio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <input type="text" class="form-control" id="estado" name="estado" required>
+                    </div>
+                    <input type="hidden" id="poblacionId" name="poblacionId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="savePoblacion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Añadir/Editar Ruta -->
+<div class="modal fade" id="rutaModal" tabindex="-1" role="dialog" aria-labelledby="rutaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rutaModalLabel">Añadir Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="rutaForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero">Número</label>
+                        <input type="number" class="form-control" id="numero" name="numero" required>
+                    </div>
+                    <input type="hidden" id="rutaId" name="rutaId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveRuta">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock %}
 {% endblock %}
 
