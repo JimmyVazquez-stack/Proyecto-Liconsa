@@ -135,15 +135,16 @@ class LecheriaUpdateView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-class LecheriaDeleteView(View):
-    def delete(self, request, pk, *args, **kwargs):
-        lecheria = get_object_or_404(Lecheria, pk=pk)
+class LecheriaDeleteView(LoginRequiredMixin, View):
+    def delete(self, request, id, *args, **kwargs):
         try:
+            lecheria = Lecheria.objects.get(pk=id)
             lecheria.delete()
-            return JsonResponse({'status': 'success', 'message': 'Lechería eliminada'})
+            return JsonResponse({'status': 'success'})
+        except Lecheria.DoesNotExist:
+            return JsonResponse({'error': 'Lechería no encontrada'}, status=404)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
+            return JsonResponse({'error': str(e)}, status=400)
 
 # Vistas de poblaciones
 
