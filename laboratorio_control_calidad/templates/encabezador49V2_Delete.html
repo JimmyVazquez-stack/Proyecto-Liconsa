@@ -29,12 +29,13 @@
         <div class="col-xl-12 mt-3 p-3">
           <div class="table-responsive">
              
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <h2>Seguro de eliminar el Registro con fecha: {{ EncabR49.id}}?</h2>
-                    <button type="submit" class="btn btn-danger">Si, eliminar</button>
-                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-success">No, Cancelar</a>
-                </form>
+              <form action="{% url 'laboratorio_control_calidad:encabezador49_delete' EncabR49.id %}" method="post">
+                {% csrf_token %}
+                <h2>Seguro de eliminar el Registro con fecha: {{ EncabR49.id}}?</h2>
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+                <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-success">No, Cancelar</a>
+            </form>
+            
                
             </div>
           </div>
