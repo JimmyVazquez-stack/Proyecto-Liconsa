@@ -4,3 +4,4 @@ django-widget-tweaks
 xhtml2pdf
 reportlab
 svglib
+djangorestframework

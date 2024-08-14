@@ -45,105 +45,105 @@ class LecheriaDataView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         lecherias = Lecheria.objects.annotate(
             nombre_ruta=F('ruta__nombre'),
+            numero_ruta=F('ruta__numero'),
             nombre_poblacion=F('poblacion__nombre'),
-        ).values()  # Elimina los argumentos aquí
+            ruta_info=Concat(F('ruta__numero'), Value(' - '), F('ruta__nombre'), output_field=CharField())
+        ).values(
+            'numero',
+            'nombre',
+            'responsable',
+            'telefono',
+            'direccion',
+            'ruta_info',  # Incluye el campo concatenado en el JSON
+            'nombre_poblacion'
+        )
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
 
-
-
-# Vista para crear una nueva lechería
-
-class LecheriaCreateView(LoginRequiredMixin, CreateView):
-    model = Lecheria
-    form_class = LecheriaForm
-    template_name = 'lecherias/lecheria_form.html'
-    success_url = reverse_lazy('lecherias:list')
-# Vista para crear una nueva lechería
-
-class LecheriaCreateView(LoginRequiredMixin, CreateView):
-    model = Lecheria
-    form_class = LecheriaForm
-    template_name = 'lecherias/lecheria_form.html'
-    success_url = reverse_lazy('lecherias:list')
+class LecheriaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'id': self.object.id, 'status': 'success'})
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        numero = data.get('numero')
+        nombre = data.get('nombre')
+        responsable = data.get('responsable')
+        telefono = data.get('telefono')
+        direccion = data.get('direccion')
+        ruta_id = data.get('ruta')
+        poblacion_id = data.get('poblacion')
 
-    def form_invalid(self, form):
-        return JsonResponse({'errors': form.errors, 'status': 'error'})
+        if not (numero and nombre and responsable and telefono and direccion and ruta_id and poblacion_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
-# Vista para actualizar una lechería existente
+        try:
+            ruta = get_object_or_404(Ruta, id=ruta_id)
+            poblacion = get_object_or_404(Poblacion, id=poblacion_id)
+            lecheria = Lecheria.objects.create(
+                numero=numero,
+                nombre=nombre,
+                responsable=responsable,
+                telefono=telefono,
+                direccion=direccion,
+                ruta=ruta,
+                poblacion=poblacion
+            )
+            return JsonResponse({
+                'id': lecheria.id,
+                'numero': lecheria.numero,
+                'nombre': lecheria.nombre,
+                'responsable': lecheria.responsable,
+                'telefono': lecheria.telefono,
+                'direccion': lecheria.direccion,
+                'ruta': lecheria.ruta.numero,  # Cambiar si es necesario
+                'poblacion': lecheria.poblacion.nombre  # Cambiar si es necesario
+            })
+        except IntegrityError:
+            return JsonResponse({'error': 'Error al crear la lechería.'}, status=400)
 
-
-class LecheriaUpdateView(LoginRequiredMixin, UpdateView):
-    model = Lecheria
-    form_class = LecheriaForm
-    template_name = 'lecherias/lecheria_form.html'
-    success_url = reverse_lazy('lecherias:list')
+class LecheriaUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'id': self.object.id, 'status': 'success'})
+    def post(self, request, pk, *args, **kwargs):
+        lecheria = get_object_or_404(Lecheria, pk=pk)
+        data = request.POST
 
-    def form_invalid(self, form):
-        return JsonResponse({'errors': form.errors, 'status': 'error'})
+        numero = data.get('numero')
+        nombre = data.get('nombre')
+        responsable = data.get('responsable')
+        telefono = data.get('telefono')
+        direccion = data.get('direccion')
+        ruta_id = data.get('ruta')
+        poblacion_id = data.get('poblacion')
 
-# Vista para eliminar una lechería
+        if not (numero and nombre and responsable and telefono and direccion and ruta_id and poblacion_id):
+            return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
-
-class LecheriaDeleteView(LoginRequiredMixin, DeleteView):
-    model = Lecheria
-    success_url = reverse_lazy('lecherias:list')
-    login_url = reverse_lazy('usuarios:login')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return JsonResponse({'status': 'success'})
-
-# Vistas de poblaciones
-
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'id': self.object.id, 'status': 'success'})
-
-    def form_invalid(self, form):
-        return JsonResponse({'errors': form.errors, 'status': 'error'})
-
-# Vista para actualizar una lechería existente
+        try:
+            ruta = get_object_or_404(Ruta, id=ruta_id)
+            poblacion = get_object_or_404(Poblacion, id=poblacion_id)
+            lecheria.numero = numero
+            lecheria.nombre = nombre
+            lecheria.responsable = responsable
+            lecheria.telefono = telefono
+            lecheria.direccion = direccion
+            lecheria.ruta = ruta
+            lecheria.poblacion = poblacion
+            lecheria.save()
+            return JsonResponse({'status': 'success', 'message': 'Lechería actualizada con éxito'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-class LecheriaUpdateView(LoginRequiredMixin, UpdateView):
-    model = Lecheria
-    form_class = LecheriaForm
-    template_name = 'lecherias/lecheria_form.html'
-    success_url = reverse_lazy('lecherias:list')
-    login_url = reverse_lazy('usuarios:login')
+class LecheriaDeleteView(View):
+    def delete(self, request, pk, *args, **kwargs):
+        lecheria = get_object_or_404(Lecheria, pk=pk)
+        try:
+            lecheria.delete()
+            return JsonResponse({'status': 'success', 'message': 'Lechería eliminada'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-    def form_valid(self, form):
-        self.object = form.save()
-        return JsonResponse({'id': self.object.id, 'status': 'success'})
-
-    def form_invalid(self, form):
-        return JsonResponse({'errors': form.errors, 'status': 'error'})
-
-# Vista para eliminar una lechería
-
-
-class LecheriaDeleteView(LoginRequiredMixin, DeleteView):
-    model = Lecheria
-    success_url = reverse_lazy('lecherias:list')
-    login_url = reverse_lazy('usuarios:login')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return JsonResponse({'status': 'success'})
 
 # Vistas de poblaciones
 

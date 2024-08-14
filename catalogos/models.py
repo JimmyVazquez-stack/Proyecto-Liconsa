@@ -10,7 +10,7 @@ class Ruta(models.Model):
     numero = models.IntegerField(unique=True)
         
     def __str__(self):
-        return self.nombre
+        return f"{self.numero} - {self.nombre}"
     
     class Meta:
         verbose_name_plural = "Rutas"
@@ -28,20 +28,24 @@ class Poblacion(models.Model):
         verbose_name_plural = "Poblaciones"
     
 class Lecheria(models.Model):
-    numero = models.IntegerField()
+    numero = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=50)
     responsable = models.CharField(max_length=50)
     telefono = models.CharField(max_length=50)
     direccion = models.CharField(max_length=50)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
     poblacion = models.ForeignKey(Poblacion, on_delete=models.CASCADE)
-    
+
     def __str__(self):
         return '%s - %s - %s - %s' % (self.numero, self.nombre, self.ruta, self.poblacion)
-    
+
+    def clean(self):
+        super().clean()
+        if len(self.numero) != 10:
+            raise ValidationError('El número debe tener exactamente 10 caracteres.')
+
     class Meta:
         verbose_name_plural = "Lecherias"
-
     
 class Rotos(models.Model):
     fecha_venta = models.DateField()
