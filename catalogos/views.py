@@ -39,6 +39,7 @@ class LecheriaListView(LoginRequiredMixin, TemplateView):
 
 
 
+
 class LecheriaDataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -49,17 +50,19 @@ class LecheriaDataView(LoginRequiredMixin, View):
             nombre_poblacion=F('poblacion__nombre'),
             ruta_info=Concat(F('ruta__numero'), Value(' - '), F('ruta__nombre'), output_field=CharField())
         ).values(
+            'id',  # Asegúrate de incluir el campo 'id' aquí
             'numero',
             'nombre',
             'responsable',
             'telefono',
             'direccion',
-            'ruta_info',  # Incluye el campo concatenado en el JSON
-            'nombre_poblacion'
+            'ruta_info',
+            'nombre_poblacion',
+            'poblacion_id',  # Incluir el ID de la población
+            'ruta_id'  # Incluir el ID de la ruta
         )
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
-
 
 class LecheriaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
@@ -144,10 +147,11 @@ class LecheriaUpdateView(LoginRequiredMixin, View):
             lecheria.poblacion = poblacion
             lecheria.save()
             return JsonResponse({'status': 'success', 'message': 'Lechería actualizada con éxito'})
+        except IntegrityError:
+            return JsonResponse({'error': 'El número de lechería ya existe. Por favor, elija uno diferente.'}, status=400)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
-
+        
 class LecheriaDeleteView(LoginRequiredMixin, View):
     def delete(self, request, id, *args, **kwargs):
         try:

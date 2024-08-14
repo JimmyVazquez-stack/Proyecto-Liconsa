@@ -99,6 +99,7 @@ function loadPoblaciones(selectedPoblacion) {
 }
 
 
+
 // Función para cargar opciones de rutas
 function loadRutas(selectedRuta) {
     $.ajax({
@@ -127,6 +128,7 @@ function loadRutas(selectedRuta) {
         }
     });
 }
+
 // ==================== Eventos de Modales ====================
 
 // Abrir modal para añadir ruta
@@ -190,21 +192,26 @@ $('.modal').on('click', '[data-dismiss="modal"]', function() {
 // Abrir modal para editar lechería
 $('#tabla_lecherias tbody').on('click', '.btn-edit', function() {
     var data = table.row($(this).parents('tr')).data();
+    
+    // Actualiza la interfaz del modal para edición
     $('#lecheriaModalLabel').text('Editar Lechería');
     $('#numero').val(data.numero);
     $('#nombre').val(data.nombre);
     $('#responsable').val(data.responsable);
     $('#telefono').val(data.telefono);
     $('#direccion').val(data.direccion);
-    $('#poblacion').val(data.poblacion);
-    $('#ruta').val(data.ruta);
     $('#lecheriaId').val(data.id);
     $('#btnAddPoblacion').hide();
     $('#btnAddRuta').hide();
+    
+    // Mostrar el modal antes de cargar las opciones para asegurar la visualización correcta
     $('#lecheriaModal').modal('show');
-    loadPoblaciones(data.poblacion); // Cargar opciones de población con la seleccionada
-    loadRutas(data.ruta); // Cargar opciones de ruta con la seleccionada
+
+    // Cargar opciones de población y establecer la opción seleccionada
+    loadPoblaciones(data.poblacion_id); // Asume que `data.poblacion_id` contiene el ID correcto
+    loadRutas(data.ruta_id); // Asume que `data.ruta_id` contiene el ID correcto
 });
+
 
 // ==================== Guardar y Eliminar ====================
 
@@ -384,47 +391,61 @@ $('#tabla_lecherias tbody').on('click', '.btn-delete', function () {
     $('#modalEliminarLecheria').modal('show');
 });
 
-// Confirmar eliminación
-$('#btnEliminarLecheria').on('click', function () {
-    var lecheriaId = $('#lecheriaId').val();
+// Confirmar eliminación usando SweetAlert2 para lecherías
+$('#tabla_lecherias tbody').on('click', '.btn-delete', function () {
+    var data = table.row($(this).parents('tr')).data();
+    var lecheriaId = data ? data.id : null;
 
     if (!lecheriaId) {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'ID de lechería no encontrado.',
+            text: 'No se pudo obtener el ID de la lechería.',
         });
         return;
     }
 
-    $.ajax({
-        url: `/catalogos/lecherias/delete/${lecheriaId}/`,
-        method: 'DELETE',
-        data: {
-            csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val()
-        },
-        success: function (response) {
-            table.ajax.reload();
-            $('#modalEliminarLecheria').modal('hide');
-            Swal.fire(
-                'Eliminado!',
-                'La lechería ha sido eliminada.',
-                'success'
-            );
-        },
-        error: function (xhr) {
-            var errorMessage = "Error al eliminar la lechería.";
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-            }
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: errorMessage,
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'red',
+        cancelButtonColor: 'gray',
+        confirmButtonText: 'Sí, eliminarla!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/catalogos/lecherias/delete/${lecheriaId}/`,
+                method: 'DELETE',
+                data: {
+                    csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val()
+                },
+                success: function (response) {
+                    table.ajax.reload();
+                    Swal.fire(
+                        'Eliminada!',
+                        'La lechería ha sido eliminada.',
+                        'success'
+                    );
+                },
+                error: function (xhr) {
+                    var errorMessage = "Error al eliminar la lechería.";
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage,
+                    });
+                }
             });
         }
     });
 });
+
 
 
 });
