@@ -229,7 +229,10 @@ $('#saveRuta').click(function() {
     $.ajax({
         url: url,
         method: method,
-        data: $('#rutaForm').serialize(),
+        data: {
+            nombre: nombre,
+            numero: numero
+        },
         success: function(response) {
             $('#rutaModal').modal('hide');
             table.ajax.reload();
@@ -253,11 +256,12 @@ $('#saveRuta').click(function() {
     });
 });
 
+
 // Guardar población (añadir o editar) con validación usando SweetAlert2
 $("#savePoblacion").click(function () {
     var nombre = $("#nombrePoblacion").val().trim();
-    var municipio = $("#municipio").val().trim();
-    var estado = $("#estado").val().trim();
+    var municipio = $("#municipioPoblacion").val().trim();
+    var estado = $("#estadoPoblacion").val().trim();
 
     if (!nombre || !municipio || !estado) {
         Swal.fire({

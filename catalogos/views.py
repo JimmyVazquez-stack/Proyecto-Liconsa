@@ -60,6 +60,7 @@ class LecheriaDataView(LoginRequiredMixin, View):
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
 
+
 class LecheriaCreateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
@@ -73,12 +74,15 @@ class LecheriaCreateView(LoginRequiredMixin, View):
         ruta_id = data.get('ruta')
         poblacion_id = data.get('poblacion')
 
-        if not (numero and nombre and responsable and telefono and direccion and ruta_id and poblacion_id):
+        # Verificar que todos los campos estén presentes
+        if not all([numero, nombre, responsable, telefono, direccion, ruta_id, poblacion_id]):
             return JsonResponse({'error': 'Todos los campos son obligatorios'}, status=400)
 
         try:
             ruta = get_object_or_404(Ruta, id=ruta_id)
             poblacion = get_object_or_404(Poblacion, id=poblacion_id)
+
+            # Crear la lechería
             lecheria = Lecheria.objects.create(
                 numero=numero,
                 nombre=nombre,
@@ -98,9 +102,18 @@ class LecheriaCreateView(LoginRequiredMixin, View):
                 'ruta': lecheria.ruta.numero,  # Cambiar si es necesario
                 'poblacion': lecheria.poblacion.nombre  # Cambiar si es necesario
             })
-        except IntegrityError:
-            return JsonResponse({'error': 'Error al crear la lechería.'}, status=400)
 
+        except IntegrityError as e:
+            if 'UNIQUE constraint failed' in str(e):
+                return JsonResponse({'error': 'Ya existe una lechería con este número.'}, status=400)
+            return JsonResponse({'error': 'Error de integridad al crear la lechería.'}, status=400)
+
+        except ValidationError as e:
+            return JsonResponse({'error': f'Error de validación: {e.messages}'}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Error desconocido: {str(e)}'}, status=500)
+        
 class LecheriaUpdateView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
 
