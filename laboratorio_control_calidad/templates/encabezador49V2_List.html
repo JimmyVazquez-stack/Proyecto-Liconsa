@@ -43,8 +43,9 @@
                     <div class="col-xl-12 mt-1 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <a href="{% url 'laboratorio_control_calidad:encabezador49_create' %}" class="btn btn-primary">Nuevo
-                                    Registro</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default">
+                                    Nuevo Registro
+                                </button>
 
                                     <!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
                                         Generar Reporte Diario/Semanal
@@ -91,6 +92,63 @@
     </div>
     <div class="row"></div>
 </div>
+
+
+<!-- /.modal encabezado -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agrega un Nuevo Folio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Mostrar errores del formulario -->
+                    {% if encab.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in encab %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in encab.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                                           
+                          
+                        
+                          
+                        
+                            <div class="form-group">
+                                {{ encab.fecha.label_tag }}
+                                {{ encab.fecha }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ encab.observaciones.label_tag }}
+                                {{ encab.observaciones }}
+                            </div>
+                        
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 <!-- /.modal -->
 <div class="modal fade" id="modal-default">
