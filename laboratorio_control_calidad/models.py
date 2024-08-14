@@ -32,7 +32,7 @@ class Densidadpt(models.Model):
     linea = models.CharField( max_length=4, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
     densidad = models.DecimalField(default=0, max_digits=5, decimal_places=4)
     volumen = models.IntegerField(default=0, verbose_name=" Volumen")
-    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE, null=True)
+    encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         # Concatenar los campos y asignar el resultado a 'linea'
@@ -51,7 +51,7 @@ class Pesoenvvacio(models.Model):
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     peso = models.DecimalField(default=0, max_digits=3, decimal_places=2)
-    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE, null=True)
+    encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         pass
@@ -64,7 +64,7 @@ class Pesobruto(models.Model):
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
     valor = models.IntegerField(default=0)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE) #relacion hacia modelo Usuario de app Usuarios
-    encabezado = models.ForeignKey(EncabTablaR49, on_delete=models.CASCADE, null=True)
+    encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         pass
