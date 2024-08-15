@@ -54,22 +54,22 @@ urlpatterns = [
     #Rutas para el CRUD de FormatoR49
     
     #complementarias Densidad
-    path('densidadr49_create/', densidadr49_create.as_view(), name='densidadr49_create'),
-    path('densidadr49_list/', densidadr49_list.as_view(), name='densidadr49_list'),
-    path('densidadr49_delete/<int:pk>', densidadr49_delete.as_view(), name='densidadr49_delete'),
-    path('densidadr49_update/<int:pk>', densidadr49_update.as_view(), name='densidadr49_update'),
+    # path('densidadr49_create/', densidadr49_create.as_view(), name='densidadr49_create'),
+    # path('densidadr49_list/', densidadr49_list.as_view(), name='densidadr49_list'),
+    # path('densidadr49_delete/<int:pk>', densidadr49_delete.as_view(), name='densidadr49_delete'),
+    # path('densidadr49_update/<int:pk>', densidadr49_update.as_view(), name='densidadr49_update'),
 
-    #complementarias Peso vacio
-    path('pesoenvvacior49_create/', pesoenvvacior49_create.as_view(), name='pesoenvvacior49_create'),
-    path('pesoenvvacior49_list/', pesoenvvacior49_list.as_view(), name='pesoenvvacior49_list'),
-    path('pesoenvvacior49_delete/<int:pk>', pesoenvvacior49_delete.as_view(), name='pesoenvvacior49_delete'),
-    path('pesoenvvacior49_update/<int:pk>', pesoenvvacior49_update.as_view(), name='pesoenvvacior49_update'),
+    # #complementarias Peso vacio
+    # path('pesoenvvacior49_create/', pesoenvvacior49_create.as_view(), name='pesoenvvacior49_create'),
+    # path('pesoenvvacior49_list/', pesoenvvacior49_list.as_view(), name='pesoenvvacior49_list'),
+    # path('pesoenvvacior49_delete/<int:pk>', pesoenvvacior49_delete.as_view(), name='pesoenvvacior49_delete'),
+    # path('pesoenvvacior49_update/<int:pk>', pesoenvvacior49_update.as_view(), name='pesoenvvacior49_update'),
 
-    #complementarias Peso bruto
-    path('pesobrutor49_create/', pesobrutor49_create.as_view(), name='pesobrutor49_create'),
-    path('pesobrutor49_list/', pesobrutor49_list.as_view(), name='pesobrutor49_list'),
-    path('pesobrutor49_delete/<int:pk>', pesobrutor49_delete.as_view(), name='pesobrutor49_delete'),
-    path('pesobrutor49_update/<int:pk>', pesobrutor49_update.as_view(), name='pesobrutor49_update'),
+    # #complementarias Peso bruto
+    # path('pesobrutor49_create/', pesobrutor49_create.as_view(), name='pesobrutor49_create'),
+    # path('pesobrutor49_list/', pesobrutor49_list.as_view(), name='pesobrutor49_list'),
+    # path('pesobrutor49_delete/<int:pk>', pesobrutor49_delete.as_view(), name='pesobrutor49_delete'),
+    # path('pesobrutor49_update/<int:pk>', pesobrutor49_update.as_view(), name='pesobrutor49_update'),
 
     # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilosEncab - [Start] - #
     path('Leche_Reconstituida_Por_Silos_Encab/list', LecheReconsSilosEncabView.as_view(), name='Leche_Recons_Silos_Encab_List'),
