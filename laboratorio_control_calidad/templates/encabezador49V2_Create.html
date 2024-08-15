@@ -37,7 +37,6 @@
                                     <form method="post" class="m-1">
                                         {% csrf_token %}
                                         {{ form.as_p }}
-
                                         <button type="submit-encab-form" class="btn btn-success">Guardar</button>
                                     </form>
                                 </div>
@@ -61,8 +60,7 @@
                         <!-- Contenido de las Pestañas -->
                         <div class="tab-content mt-3">
                             <!-- Contenido de la Pestaña Peso Bruto -->
-                            <div class="tab-pane fade show active" id="pesoBruto" role="tabpanel"
-                                aria-labelledby="pesoBruto-tab">
+                            <div class="tab-pane fade show active" id="pesoBruto" role="tabpanel" aria-labelledby="pesoBruto-tab">
                                 <!-- Botón para agregar un nuevo registro -->
                                 <div>
                                     <a href="?peso_bruto_id=" class="btn btn-info mr-2" data-toggle="modal"
@@ -108,10 +106,10 @@
                                             <td>{{ item.encabezado }}</td>
                                             <td>
                                                 <a class="btn btn-secondary"
-                                                    href="{% url 'laboratorio_control_calidad:pesobrutor49_update' item.id %}"><i
+                                                    href="{% url 'laboratorio_control_calidad:pesoBrutor49_Update' item.id %}"><i
                                                         class="fas fa-edit"></i></a>
                                                 <a class="btn btn-danger"
-                                                    href="{% url 'laboratorio_control_calidad:pesobrutor49_delete' item.id %}">
+                                                    href="{% url 'laboratorio_control_calidad:pesoBrutor49_Delete' item.id %}">
                                                     <i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -119,7 +117,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
 
                             <div class="tab-pane fade" id="densidad" role="tabpanel" aria-labelledby="densidad-tab">
                                 <!-- Botón para agregar un nuevo registro -->
@@ -157,10 +154,10 @@
                                             <td>{{ item.volumen }}</td>
                                             <td>
                                                 <a class="btn btn-secondary"
-                                                    href="{% url 'laboratorio_control_calidad:densidadr49_update' item.id %}"><i
+                                                    href="{% url 'laboratorio_control_calidad:densidadr49_Update' item.id %}"><i
                                                         class="fas fa-edit"></i></a>
                                                 <a class="btn btn-danger"
-                                                    href="{% url 'laboratorio_control_calidad:densidadr49_delete' item.id %}">
+                                                    href="{% url 'laboratorio_control_calidad:densidadr49_Delete' item.id %}">
                                                     <i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -202,10 +199,10 @@
                                             <td>{{ item.peso }}</td>
                                             <td>
                                                 <a class="btn btn-secondary"
-                                                    href="{% url 'laboratorio_control_calidad:pesoenvvacior49_update' item.id %}"><i
+                                                    href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Update' item.id %}"><i
                                                         class="fas fa-edit"></i></a>
                                                 <a class="btn btn-danger"
-                                                    href="{% url 'laboratorio_control_calidad:pesoenvvacior49_delete' item.id %}"><i
+                                                    href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Delete' item.id %}"><i
                                                         class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -214,7 +211,6 @@
                                 </table>
 
                             </div>
-
                         </div>
 
                     </div>
@@ -508,11 +504,8 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
-
-
-
-
 
 
 {% block javascript %}
