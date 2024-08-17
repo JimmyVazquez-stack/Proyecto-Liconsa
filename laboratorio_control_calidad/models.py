@@ -29,7 +29,7 @@ class Densidadpt(models.Model):
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
     silo = models.ForeignKey(Silo, on_delete=models.CASCADE)
     turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
-    linea = models.CharField( max_length=4, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
+    linea = models.CharField( max_length=40, blank=True) #concatenacion string de los campos planta, turno,silo y cabezal
     densidad = models.DecimalField(default=0, max_digits=5, decimal_places=4)
     volumen = models.IntegerField(default=0, verbose_name=" Volumen")
     encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
