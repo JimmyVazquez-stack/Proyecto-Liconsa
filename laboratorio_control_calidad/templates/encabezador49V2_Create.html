@@ -3,7 +3,6 @@
 
 {% block title %} Registros FormatoR49{% endblock %}
 
-
 {% block principal %}
 <section class="content">
     <div class="container-fluid">
@@ -23,11 +22,11 @@
             </div>
             <div class="card-body">
                 {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                         {% endfor %}
-                </ul>
+                    </ul>
                 {% endif %}
                 <div class="col-xl-12 mt-3 p-3">
                     <div class="table-responsive">
@@ -37,38 +36,35 @@
                                     <form method="post" class="m-1">
                                         {% csrf_token %}
                                         {{ form.as_p }}
-                                        <button type="submit-encab-form" class="btn btn-success">Guardar</button>
+                                        <button type="submit" class="btn btn-success mr-2" name="submit-encab-form">Guardar</button>
+                                        
                                     </form>
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Nav Tabs -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="pesoBruto-tab" data-toggle="tab" href="#pesoBruto"
-                                    role="tab" aria-controls="pesoBruto" aria-selected="true">Peso Bruto</a>
+                                <a class="nav-link active" id="pesoBruto-tab" data-toggle="tab" href="#pesoBruto" role="tab" aria-controls="pesoBruto" aria-selected="true">Peso Bruto</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="densidad-tab" data-toggle="tab" href="#densidad" role="tab"
-                                    aria-controls="densidad" aria-selected="false">Densidad</a>
+                                <a class="nav-link" id="densidad-tab" data-toggle="tab" href="#densidad" role="tab" aria-controls="densidad" aria-selected="false">Densidad</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pesoEnvVacio-tab" data-toggle="tab" href="#pesoEnvVacio"
-                                    role="tab" aria-controls="pesoEnvVacio" aria-selected="false">Peso Env. Vacio</a>
+                                <a class="nav-link" id="pesoEnvVacio-tab" data-toggle="tab" href="#pesoEnvVacio" role="tab" aria-controls="pesoEnvVacio" aria-selected="false">Peso Env. Vacio</a>
                             </li>
                         </ul>
 
-                        <!-- Contenido de las Pestañas -->
+                        <!-- Tab Content -->
                         <div class="tab-content mt-3">
-                            <!-- Contenido de la Pestaña Peso Bruto -->
+                            <!-- Peso Bruto Tab -->
                             <div class="tab-pane fade show active" id="pesoBruto" role="tabpanel" aria-labelledby="pesoBruto-tab">
-                                <!-- Botón para agregar un nuevo registro -->
                                 <div>
-                                    <a href="?peso_bruto_id=" class="btn btn-info mr-2" data-toggle="modal"
-                                        data-target="#modal-pesoBruto">Agregar Registro</a>
+                                    <a href="?peso_bruto_id=" class="btn btn-info mr-2" data-toggle="modal" data-target="#modal-pesoBruto">Agregar Registro</a>
                                 </div>
                                 <hr>
-                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed"
-                                    id="tablaPesoBruto" aria-describedby="tablaPesoBruto_info">
+                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="tablaPesoBruto" aria-describedby="tablaPesoBruto_info">
                                     <thead class="thead-light" style="font-size: 14px">
                                         <tr>
                                             <th>Fecha y Hora</th>
@@ -113,20 +109,19 @@
                                                     href="{% url 'laboratorio_control_calidad:pesoBrutor49_Delete' item.id %}">
                                                     <i class="fas fa-trash"></i></a>
                                             </td>
-                                        </tr>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
 
+                            <!-- Densidad Tab -->
                             <div class="tab-pane fade" id="densidad" role="tabpanel" aria-labelledby="densidad-tab">
-                                <!-- Botón para agregar un nuevo registro -->
                                 <div>
-                                    <a href="?densidad_id=" class="btn btn-info mr-2" data-toggle="modal"
-                                        data-target="#modal-densidad">Agregar Registro</a>
+                                    <a href="?densidad_id=" class="btn btn-info mr-2" data-toggle="modal" data-target="#modal-densidad">Agregar Registro</a>
                                 </div>
-                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed"
-                                    id="tablaDensidad" aria-describedby="tablaDensidad_info">
+                                <hr>
+                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="tablaDensidad" aria-describedby="tablaDensidad_info">
                                     <thead class="thead-light" style="font-size: 14px">
                                         <tr>
                                             <th>Fecha y Hora</th>
@@ -143,39 +138,33 @@
                                     </thead>
                                     <tbody>
                                         {% for item in datosDensidad %}
-                                        <tr>
-                                            <td>{{ item.fechaHora }}</td>
-                                            <td>{{ item.cabezal }}</td>
-                                            <td>{{ item.planta }}</td>
-                                            <td>{{ item.producto }}</td>
-                                            <td>{{ item.silo }}</td>
-                                            <td>{{ item.turno }}</td>
-                                            <td>{{ item.linea }}</td>
-                                            <td>{{ item.densidad }}</td>
-                                            <td>{{ item.volumen }}</td>
-                                            <td>
-                                                <a class="btn btn-secondary"
-                                                    href="{% url 'laboratorio_control_calidad:densidadr49_Update' item.id %}"><i
-                                                        class="fas fa-edit"></i></a>
-                                                <a class="btn btn-danger"
-                                                    href="{% url 'laboratorio_control_calidad:densidadr49_Delete' item.id %}">
-                                                    <i class="fas fa-trash"></i></a>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>{{ item.fechaHora }}</td>
+                                                <td>{{ item.cabezal }}</td>
+                                                <td>{{ item.planta }}</td>
+                                                <td>{{ item.producto }}</td>
+                                                <td>{{ item.silo }}</td>
+                                                <td>{{ item.turno }}</td>
+                                                <td>{{ item.linea }}</td>
+                                                <td>{{ item.densidad }}</td>
+                                                <td>{{ item.volumen }}</td>
+                                                <td>
+                                                    <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_Update' item.id %}"><i class="fas fa-edit"></i></a>
+                                                    <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_Delete' item.id %}"><i class="fas fa-trash"></i></a>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
-
                             </div>
 
+                            <!-- Peso Env. Vacio Tab -->
                             <div class="tab-pane fade" id="pesoEnvVacio" role="tabpanel" aria-labelledby="pesoEnvVacio-tab">
-                                <!-- Botón para agregar un nuevo registro -->
                                 <div>
-                                    <a href="?pesoEnvVacio_id=" class="btn btn-info mr-2" data-toggle="modal"
-                                        data-target="#modal-pesoEnvVacio">Agregar Registro</a>
+                                    <a href="?pesoEnvVacio_id=" class="btn btn-info mr-2" data-toggle="modal" data-target="#modal-pesoEnvVacio">Agregar Registro</a>
                                 </div>
-                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed"
-                                    id="tablaPesoEnvVacio" aria-describedby="tablaPesoEnvVacio_info">
+                                <hr>
+                                <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="tablaPesoEnvVacio" aria-describedby="tablaPesoEnvVacio_info">
                                     <thead class="thead-light" style="font-size: 14px">
                                         <tr>
                                             <th>Fecha y Hora</th>
@@ -190,27 +179,22 @@
                                     </thead>
                                     <tbody>
                                         {% for item in datosPesoEnvVacio %}
-                                        <tr>
-                                            <td>{{ item.fechaHora }}</td>
-                                            <td>{{ item.cabezal }}</td>
-                                            <td>{{ item.maquina }}</td>
-                                            <td>{{ item.planta }}</td>
-                                            <td>{{ item.producto }}</td>
-                                            <td>{{ item.proveedor }}</td>
-                                            <td>{{ item.peso }}</td>
-                                            <td>
-                                                <a class="btn btn-secondary"
-                                                    href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Update' item.id %}"><i
-                                                        class="fas fa-edit"></i></a>
-                                                <a class="btn btn-danger"
-                                                    href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Delete' item.id %}"><i
-                                                        class="fas fa-trash"></i></a>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>{{ item.fechaHora }}</td>
+                                                <td>{{ item.cabezal }}</td>
+                                                <td>{{ item.maquina }}</td>
+                                                <td>{{ item.planta }}</td>
+                                                <td>{{ item.producto }}</td>
+                                                <td>{{ item.proveedor }}</td>
+                                                <td>{{ item.peso }}</td>
+                                                <td>
+                                                    <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Update' item.id %}"><i class="fas fa-edit"></i></a>
+                                                    <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Delete' item.id %}"><i class="fas fa-trash"></i></a>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
 
@@ -220,11 +204,10 @@
         </div>
     </div>
     <br>
-    </div>
-    </div>
 </section>
 
-<!-- Modal para agregar/editar registro  peso bruto-->
+
+<!-- Modal para agregar/editar registro peso bruto -->
 <div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-pesoBruto">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -314,7 +297,7 @@
     </div>
 </div>
 
-<!-- Modal para agregar/editar registro  peso densidad-->
+<!-- Modal para agregar/editar registro peso densidad -->
 <div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-densidad">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -398,25 +381,25 @@
                                 {{ form_densidad.volumen.label_tag }}
                                 {{ form_densidad.volumen }}
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{ form_densidad.encabezado.label_tag }}
-                                    {{ form_densidad.encabezado }}
-                                </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                {{ form_densidad.encabezado.label_tag }}
+                                {{ form_densidad.encabezado }}
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="submit" class="btn btn-primary" name="submit-densidad-form">Guardar</button>
-                        <a href="{{ request.path }}" class="btn btn-default" data-dismiss="modal">Cerrar</a>
-                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-primary" name="submit-densidad-form">Guardar</button>
+                    <a href="{{ request.path }}" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal para agregar/editar registro  peso peso env vacio-->
+<!-- Modal para agregar/editar registro peso env vacío -->
 <div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-pesoEnvVacio">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -432,7 +415,7 @@
                 <input type="hidden" name="pesoEnvVacio_id" value="{{ form_pesoEnvVacio.instance.id }}">
                 {% endif %}
                 <div class="modal-body">
-                    {% if form_pesoEnvVacio.errors %}
+                    {% if form_peso_env_vacio.errors %}
                     <div class="alert alert-danger">
                         <ul>
                             {% for field in form_pesoEnvVacio %}
@@ -491,6 +474,12 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
+                                {{ form_pesoEnvVacio.usuario.label_tag }}
+                                {{ form_pesoEnvVacio.usuario }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
                                 {{ form_pesoEnvVacio.encabezado.label_tag }}
                                 {{ form_pesoEnvVacio.encabezado }}
                             </div>
@@ -508,12 +497,11 @@
 
 {% endblock %}
 
-
 {% block javascript %}
 {{ block.super }}
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 <!--datatables-->
 <script src="{% static 'js/datatables/external-libraries.js' %}"></script>
