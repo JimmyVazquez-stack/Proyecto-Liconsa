@@ -65,5 +65,19 @@ urlpatterns = [
     path('pt_Update/<int:pk>', TerminadoUpdate.as_view(), name='pt_Update'),
     path('pt_Delete/<int:pk>', PTerminadoDelete.as_view(), name='pt_Delete'),
 
+    #Calidad microbiologica
+    path('api/planta/', planta_list, name='planta_list'),
+    path('api/producto/', producto_list, name='producto_list'),
+    path('api/encabezados/', encabezados_list, name='encabezados_list_api'),      
+    path('api/calidad-microbiologica/add/<int:encabezado_id>/', add_calidad_microbiologica, name='calidad_microbiologica_add'),
+    path('api/calidad-microbiologica/', calidad_microbiologica_list, name='calidad_microbiologica_list'),
+    path('api/calidad-microbiologica/edit/<int:pk>/', calidad_microbiologica_edit, name='calidad_microbiologica_edit'),
+    path('api/calidad-microbiologica/update/', calidad_microbiologica_update, name='calidad_microbiologica_update'),    
+    path('api/calidad-microbiologica/delete/<int:pk>/', calidad_microbiologica_delete, name='calidad_microbiologica_delete'),
+    path('calidad-microbiologica/', CalidadMicrobiologicaView.as_view(), name='calidad_microbiologica'),
+    path('calidad-microbiologica/update/<int:encabezado_id>/', CalidadMicrobiologicaView.as_view(), name='calidad_microbiologica_edit_encabezado'),
+    path('calidad-microbiologica/delete/<int:encabezado_id>/', CalidadMicrobiologicaDeleteEncabezadoView.as_view(), name='calidad_microbiologica_delete_encabezado'),
+    path('calidad-microbiologica/detalle/<int:encabezado_id>/', CalidadMicrobiologicaDetalleView.as_view(), name='calidad_microbiologica_detalle'),
+    path('calidad-microbiologica/editar-encabezado/<int:pk>/', CalidadMicrobiologicaEncabezadoUpdateView.as_view(), name='calidad_microbiologica_editar_encabezado'),
 ]
 

@@ -27,7 +27,17 @@ from django.contrib.auth.models import Permission #Importamos el modelo Permissi
 
 
 
-from django.views.generic import DetailView
+from django.views.generic import UpdateView
+from rest_framework.decorators import api_view
+from .serializers import *
+from rest_framework.response import Response
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework import status
+import json
+
+
 
 
 # Create your views here.
@@ -678,3 +688,169 @@ class PTerminadoDelete(generic.DeleteView):
    
 
     
+
+
+@api_view(['GET'])
+def encabezados_list(request):
+    encabezados = CalidadMicrobiologicaEncabezado.objects.all()
+    serializer = CalidadMicrobiologicaEncabezadoSerializer(encabezados, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def planta_list(request):
+    plantas = Planta.objects.all()
+    serializer = PlantaSerializer(plantas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def producto_list(request):
+    productos = Producto.objects.all()
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
+
+class CalidadMicrobiologicaView(LoginRequiredMixin, TemplateView):
+    template_name = 'CalidadMicrobiologica/calidad_microbiologica.html'
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        # Manejar la creación de un nuevo encabezado
+        if 'crear_encabezado' in request.POST:
+            folio = request.POST.get('folio')
+            if folio:  # Verifica que folio no esté vacío
+                CalidadMicrobiologicaEncabezado.objects.create(
+                    folio=folio
+                )
+            return redirect('laboratorio_control_calidad:calidad_microbiologica')
+
+        # Manejar la eliminación de un encabezado
+        elif 'delete_encabezado' in request.POST:
+            encabezado_id = request.POST.get('encabezado_id')
+            encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+            encabezado.delete()
+            return redirect('laboratorio_control_calidad:calidad_microbiologica')
+
+        return self.get(request, *args, **kwargs)
+    
+
+class CalidadMicrobiologicaEncabezadoUpdateView(UpdateView):
+    model = CalidadMicrobiologicaEncabezado
+    fields = ['folio', 'observaciones']
+    template_name = 'calidad_microbiologica_encabezado_form.html'
+    success_url = reverse_lazy('laboratorio_control_calidad:calidad_microbiologica')  # Redirige a la vista de calidad microbiológica
+
+    def form_valid(self, form):
+        # Puedes agregar lógica adicional aquí si es necesario
+        return super().form_valid(form)
+
+    
+class CalidadMicrobiologicaDeleteEncabezadoView(View):
+    def delete(self, request, *args, **kwargs):
+        encabezado_id = kwargs.get('encabezado_id')
+        encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+        encabezado.delete()
+        return JsonResponse({'status': 'success'})
+    
+class CalidadMicrobiologicaDetalleView(View):
+    def get(self, request, encabezado_id):
+        encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+        calidad_microbiologica = CalidadMicrobiologica.objects.filter(encabezado=encabezado)
+        context = {
+            'encabezado': encabezado,
+            'calidad_microbiologica': calidad_microbiologica
+        }
+        return render(request, 'CalidadMicrobiologica/calidad_microbiologica_detalles.html', context)
+    
+@csrf_exempt
+def add_calidad_microbiologica(request, encabezado_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            # Obtiene los datos del cuerpo de la solicitud
+            fechaHora = data.get('fechaHora')
+            planta = data.get('planta')
+            producto = data.get('producto')
+            organismos_coliformes = data.get('organismos_coliformes')
+            encabezado_id = data.get('encabezado_id')
+
+            # Verifica que todos los campos requeridos estén presentes
+            if not all([fechaHora, planta, producto, organismos_coliformes, encabezado_id]):
+                return JsonResponse({'success': False, 'error': 'Missing required fields'}, status=400)
+
+            # Procesa y guarda los datos en la base de datos
+            # Aquí debes agregar la lógica para guardar los datos en la base de datos
+            # Ejemplo:
+            from .models import CalidadMicrobiologica
+
+            # Asumiendo que planta_id y producto_id son IDs que se deben convertir
+            try:
+                from .models import Planta, Producto
+                planta_instance = Planta.objects.get(id=planta)
+                producto_instance = Producto.objects.get(id=producto)
+            except Planta.DoesNotExist or Producto.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Invalid planta or producto ID'}, status=400)
+
+            # Crea una nueva instancia del modelo
+            calidad = CalidadMicrobiologica(
+                fechaHora=fechaHora,
+                planta=planta_instance,
+                producto=producto_instance,
+                organismos_coliformes=organismos_coliformes,
+                encabezado_id=encabezado_id
+            )
+            calidad.save()
+
+            return JsonResponse({'success': True})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def calidad_microbiologica_list(request):
+    encabezado_id = request.query_params.get('encabezado_id', None)
+    if encabezado_id is not None:
+        try:
+            encabezado_id = int(encabezado_id)
+        except ValueError:
+            return Response({'error': 'Invalid encabezado_id'}, status=400)
+        queryset = CalidadMicrobiologica.objects.filter(encabezado_id=encabezado_id)
+    else:
+        queryset = CalidadMicrobiologica.objects.all()
+    serializer = CalidadMicrobiologicaSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def calidad_microbiologica_delete(request, pk):
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    registro.delete()
+    return Response({'success': True})
+
+@api_view(['GET'])
+def calidad_microbiologica_edit(request, pk):
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CalidadMicrobiologicaSerializer(registro)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def calidad_microbiologica_update(request):
+    pk = request.data.get('id')
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CalidadMicrobiologicaSerializer(registro, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success': True})
+    return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

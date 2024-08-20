@@ -121,8 +121,8 @@
       <!-- Brand Logo -->
       <a href="{% url 'laboratorio_control_calidad:index'%}" class="brand-link">
 
-        <img src="/static/vendor/adminlte/img/AdminLTELogo.png" alt="SAV-C Logo"
-          class="img-circle brand-image elevation-3" style="opacity: .8">
+        <img src="{% static 'img/Liconsa_icono.png' %}" alt="SAV-C Logo"
+          class="img brand-image elevation-3" style="opacity: .8">
 
         <span class="brand-text font-weight-light"> SAV-C</span>
 
@@ -500,6 +500,16 @@
                   </a>
                 </li>
  
+              </ul>
+
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:calidad_microbiologica' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Calidad Microbiólogica</p>
+                  </a>
+                </li>
+
               </ul>
 
               <ul class="nav nav-treeview">

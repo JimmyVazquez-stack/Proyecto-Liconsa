@@ -150,3 +150,20 @@ class permisosForm(forms.ModelForm):
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False) 
 LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False)    
+
+
+
+
+
+
+
+#Formulario Calidad Microbiologica
+class CalidadMicrobiologicaEncabezadoForm(forms.ModelForm):
+    class Meta:
+        model = CalidadMicrobiologicaEncabezado
+        fields = ['folio']
+
+class CalidadMicrobiologicaForm(forms.ModelForm):
+    class Meta:
+        model = CalidadMicrobiologica
+        fields = ['fechaHora', 'planta', 'producto', 'organismos_coliformes', 'encabezado']

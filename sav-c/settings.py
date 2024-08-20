@@ -214,4 +214,5 @@ LOGIN_URL='usuarios:login'
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = False
 
-API_BASE_URL = 'http://localhost:8000/api/'
+API_BASE_URL = 'http://localhost:8001/api/'
+X_FRAME_OPTIONS = 'SAMEORIGIN'

@@ -23,21 +23,29 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from laboratorio_control_calidad.models import LecheReconsSilos, producto_terminado
-from .serializers import LecheReconsSilosSerializer
+from .serializers import *
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.db.models import Avg, Min, Max, Sum
 
 
+# Vista para el reporte mensual para el laboratorio de control de calidad
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.views.generic import TemplateView
+from django.conf import settings
+import requests
+
 #Vista para el reporte mensual para el laboratorio de control de calidad
 class ReporteMensualView(LoginRequiredMixin, TemplateView):
         def get(self, request, *args, **kwargs):
+            producto_id = request.GET.get('producto_id')
             fecha_inicio = request.GET.get('fecha_inicio')
             fecha_fin = request.GET.get('fecha_fin')
             datos = []
 
-            if fecha_inicio and fecha_fin:
-                api_url = f"{settings.API_BASE_URL}api/composicion_fisicoquimica/?fecha_inicio={fecha_inicio}&fecha_fin={fecha_fin}"
+            if fecha_inicio and fecha_fin and producto_id:
+                api_url = f"{settings.API_BASE_URL}api/composicion_fisicoquimica/?fecha_fin={fecha_fin}&fecha_inicio={fecha_inicio}&producto_id={producto_id}"
                 
                 try:
                     response = requests.get(api_url)
@@ -50,13 +58,16 @@ class ReporteMensualView(LoginRequiredMixin, TemplateView):
                 'datos': datos,
                 'fecha_inicio': fecha_inicio,
                 'fecha_fin': fecha_fin,
+                'producto_id': producto_id
             }
+            print(context)
+            return render(request, 'mensual_reporte.html', context)
 
-            return render(request, 'reporte_mensual.html', context)
 
 
 class ComposicionFisicoquimicaDataView(APIView):
     def get(self, request, *args, **kwargs):
+        tipo_producto = request.query_params.get('tipo_producto')
         fecha_inicio = request.query_params.get('fecha_inicio')
         fecha_fin = request.query_params.get('fecha_fin')
 
@@ -70,10 +81,26 @@ class ComposicionFisicoquimicaDataView(APIView):
             if fecha_inicio is None or fecha_fin is None:
                 raise ValidationError("Formato de fecha incorrecto. Use 'YYYY-MM-DD'.")
             
-            datos_leche_reconsilos = LecheReconsSilos.objects.filter(fecha_Hora__date__range=[fecha_inicio, fecha_fin]).select_related('encabezado')
+            # Filtrar por tipo_producto y rango de fechas
+            if tipo_producto:
+                datos_leche_reconsilos = LecheReconsSilos.objects.filter(
+                    producto__tipo_producto__nombre=tipo_producto,
+                    fecha_Hora__date__range=[fecha_inicio, fecha_fin]
+                ).select_related('encabezado')
 
-            datos_producto_terminado = producto_terminado.objects.filter(encabezado__fecha__range=[fecha_inicio, fecha_fin])
+                datos_producto_terminado = producto_terminado.objects.filter(
+                    producto__tipo_producto__nombre=tipo_producto,
+                    encabezado__fecha__range=[fecha_inicio, fecha_fin]
+                )
+            else:
+                datos_leche_reconsilos = LecheReconsSilos.objects.filter(
+                    fecha_Hora__date__range=[fecha_inicio, fecha_fin]
+                ).select_related('encabezado')
 
+                datos_producto_terminado = producto_terminado.objects.filter(
+                    encabezado__fecha__range=[fecha_inicio, fecha_fin]
+                )
+            
         except ValidationError:
             return Response({"error": "Formato de fecha incorrecto. Use 'YYYY-MM-DD'"}, status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
@@ -111,7 +138,6 @@ class ComposicionFisicoquimicaDataView(APIView):
             producto_id = F('producto_id'),
 
             numero_muestras=Count('id'),
-
 
             promedio_temperatura=Avg('temperatura'),
             minimo_temperatura=Min('temperatura'),
@@ -152,32 +178,54 @@ class ComposicionFisicoquimicaDataView(APIView):
             produccion_real=Sum('volumen'),
         ).order_by('producto_id')
         
-        observaciones_leche_recon_silos = datos_leche_reconsilos.values('encabezado__folio', 'encabezado__observaciones').order_by('producto_id') 
+        observaciones_leche_recon_silos = datos_leche_reconsilos.values(
+            'encabezado__folio',
+            'encabezado__observaciones',
+            'producto_id'
+        ).order_by('producto_id')
 
-        datos_serializados_leche_recon_silos = LecheReconsSilosSerializer( datos_leche_reconsilos, many=True)
-        datos_serializados_producto_terminado = LecheReconsSilosSerializer( datos_producto_terminado, many=True)
+        observaciones_unicas = []
+        observacion_anterior = None
+
+        for observacion in observaciones_leche_recon_silos:
+            if observacion['encabezado__observaciones'] != observacion_anterior:
+                observaciones_unicas.append(observacion)
+                observacion_anterior = observacion['encabezado__observaciones']
         
         response_data = {
-            'datos_serializados_leche_recon_silos': datos_serializados_leche_recon_silos.data,
-            'datos_serializados_producto_terminado': datos_serializados_producto_terminado.data,
             'estadisticas_leche_recon': estadisticas_leche_recon_silos, 
             'estadisticas_producto_terminado': estadisticas_producto_terminado,
             'estadisticas_ph_leche_recon_silos': estadisticas_ph_leche_recon_silos,
             'estadisticas_produccion_producto_terminado': estadisticas_produccion_producto_terminado,
             'estadisticas_produccion_leche_recon_silos': estadisticas_produccion_leche_recon_silos,
-            'observaciones_leche_recon_silos': observaciones_leche_recon_silos,
+            'observaciones_leche_recon_silos': observaciones_unicas,
         }
         
         return Response(response_data, status=status.HTTP_200_OK)
 
 
+class TipoPorductoDataView(APIView):
+    def get(self, request, *args, **kwargs):
+        tipos_productos = TipoProducto.objects.all()
+        serializer = TipoProductoSerializer(tipos_productos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
+class PDFGeneratorCalidadMicrobiologicaView(View):
+    pass
+
+class PDFGeneratorPesoEnvaseVacioView(View):
+    pass
+
+class PDFGeneratorPesoNetoView(View):
+    pass
 
 class PDFGeneratorView(View):
     def get(self, request, *args, **kwargs):
         # Obtener las fechas desde los parámetros de la solicitud
         fecha_inicio = request.GET.get('fecha_inicio')
         fecha_fin = request.GET.get('fecha_fin')
+        producto_id = request.GET.get('producto_id')
         
         # Imprimir para depuración
         print("Fecha Inicio:", fecha_inicio)
@@ -204,8 +252,8 @@ class PDFGeneratorView(View):
 
          # Consulta a la API para obtener los datos
         datos = {}
-        if fecha_inicio and fecha_fin:
-            api_url = f"{settings.API_BASE_URL}api/composicion_fisicoquimica/?fecha_inicio={fecha_inicio}&fecha_fin={fecha_fin}"
+        if fecha_inicio and fecha_fin and producto_id:
+            api_url = f"{settings.API_BASE_URL}api/composicion_fisicoquimica/?fecha_inicio={fecha_inicio}&fecha_fin={fecha_fin}&producto_id={producto_id}"
             
             try:
                 api_response = requests.get(api_url)
@@ -227,8 +275,8 @@ class PDFGeneratorView(View):
 
         #Tabla de encabezado - Inicio
         datos_encabezado_table1 = [
-            ['Planta Liconsa Tlaxcala', '', ''],
-            ['Periodo reportado:','HOY', 'HOY'],
+            ['LICONSA PLANTA TLAXCALA S.A DE C.V', '', ''],
+            ['PERIODO REPORTADO:','HOY', 'HOY'],
         ]
 
         #Datos de encabezado tabla 1
@@ -246,8 +294,8 @@ class PDFGeneratorView(View):
 
 
         datos_encabezado_table2 = [
-            ['Producto:', 'LPD'],
-            ['Fecha de emisión:', 'HOY'],
+            ['PRODUCTO:', 'LPD'],
+            ['FECHA DE EMISION:', 'HOY'],
         ]
 
         #Datos de encabezado tabla 2
@@ -801,4 +849,3 @@ class ReporteRX51(View):
             context['rango_folios'] = rango_folios
 
         return render(request, 'reporte_Rx51.html', context)
-

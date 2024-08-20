@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+<html lang="es">
+
+{% block title %}Calidad Microbiológica{% endblock %}
+
+{% block principal %}
+{% block informacion %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Captura de datos de la Calidad Microbiológica</h5>
+                        <p>En esta sección se recaba información para el reporte mensual o semanal</p>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+{% endblock %} <!-- block informacion -->
+
+{% block datatable %}
+<div class="container-fluid p-4">
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-gray-dark">
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="table-responsive">
+                            
+
+                       
+                            <form id="editEncabezadoForm" method="post" action="{% url 'laboratorio_control_calidad:calidad_microbiologica_editar_encabezado' encabezado.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="folio">Folio:</label>
+                                    <input type="text" id="folio" name="folio" class="form-control" value="{{ encabezado.folio }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="observaciones">Observaciones:</label>
+                                    <textarea id="observaciones" name="observaciones" class="form-control" rows="3">{{ encabezado.observaciones }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios del Encabezado</button>
+                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addDataModal">Agregar Registro</button>
+                            </form>
+                            <!-- DataTable para mostrar los datos existentes de calidad microbiológica -->
+                            <hr>
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <table id="calidadMicrobiologicaTable" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha y Hora</th>
+                                        <th>Planta</th>
+                                        <th>Producto</th>
+                                        <th>Organismos Coliformes</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos serán poblados por DataTables -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal para Agregar Datos -->
+<div class="modal fade" id="addDataModal" tabindex="-1" role="dialog" aria-labelledby="addDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addDataModalLabel">Agregar Registro de Calidad Microbiológica</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addDataForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="modalEncabezadoId" name="encabezado_id" value="">
+                    <div class="form-group">
+                        <label for="fechaHora">Fecha y Hora:</label>
+                        <input type="datetime-local" id="modalFechaHora" name="fechaHora" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="planta">Planta:</label>
+                        <select id="modalPlanta" name="planta" class="form-control" required>
+                            <!-- Opciones se llenarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="producto">Producto:</label>
+                        <select id="modalProducto" name="producto" class="form-control" required>
+                            <!-- Opciones se llenarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="organismos_coliformes">Organismos Coliformes:</label>
+                        <input type="number" step="0.01" id="modalOrganismosColiformes" name="organismos_coliformes" class="form-control" required>
+                    </div>
+                    <input type="hidden" id="encabezadoId" value="{{ encabezado_id }}" />
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+   <!-- Modal para Editar Datos -->
+<div class="modal fade" id="editDataModal" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDataModalLabel">Editar Registro de Calidad Microbiológica</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editDataForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="editRecordId" name="id">
+                    <div class="form-group">
+                        <label for="editFechaHora">Fecha y Hora:</label>
+                        <input type="datetime-local" id="editFechaHora" name="fechaHora" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPlanta">Planta:</label>
+                        <select id="editPlanta" name="planta" class="form-control" required>
+                            <!-- Opciones se llenarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProducto">Producto:</label>
+                        <select id="editProducto" name="producto" class="form-control" required>
+                            <!-- Opciones se llenarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editOrganismosColiformes">Organismos Coliformes:</label>
+                        <input type="number" step="0.01" id="editOrganismosColiformes" name="organismos_coliformes" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} <!-- block datatable -->
+{% endblock %} <!-- block principal -->
+
+{% block javascript %}
+{{ block.super }}
+<!-- Incluye JS de jQuery, Bootstrap y DataTables -->
+
+<!-- Script para inicializar DataTables -->
+<script src="{% static 'js/calidad_microbiologica_detalles.js' %}"></script>
+
+{% endblock %}
+
+</html>

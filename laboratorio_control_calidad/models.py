@@ -125,14 +125,6 @@ class LecheReconsSilos(models.Model):
 
 
 
-
-class terminadoEncab(models.Model): 
-    folio = models.IntegerField()
-    fecha = models.DateField(default=timezone.now)
-    estatus = models.BooleanField(default = True)
-
-    def __str__(self):
-       return f" Folio: {self.folio}"
     
 class producto_terminado(models.Model):
     lotCad = models.CharField(max_length=10, verbose_name="Fecha de caducidad")
@@ -160,3 +152,26 @@ class producto_terminado(models.Model):
         return f"Encabezado_Id: {self.encabezado}, Hora: {self.hora}, Producto: {self.producto}, Volumen: {self.volumen}"
 
  
+
+
+class CalidadMicrobiologicaEncabezado(models.Model):
+    folio = models.IntegerField()
+    fecha_creacion = models.DateTimeField(verbose_name="Fecha de Creación", auto_now_add=True)
+    observaciones = models.CharField(verbose_name="Observaciones",max_length=512, blank=True) 
+
+    def __str__(self):
+       return f"Folio: {self.folio}"
+    class Meta:
+        verbose_name_plural = "Encabezado de Calidad Microbiológica"
+
+class CalidadMicrobiologica(models.Model):
+    fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE, max_length=4)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True) 
+    organismos_coliformes = models.FloatField(default=0, max_length=30)
+    encabezado = models.ForeignKey(CalidadMicrobiologicaEncabezado, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Fecha: {self.fechaHora} - {self.planta} - {self.producto}"
+    class Meta:
+        verbose_name_plural = "Calidad Microbiológica"
