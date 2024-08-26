@@ -55,7 +55,7 @@
             dataType: 'json',
             success: function(data) {
                 var tableData = data.resultadosPesoNeto.map(function(item) {
-                    return [item.id, item.cabezal, item.valor, item.resultado];
+                    return [item.id, item.cabezal, item.valorPesoBruto, item.resultado];
                 });
                 
                 $('#reportTable').DataTable({
