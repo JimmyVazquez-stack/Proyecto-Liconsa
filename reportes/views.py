@@ -1,18 +1,20 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
 import os
-from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, Avg
+from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, Avg, StdDev
 from django.shortcuts import render
 from django.views import View
 from laboratorio_control_calidad.models import *
 from catalogos.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
-from laboratorio_control_calidad.models import LecheReconsSilos
+from laboratorio_control_calidad.models import LecheReconsSilos, Pesoenvvacio,Densidadpt, Pesobruto
 from django.conf import settings
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls  import reverse_lazy
+import statistics
+from django.utils.dateparse import parse_date
 
 #Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4
@@ -29,7 +31,8 @@ from rest_framework import status
 from laboratorio_control_calidad.models import LecheReconsSilos
 from .serializers import LecheReconsSilosSerializer
 from django.core.exceptions import ValidationError
-from django.utils.dateparse import parse_date
+
+
 
 
 #Vista para el reporte mensual para el laboratorio de control de calidad
@@ -82,7 +85,6 @@ class ComposicionFisicoquimicaDataView(APIView):
         
         serializer = LecheReconsSilosSerializer(datos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 
@@ -530,7 +532,7 @@ class VolumenNetoView(View):
 
 
 
-# START PRUEBAS USANDO JSON RESPONSE EN CALCULOS DENSIDAD------------------------------------------|
+#----START PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-------------------------------------------------|
 class CalculosR49DataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
 
@@ -540,6 +542,7 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
             pesoPromedio=Avg('peso'),
         )
+        
 
         # Filtrar los datos para densidad ponderada
         datosDensidad = Densidadpt.objects.all()
@@ -560,11 +563,12 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         # Obtener los datos de Pesobruto
         datosPesoBruto = Pesobruto.objects.all()
 
-        #Realizar el cálculo de peso neto
+        #Realizar el cálculo de peso neto y agregar datos importantes: cabezal, id, valor peso bruto para renderizar al temmplate
         resultadosPesoNeto = [
-            {
-                
-                'valor': dato.valor,
+            { 
+                'id': dato.id,
+                'cabezal':dato.cabezal.nombre,
+                'valorPesoBruto': dato.valor,
                 'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
             }
             for dato in datosPesoBruto
@@ -582,6 +586,121 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         # Retornar la respuesta en formato JSON
         return JsonResponse(resultados)
     
-
-# END PRUEBAS USANDO JSON RESPONSE EN CALCULOS DENSIDAD------------------------------------------|
+#----END PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-----------------------------------------------|
         
+
+#[--------------------------[START VISTA CALCULOS-R49-RANGOS DE FECHAS]--------------------------------]
+
+class ReporteR49RangoFechaView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Método GET no permitido en esta vista. Por favor, utiliza POST.", status=405)
+    
+    def post(self, request, *args, **kwargs):
+        fecha_inicial = request.POST.get('fecha-inicial')
+        fecha_final = request.POST.get('fecha-final')
+
+        # Validar y parsear las fechas
+        try:
+            fecha_inicial = parse_date(fecha_inicial)
+            fecha_final = parse_date(fecha_final)
+        except ValueError:
+            return JsonResponse({'error': 'Fechas inválidas'}, status=400)
+
+        # Filtrar los datos por el rango de fechas
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosDensidad = Densidadpt.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosPesoBruto = Pesobruto.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+
+        # Calcular el peso promedio y densidad ponderada
+        calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
+            pesoPromedio=Avg('peso'),
+        )
+        
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+        
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+        )
+        
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+
+        # Calcular los resultados de peso neto en lugar de peso bruto
+        resultadosPesoNeto = [
+            {
+                'valor': dato.valor,
+                'id': dato.id,
+                'cabezal': dato.cabezal.nombre,
+                'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
+            }
+            for dato in datosPesoBruto
+        ]
+
+        # Cálculos para cada combinación de máquina y cabezal
+        combinaciones = [
+            ('1', 'A'),
+            ('1', 'B'),
+            ('2', 'C'),
+            ('2', 'D'),
+            ('3', 'E'),
+            ('3', 'F')
+        ]
+
+        calculos_diarios = {}
+        for maquina, cabezal in combinaciones:
+            datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['cabezal'] == cabezal]
+
+            if datos_maquina_cabezal:
+                valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': len(valores),
+                    'promedio': sum(valores) / len(valores) if valores else None,
+                    'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
+                    'maximo': max(valores) if valores else None,
+                    'minimo': min(valores) if valores else None,
+                }
+            else:
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': 0,
+                    'desviacion_Estandar': None,
+                    'maximo': None,
+                    'minimo': None,
+                }
+
+        # Cálculos semanales
+        total_datos_semanales = len(resultadosPesoNeto)
+        valores_ponderados = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
+
+        promedio_total_ponderado = sum(valores_ponderados) / total_datos_semanales if total_datos_semanales else None
+        desviacion_total_ponderada = statistics.stdev(valores_ponderados) if len(valores_ponderados) > 1 else None
+        maximo_semanal = max(valores_ponderados) if valores_ponderados else None
+        minimo_semanal = min(valores_ponderados) if valores_ponderados else None
+
+        # Peso promedio
+        pesoPromedio = calculosPesoEnvVacio['pesoPromedio']
+
+        # Generar el JSON de resultados
+        resultadosporfecha = {
+            'diarios': calculos_diarios,
+            'semanales': {
+                'total_Datos': total_datos_semanales,
+                'promedio_Total_Ponderado': promedio_total_ponderado,
+                'desviacion_Total_Ponderada': desviacion_total_ponderada,
+                'maximo_Semanal': maximo_semanal,
+                'minimo_Semanal': minimo_semanal,
+                'densidadPonderada': densidadPonderada,
+                'pesoPromedio': pesoPromedio,
+            },
+        }
+
+        return JsonResponse(resultadosporfecha)
+
+    
+class MostrarDiarioSemanalView(LoginRequiredMixin, TemplateView):
+    # model = Pesobruto  #borrar locomentado si no hay errores
+    # queryset = Pesobruto.objects.all()
+    template_name = 'reporte_R49_DiarioSemanal.html'
+    login_url = reverse_lazy('usuarios:login')
