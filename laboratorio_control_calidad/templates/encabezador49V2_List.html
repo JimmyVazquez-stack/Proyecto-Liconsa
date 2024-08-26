@@ -10,11 +10,12 @@
                 <div class="card-header bg-gray-dark">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Información
+                        Información: En esta sección se presentan los registros de 
+                        peso bruto, densidad y peso envace vacio del formato R49
                     </h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
+                <!-- <div class="card-body">
                     <div class="callout callout-info">
                         <h5>Formatos R49 Encabezado</h5>
                         <p>
@@ -22,7 +23,7 @@
                             Peso bruto, densidad y peso envace vacio.
                         </p>
                     </div>
-                </div>
+                </div> -->
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -43,13 +44,13 @@
                     <div class="col-xl-12 mt-1 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-nuevoRegistro">
                                     Nuevo Registro
                                 </button>
 
-                                    <!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
-                                        Generar Reporte Diario/Semanal
-                                      </button> -->
+                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-reporteFechas">
+                                        Reporte Diario/Semanal
+                                      </button>
                                 
                                     
 
@@ -95,7 +96,7 @@
 
 
 <!-- /.modal encabezado -->
-<div class="modal fade" id="modal-default">
+<div class="modal fade" id="modal-nuevoRegistro">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -121,12 +122,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                    {% endif %}
-                                           
-                          
-                        
-                          
-                        
+                    {% endif %}                                       
                             <div class="form-group">
                                 {{ encab.fecha.label_tag }}
                                 {{ encab.fecha }}
@@ -151,7 +147,7 @@
 <!-- /.modal -->
 
 <!-- /.modal -->
-<div class="modal fade" id="modal-default">
+<div class="modal fade" id="modal-reporteFechas">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -160,7 +156,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="#">
+        <form method="post" action="{% url 'reportes:diario_Semanal_Data' %}" id="form-fechas">
         <div class="modal-body">
             {% csrf_token %}
             <div class="form-group">
@@ -194,26 +190,10 @@
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 
+<!--Solicitud AJAX al endpoint de la vista -->
+<script src="{% static 'js/reporte-fechas.js' %}"></script>
 
 <!-- Page specific script datatable -->  
-<script type="application/javascript">
-    $(function() {
-        $('.btnTest').on('click', function() {
-            $.ajax({
-                url: "{% url 'laboratorio_control_calidad:encabezador49V2_List'%}" , 
-                type: 'POST',
-                data: {
-                    id: 1
-                },
-                dataType: 'json'
-            }).done(function(data) {
-                console.log(data)
-            }).fail(function(data) {
-                alert("error");
-            }).always(function(data) {
+<script src="{% static 'js/scripts.js' %}"></script>
 
-            })
-        });
 
-    });
-</script> 
