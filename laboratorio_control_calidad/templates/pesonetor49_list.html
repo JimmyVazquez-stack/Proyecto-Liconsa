@@ -13,24 +13,28 @@
 </head>
 <body>
 
-    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; background-color: #585f58; padding: 10px; color: white;">
-    <table>
-        <tr>
-            <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
-        </tr>
-    </table>
-    <div class="right-image">
-        <img src="{% static 'img/liconsalogo.png' %}" alt="Logo" style="width: 40px; height: auto;">
+    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 10px; color: white;">
+        <table>
+            <tr>
+                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
+            </tr>
+        </table>
+        <div class="right-image">
+            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo" style="width: 30px; height: auto;">
+        </div>    
     </div>
-</div>
- 
-<h3>Listado de valores peso neto</h3>
-<div class="contenedor-tablas" >
+    <hr>
+
+<h4>Listado de valores peso neto</h4>
+
+<div class="contenedor-tablas" style="display: flex;" >
     <div class="table-responsive">
         <table id="reportTable" class="table table-bordered bg-light table-hover">
             <thead>
                 
                 <tr>
+                    <th>Id</th>
+                    <th>Cabezal</th>
                     <th>Valor Peso Bruto</th>
                     <th>Resultado Operación</th>
                 </tr>
@@ -51,12 +55,14 @@
             dataType: 'json',
             success: function(data) {
                 var tableData = data.resultadosPesoNeto.map(function(item) {
-                    return [item.valor, item.resultado];
+                    return [item.id, item.cabezal, item.valor, item.resultado];
                 });
                 
                 $('#reportTable').DataTable({
                     data: tableData,
                     columns: [
+                        { title: "Id" },
+                        { title: "Cabezal" },
                         { title: "Valor Peso Bruto" },
                         { title: "Resultado Operación" }
                     ]
