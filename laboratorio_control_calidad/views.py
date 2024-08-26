@@ -308,15 +308,13 @@ class TerminadoEncabCreate(View):
 # END--VISTA ENCABEZADO TRES FORMULARIOS  ---------------------------------------------------|
 
 # START--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|
-class Pesonetoview(LoginRequiredMixin, TemplateView):
-    template_name = 'pesoNetor49_list.html'
 
-
-class MostrarPesosView(generic.ListView):
-    model = Pesobruto
-    queryset = Pesobruto.objects.all()
+class MostrarPesosView(LoginRequiredMixin, TemplateView):
+    # model = Pesobruto  #borrar locomentado si no hay errores
+    # queryset = Pesobruto.objects.all()
     template_name = 'pesonetor49_list.html'
-    context_object_name = 'pesos'       
+    login_url = reverse_lazy('usuarios:login')
+    # context_object_name = 'pesos'       
 # END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
 
 # START--PRUEBAS VISTA PESO NETO  ---------------------------------------------------------|
@@ -326,7 +324,6 @@ class Densidadr49ListView(generic.ListView):
      queryset = Densidadpt.objects.all ()
      template_name = 'crud_VolumenNetoR49/densidad_List.html'
      context_object_name = 'densidadr49'
-
 
 class Densidadr49CreateView(TemplateView):
     template_name = 'crud_VolumenNetoR49/densidad_Create.html'
@@ -344,20 +341,19 @@ class Densidadr49CreateView(TemplateView):
             return HttpResponseRedirect(reverse_lazy('laboratorio_control_calidad:encabezador49_update', kwargs={'pk': densidad.pk}))
         else:
             return self.render_to_response(self.get_context_data(form=form))
-        
-        
+               
 class Densidadr49UpdateView(generic.UpdateView):
     model = Densidadpt
     template_name = 'crud_VolumenNetoR49/densidad_Create.html' 
     form_class = DensidadptForm
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
     context_object_name = 'densidadr49'
 
 class Densidadr49DeleteView(generic.DeleteView):
     model = Densidadpt
     template_name = 'crud_VolumenNetoR49/densidad_Delete.html'
     context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 #)
 
 #PESO BRUTO (
@@ -378,14 +374,14 @@ class PesoBrutor49UpdateView(generic.UpdateView):
     model = Pesobruto
     template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html' 
     form_class = PesobrutoForm
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
     context_object_name = 'pesoBrutor49'
 
 class PesoBrutor49DeleteView(generic.DeleteView):
     model = Pesobruto
     template_name = 'crud_VolumenNetoR49/pesoBruto_Delete.html'
     context_object_name = 'pesoBrutor49'
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 #)
 
 #PESO ENVASE VACIO (
@@ -404,16 +400,16 @@ class PesoEnvVacior49CreateView(generic.CreateView):
 
 class PesoEnvVacior49UpdateView(generic.UpdateView):
     model = Pesoenvvacio
-    template_name = 'crud_VolumenNetoR49/pesoEnvVacior49_Create.html' 
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html' 
     form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_update')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
     context_object_name = 'pesoEnvVacior49'
 
 class PesoEnvVacior49DeleteView(generic.DeleteView):
     model = Pesoenvvacio
     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Delete.html'
     context_object_name = 'pesoEnvVacior49'
-    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_create')
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
 #)
 
 #ENCABEZADO (
@@ -436,9 +432,6 @@ class EncabR49ListView(generic.ListView):
         else:
             print("Form errors:", form.errors)  # Agrega esta línea para ver los errores del formulario
         return self.get(request, *args, **kwargs)
-
-
-
 
 class EncabR49UpdateView(generic.UpdateView):
     model = EncabR49V2
@@ -523,11 +516,6 @@ class EncabR49UpdateView(generic.UpdateView):
                 return form_class(self.request.POST)
         else:
             return form_class(self.request.POST)
-
-
-
-
-
 
 class EncabR49DeleteView(generic.DeleteView):
     model = EncabR49V2
