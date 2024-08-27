@@ -10,11 +10,12 @@
                 <div class="card-header bg-gray-dark">
                     <h3 class="card-title">
                         <i class="fas fa-bullhorn"></i>
-                        Información
+                        Información: En esta sección se presentan los registros de 
+                        peso bruto, densidad y peso envace vacio del formato R49
                     </h3>
                 </div>
                 <!-- /.card-header -->
-                <div class="card-body">
+                <!-- <div class="card-body">
                     <div class="callout callout-info">
                         <h5>Formatos R49 Encabezado</h5>
                         <p>
@@ -22,7 +23,7 @@
                             Peso bruto, densidad y peso envace vacio.
                         </p>
                     </div>
-                </div>
+                </div> -->
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -40,14 +41,15 @@
                     <h3 class="card-title"></h3>
                 </div>
                 <div class="card-body bg-light">
-                    <div class="col-xl-12 mt-3 p-3">
+                    <div class="col-xl-12 mt-1 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-between mb-3">
-                                <a href="{% url 'laboratorio_control_calidad:encabezador49_create' %}" class="btn btn-primary">Nuevo
-                                    Registro</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-nuevoRegistro">
+                                    Nuevo Registro
+                                </button>
 
-                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-default">
-                                        Generar Reporte Diario/Semanal
+                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-reporteFechas">
+                                        Reporte Diario/Semanal
                                       </button>
                                 
                                     
@@ -65,7 +67,7 @@
                                     </tr>
                                 </thead>
                                 <tbody style="font-size: 14px">
-                                    {% for item in EncabTablaR49 %}
+                                    {% for item in EncabR49 %}
                                     <tr>
                                         <td>{{item.id}}</td>
                                         <td>{{item.fecha}}</td>
@@ -92,8 +94,60 @@
     <div class="row"></div>
 </div>
 
+
+<!-- /.modal encabezado -->
+<div class="modal fade" id="modal-nuevoRegistro">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agrega un Nuevo Folio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Mostrar errores del formulario -->
+                    {% if encab.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in encab %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in encab.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}                                       
+                            <div class="form-group">
+                                {{ encab.fecha.label_tag }}
+                                {{ encab.fecha }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ encab.observaciones.label_tag }}
+                                {{ encab.observaciones }}
+                            </div>
+                        
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <!-- /.modal -->
-<div class="modal fade" id="modal-default">
+
+<!-- /.modal -->
+<div class="modal fade" id="modal-reporteFechas">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -102,7 +156,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form method="post" action="#">
+        <form method="post" action="{% url 'reportes:diario_Semanal_Data' %}" id="form-fechas">
         <div class="modal-body">
             {% csrf_token %}
             <div class="form-group">
@@ -136,26 +190,8 @@
 <script src="{% static 'js/datatables/datatable_init.js' %}"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 
+<!--Solicitud AJAX al endpoint de la vista -->
+<script src="{% static 'js/reporte-fechas.js' %}"></script>
 
 <!-- Page specific script datatable -->  
-<script type="application/javascript">
-    $(function() {
-        $('.btnTest').on('click', function() {
-            $.ajax({
-                url: "{% url 'laboratorio_control_calidad:encabezador49_list'%}" , 
-                type: 'POST',
-                data: {
-                    id: 1
-                },
-                dataType: 'json'
-            }).done(function(data) {
-                console.log(data)
-            }).fail(function(data) {
-                alert("error");
-            }).always(function(data) {
-
-            })
-        });
-
-    });
-</script> 
+<script src="{% static 'js/scripts.js' %}"></script>

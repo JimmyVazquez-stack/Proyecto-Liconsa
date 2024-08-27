@@ -1,14 +1,16 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
-from django.db.models import Min, Max, Count, Sum, F, FloatField
+from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, StdDev
 from django.shortcuts import render
 from django.views import View
 from laboratorio_control_calidad.models import *
 from catalogos.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
-from laboratorio_control_calidad.models import LecheReconsSilos
+from laboratorio_control_calidad.models import LecheReconsSilos, Pesoenvvacio, Pesobruto, Densidadpt
 from django.conf import settings
 import requests
+import statistics
+from django.urls import reverse_lazy
 from django.http import HttpResponse
 
 
@@ -849,3 +851,245 @@ class ReporteRX51(View):
             context['rango_folios'] = rango_folios
 
         return render(request, 'reporte_Rx51.html', context)
+
+
+    #START--CALCULOS PARA OBTENER PESO NETO -----------------------------------------------------|
+
+class VolumenNetoView(View):
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk') # Asumiendo que el pk se pasa como un argumento en la URL
+        
+        # CALCULOS ENCABEZADO
+        datosEncabezado = EncabTablaR49.objects.filter(pk=pk)
+        calculosEncabezado = datosEncabezado.aggregate(
+            #Aqui van las formulas modelo1
+
+        )
+
+        # START CALCULOS DENSIDAD----------------------------------------------------------------|
+        datosDensidad = Densidadpt.objects.all()
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+
+        # Calcular la suma de volumen
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+        )
+
+        # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+        print(f'Densidad Ponderada: {densidadPonderada}')
+
+        calculos2 = {
+            'densidadPonderada': densidadPonderada
+        }
+        # END CALCULOS DENSIDAD----------------------------------------------------------------|
+
+        #CALCULOS PESO BRUTO ----------------------------------------
+        datosPesoBruto = Pesobruto.objects.filter(encabezado=pk)
+        calculosPesoBruto = datosPesoBruto.aggregate(
+            #Aqui van las formulas modelo3
+        )
+
+        #CALCULOS PESO ENVASE VACIO ----------------------------------------
+        datosPesoEnvVacio = Pesoenvvacio.objects.all()
+        calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
+            #Aqui van las formulas modelo4
+            pesoPromedio=Avg('peso'),
+        )
+        peso_promedio = calculosPesoEnvVacio["pesoPromedio"]
+        if peso_promedio is not None:
+             print(f'Peso Promedio: {peso_promedio}')
+        else:
+             print('No se pudo calcular el peso promedio.')
+            
+
+         # Renderizar a la plantilla con los datos calculados
+        context = {
+            'datosEncabezado': datosEncabezado,
+            'datosDensidad': datosDensidad,
+            'datosPesoBruto': datosPesoBruto,
+            'datosPesoEnvVacio': datosPesoEnvVacio,
+            'calculosEncabezado': calculosEncabezado,
+            'calculosPesoEnvVacio': calculosPesoEnvVacio,
+            'calculosPesoBruto':calculosPesoBruto,
+            'calculos2':calculos2,
+        } 
+        return render(request, ['reporte_VolumenNetoR49.html','pesonetor49_list.html'], context)
+
+
+
+
+#----START PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-------------------------------------------------|
+class CalculosR49DataView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
+
+    def get(self, request, *args, **kwargs):
+        # Calcular el peso promedio
+        datosPesoEnvVacio = Pesoenvvacio.objects.all()
+        calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
+            pesoPromedio=Avg('peso'),
+        )
+        
+
+        # Filtrar los datos para densidad ponderada
+        datosDensidad = Densidadpt.objects.all()
+        
+        # Calcular la suma ponderada de densidad por volumen
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+
+        # Calcular la suma de volumen
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+        )
+
+        # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+        
+        # Obtener los datos de Pesobruto
+        datosPesoBruto = Pesobruto.objects.all()
+
+        #Realizar el cálculo de peso neto y agregar datos importantes: cabezal, id, valor peso bruto para renderizar al temmplate
+        resultadosPesoNeto = [
+            { 
+                'id': dato.id,
+                'cabezal':dato.cabezal.nombre,
+                'valorPesoBruto': dato.valor,
+                'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
+            }
+            for dato in datosPesoBruto
+        ]
+
+        
+
+        # Crear el diccionario de resultados para la respuesta JSON
+        resultados = {
+            'pesoPromedio': calculosPesoEnvVacio['pesoPromedio'],
+            'densidadPonderada': densidadPonderada,
+            'resultadosPesoNeto': resultadosPesoNeto   #agregado prueba resultado para peso neto
+        }
+
+        # Retornar la respuesta en formato JSON
+        return JsonResponse(resultados)
+    
+#----END PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-----------------------------------------------|
+        
+
+#[--------------------------[START VISTA CALCULOS-R49-RANGOS DE FECHAS]--------------------------------]
+
+class ReporteR49RangoFechaView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Método GET no permitido en esta vista. Por favor, utiliza POST.", status=405)
+    
+    def post(self, request, *args, **kwargs):
+        fecha_inicial = request.POST.get('fecha-inicial')
+        fecha_final = request.POST.get('fecha-final')
+
+        # Validar y parsear las fechas
+        try:
+            fecha_inicial = parse_date(fecha_inicial)
+            fecha_final = parse_date(fecha_final)
+        except ValueError:
+            return JsonResponse({'error': 'Fechas inválidas'}, status=400)
+
+        # Filtrar los datos por el rango de fechas
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosDensidad = Densidadpt.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosPesoBruto = Pesobruto.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+
+        # Calcular el peso promedio y densidad ponderada
+        calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
+            pesoPromedio=Avg('peso'),
+        )
+        
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+        
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+        )
+        
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+
+        # Calcular los resultados de peso neto en lugar de peso bruto
+        resultadosPesoNeto = [
+            {
+                'valor': dato.valor,
+                'id': dato.id,
+                'cabezal': dato.cabezal.nombre,
+                'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
+            }
+            for dato in datosPesoBruto
+        ]
+
+        # Cálculos para cada combinación de máquina y cabezal
+        combinaciones = [
+            ('1', 'A'),
+            ('1', 'B'),
+            ('2', 'C'),
+            ('2', 'D'),
+            ('3', 'E'),
+            ('3', 'F')
+        ]
+
+        calculos_diarios = {}
+        for maquina, cabezal in combinaciones:
+            datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['cabezal'] == cabezal]
+
+            if datos_maquina_cabezal:
+                valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': len(valores),
+                    'promedio': sum(valores) / len(valores) if valores else None,
+                    'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
+                    'maximo': max(valores) if valores else None,
+                    'minimo': min(valores) if valores else None,
+                }
+            else:
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': 0,
+                    'desviacion_Estandar': None,
+                    'maximo': None,
+                    'minimo': None,
+                }
+
+        # Cálculos semanales
+        total_datos_semanales = len(resultadosPesoNeto)
+        valores_ponderados = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
+
+        promedio_total_ponderado = sum(valores_ponderados) / total_datos_semanales if total_datos_semanales else None
+        desviacion_total_ponderada = statistics.stdev(valores_ponderados) if len(valores_ponderados) > 1 else None
+        maximo_semanal = max(valores_ponderados) if valores_ponderados else None
+        minimo_semanal = min(valores_ponderados) if valores_ponderados else None
+
+        # Peso promedio
+        pesoPromedio = calculosPesoEnvVacio['pesoPromedio']
+
+        # Generar el JSON de resultados
+        resultadosporfecha = {
+            'diarios': calculos_diarios,
+            'semanales': {
+                'total_Datos': total_datos_semanales,
+                'promedio_Total_Ponderado': promedio_total_ponderado,
+                'desviacion_Total_Ponderada': desviacion_total_ponderada,
+                'maximo_Semanal': maximo_semanal,
+                'minimo_Semanal': minimo_semanal,
+                'densidadPonderada': densidadPonderada,
+                'pesoPromedio': pesoPromedio,
+            },
+        }
+
+        return JsonResponse(resultadosporfecha)
+
+    
+class MostrarDiarioSemanalView(LoginRequiredMixin, TemplateView):
+    # model = Pesobruto  #borrar locomentado si no hay errores
+    # queryset = Pesobruto.objects.all()
+    template_name = 'reporte_R49_DiarioSemanal.html'
+    login_url = reverse_lazy('usuarios:login')

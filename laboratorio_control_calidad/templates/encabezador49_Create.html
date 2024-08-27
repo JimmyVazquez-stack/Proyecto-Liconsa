@@ -10,126 +10,215 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-info"></i>
-                        ENCABEZADO R49
+                        Tablas de captura para volumen peso neto
                     </h3>
                 </div>
                 <!-- /.card-header -->
+                 <!-- Script autocompletar campo Linea -->
+                <script>
+                    function updateLinea() {
+                        var planta = document.getElementById("id_planta").value;
+                        var turno = document.getElementById("id_turno").value;
+                        var silo = document.getElementById("id_silo").value;
+                        var cabezal = document.getElementById("id_cabezal").value
+                        var linea = planta + turno + silo + cabezal;
+                        document.getElementById("id_linea").value = linea;
+                    }
+                </script>
+                <!-- END -->
+                
                 <div class="card-body">
+                    <!-- Pestañas -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1pbruto-tab" data-toggle="tab" href="#tab1pbruto" role="tab" aria-controls="tab1" aria-selected="true">Tabla Peso Bruto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab2densidad-tab" data-toggle="tab" href="#tab2densidad" role="tab" aria-controls="tab2" aria-selected="false">Tabla Densidad</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab3pvacio-tab" data-toggle="tab" href="#tab3pvacio" role="tab" aria-controls="tab3" aria-selected="false">Tabla Peso Envase Vacío</a>
+                        </li>
+                    </ul>
 
-                    
-                    <form id="formulario" action="" method="post">
-                        {% csrf_token %}
-                        {{ encab_form.as_p }}
-                        
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
-                            <thead class="thead-light" style="font-size: 14px">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>fechaHora</th>
-                                    <th>cabezal</th>
-                                    <th>planta</th>
-                                    <th>producto</th>
-                                    <th>silo</th>
-                                    <th>turno</th>
-                                    <th>linea</th>
-                                    <th>densidad</th>
-                                    <th>volumen</th>
-                                    <th>encabezado</th>                             
-                                </tr>
-                            </thead>
-                            <tbody id="formularios-body" style="font-size: 14px">
-                                {{ Densidadpt_formset.management_form }}
-                                {% for form in Densidadpt_formset %}
-                                <tr>
-                                    <td>{{ form.id }}</td>
-                                    <td>{{ form.fechaHora }}</td>
-                                    <td>{{ form.cabezal }}</td>
-                                    <td>{{ form.planta }}</td>
-                                    <td>{{ form.producto }}</td>
-                                    <td>{{ form.silo }}</td>
-                                    <td>{{ form.turno }}</td>
-                                    <td>{{ form.linea }}</td>
-                                    <td>{{ form.densidad }}</td>
-                                    <td>{{ form.volumen }}</td>
-                                    <td>{{ form.encabezado }}</td>
-                                  
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
-                            <thead class="thead-light" style="font-size: 14px">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>fechaHora</th>
-                                    <th>cabezal</th>
-                                    <th>maquina</th>
-                                    <th>planta</th>
-                                    <th>producto</th>
-                                    <th>proveedor</th>
-                                    <th>peso</th>                         
-                                </tr>
-                            </thead>
-                            <tbody id="formularios-body" style="font-size: 14px">
-                                {{ Pesoenvvacio_formset.management_form }}
-                                {% for form in Pesoenvvacio_formset %}
-                                <tr>
-                                    <td>{{ form.id }}</td>
-                                    <td>{{ form.fechaHora }}</td>
-                                    <td>{{ form.cabezal }}</td>
-                                    <td>{{ form.maquina }}</td>
-                                    <td>{{ form.planta }}</td>
-                                    <td>{{ form.producto }}</td>
-                                    <td>{{ form.proveedor }}</td>
-                                    <td>{{ form.peso }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <table id="example" class="table table-bordered bg-light table-hover" style="width: 100%">
-                            <thead class="thead-light" style="font-size: 14px">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>fechaHora</th>
-                                    <th>cabezal</th>
-                                    <th>maquina</th>
-                                    <th>planta</th>
-                                    <th>producto</th>
-                                    <th>analista</th>
-                                    <th>valor</th>
-                                </tr>
-                            </thead>
-                            <tbody id="formularios-body" style="font-size: 14px">
+                    <!-- Contenido de las Pestañas -->
+                    <div class="tab-content" id="r49TabContent">
+                        <!-- Contenido de la Pestaña 1 -->
+                        <div class="tab-pane fade show active" id="tab1pbruto" role="tabpanel" aria-labelledby="tab1pbruto-tab">
+                            <h4>Registro de muestras para tabla Peso Bruto</h4>
+                            <form method="post">
+                                {% csrf_token %}
                                 {{ Pesobruto_formset.management_form }}
-                                {% for form in Pesobruto_formset %}
-                                <tr>
-                                    <td>{{ form.id }}</td>
-                                    <td>{{ form.fechaHora }}</td>
-                                    <td>{{ form.cabezal }}</td>
-                                    <td>{{ form.maquina }}</td>
-                                    <td>{{ form.planta }}</td>
-                                    <td>{{ form.producto }}</td>
-                                    <td>{{ form.analista }}</td>
-                                    <td>{{ form.valor }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="btn btn-danger">Cancelar</a>
-                    </form> 
-                </div>    
-                <div class="callout callout-info">
-                      
-                        <p>En esta sección se realiza el registro del formato TX-HP-910-01-R49.</p>
 
-                        <p>Ingresa los datos y oprime guardar.</p>
+                                <div class="table-responsive">
+                                    <div class="table-scroll"> <!-- Añadir la clase para el scroll -->
+                                        <table id="tabla1" class="table table-bordered bg-light table-hover" style="width: 100%">
+                                            <thead class="thead-light" style="font-size: 14px">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Fecha y Hora</th>
+                                                    <th>Cabezal</th>
+                                                    <th>Planta</th>
+                                                    <th>Producto</th>
+                                                    <th>Valor</th>
+                                                    <th>Usuario que registra:</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="formularios-body" style="font-size: 14px">
+                                                {% for form in Pesobruto_formset %}
+                                                <tr>
+                                                    <td>{{ form.id }}</td>
+                                                    <td>{{ form.fechaHora }}</td>
+                                                    <td>{{ form.cabezal }}</td>
+                                                    <td>{{ form.planta }}</td>
+                                                    <td>{{ form.producto }}</td>
+                                                    <td>{{ form.valor }}</td>
+                                                    <!-- Agregar el usuario que registra -->
+                                                    <td>
+                                                        {% if user_info %}
+                                                            {{ user_info.username }} <!-- Nombre del usuario -->                                                     
+                                                            {% if user_groups %}
+                                                                /
+                                                                {% for group in user_groups %}
+                                                                        {{ group.name }} <!-- Nombre del grupo -->
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            Usuario no autenticado
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                        
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                            </form>
+                        </div>
+
+                            <!-- Contenido de la Pestaña 2 -->
+                        <div class="tab-pane fade" id="tab2densidad" role="tabpanel" aria-labelledby="tab2densidad-tab">
+                            <h4>Registro de datos para tabla Densidad</h4>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ Densidadpt_formset.management_form }}
+
+                                <div class="table-responsive">
+                                    <div class="table-scroll">
+                                        <table id="tabla2" class="table table-bordered bg-light table-hover" style="width: 100%">
+                                            <thead class="thead-light" style="font-size: 14px">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Fecha y Hora</th>
+                                                    <th>Cabezal</th>
+                                                    <th>Planta</th>
+                                                    <th>Producto</th>
+                                                    <th>Silo</th>
+                                                    <th>Turno</th>
+                                                    <th>Linea</th>
+                                                    <th>Densidad</th>
+                                                    <th>Volumen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="formulario-densidad" style="font-size: 14px">
+                                                {% for form in Densidadpt_formset %}
+                                                <tr>
+                                                    <td>{{ form.id }}</td>
+                                                    <td>{{ form.fechaHora }}</td>
+                                                    <td>{{ form.cabezal }}</td>
+                                                    <td>{{ form.planta }}</td>
+                                                    <td>{{ form.producto }}</td>
+                                                    <td>{{ form.silo }}</td>
+                                                    <td>{{ form.turno }}</td>
+                                                    <td>{{ form.linea }}</td>
+                                                    <td>{{ form.densidad }}</td>
+                                                    <td>{{ form.volumen }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                            </form>
+                        </div>
+
+                        <!-- Contenido de la Pestaña 3 -->
+                        <div class="tab-pane fade" id="tab3pvacio" role="tabpanel" aria-labelledby="tab3pvacio-tab">
+                            <h4>Registro de datos para tabla Peso Envase Vacio</h4>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ Pesoenvvacio_formset.management_form }}
+
+                            <div class="table-responsive">
+                                <div class="table-scroll">
+                                    <table id="tabla3" class="table table-bordered bg-light table-hover" style="width: 100%">
+                                        <thead class="thead-light" style="font-size: 14px">
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Fecha y Hora</th>
+                                                <th>Num. Cabezal</th>
+                                                <th>Numero de maquina</th>
+                                                <th>planta</th>
+                                                <th>producto</th>
+                                                <th>proveedor</th>
+                                                <th>peso</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="formularios-body" style="font-size: 14px">
+                                            {% for form in Pesoenvvacio_formset %}
+                                            <tr>
+                                                <td>{{ form.id }}</td>
+                                                <td>{{ form.fechaHora }}</td>
+                                                <td>{{ form.cabezal }}</td>
+                                                <td>{{ form.maquina }}</td>
+                                                <td>{{ form.planta }}</td>
+                                                <td>{{ form.producto }}</td>
+                                                <td>{{ form.proveedor }}</td>
+                                                <td>{{ form.peso }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="btn btn-danger">Cancelar</a>
+                        </form>
+                    </div>
                 </div>
-               
+
+                    <!-- SCRIPT CALCULAR CAMPO LINEA -->
+                    <input type="hidden" id="id_linea" name="linea"> <!-- END -->
+
+                <!-- SCRIPT CALCULAR CAMPO LINEA -->
+                <script>
+                    document.getElementById("id_planta").addEventListener("input", updateLinea);
+                    document.getElementById("id_turno").addEventListener("input", updateLinea);
+                    document.getElementById("id_silo").addEventListener("input", updateLinea);
+                    document.getElementById("id_cabezal").addEventListener("input", updateLinea);
+                </script>
+                <!-- END -->
+                </div> <!-- /.card-body --> 
+                <div class="callout callout-info">
+                    <p>En esta sección se realiza el registro del formato TX-HP-910-01-R49.</p>
+                    <p>Ingresa los datos y oprime guardar.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{%endblock%}
-{% endblock %}
 
+<style>
+    .table-scroll {
+        max-height: 400px; /* Ajusta esta altura según sea necesario */
+        overflow-y: auto; /* Habilita el desplazamiento vertical */
+    }
+</style>
+
+{% endblock %}
+{% endblock %}

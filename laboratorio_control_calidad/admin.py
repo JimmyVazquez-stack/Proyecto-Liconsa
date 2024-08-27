@@ -6,3 +6,9 @@ admin.site.register(LecheReconsSilosEncab)
 admin.site.register(LecheReconsSilos)
 admin.site.register(CalidadMicrobiologicaEncabezado)
 admin.site.register(CalidadMicrobiologica)
+
+#Modelos FormatoR49
+admin.site.register(Densidadpt)
+admin.site.register(Pesoenvvacio)
+admin.site.register(Pesobruto)
+admin.site.register(EncabTablaR49)

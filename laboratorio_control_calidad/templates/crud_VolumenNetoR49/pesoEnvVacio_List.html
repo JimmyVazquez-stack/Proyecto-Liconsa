@@ -11,8 +11,8 @@
         </h3>
     </div>
         <div class="container container-data  d-flex align-items-center flex-column"></div>
-            <h1>Listado de registros Densidad</h1>
-            <a href="{% url 'laboratorio_control_calidad:densidadr49_create' %}" class="btn btn-primary">Nuevo registro</a>
+            <h1>Listado de registros Peso envase vacio</h1>
+            <a href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Create' %}" class="btn btn-primary">Nuevo registro</a>
             <div class="card-body">
 {% endblock %}        
 
@@ -20,30 +20,29 @@
     <table class="table table-striped table-bordered text-nowrap dataTable no-footer dtr-inline collapsed"  id="example1" aria-describedby="example1_info">
     <thead class="thead-light" style="font-size: 14px;">
         <tr>
-            <th>Fecha Hora</th>
+            <th>Fecha y Hora</th>
             <th>Cabezal</th>
+            <th>Maquina</th>
             <th>Planta</th>
-            <th>Num Silo</th>
-            <th>Turno</th>
-            <th>Linea</th>
-            <th>Densidad</th>
-            <th>Volumen</th>
+            <th>Producto</th>
+            <th>Proveedor</th>
+            <th>Peso</th>
+            <th>Opciones</th>
         </tr>
     </thead>
     <tbody>
-        {% for item in densidadr49 %}
+        {% for item in pesoEnvVacior49 %}
         <tr>
-            <td>{{item.fecha_hora}}</td>
+            <td>{{item.fechaHora}}</td>
             <td>{{item.cabezal}}</td>
+            <td>{{item.maquina}}</td>
             <td>{{item.planta}}</td>
-            <td>{{item.numSilo}}</td>
-            <td>{{item.turno}}</td>
-            <td>{{item.linea}}</td>
-            <td>{{item.densidad}}</td>
-            <td>{{item.volumen}}</td>
+            <td>{{item.producto}}</td>
+            <td>{{item.proveedor}}</td>
+            <td>{{item.peso}}</td>
             <td>
-            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:densidadr49_update' item.id %}"><i class="fas fa-edit"></i></a>
-            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:densidadr49_delete' item.id %}"> <i class="fas fa-trash"></i></a>
+            <a class="btn btn-secondary" href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Update' item.id %}"><i class="fas fa-edit"></i></a>
+            <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_Delete' item.id %}"> <i class="fas fa-trash"></i></a>
             </td>
         </tr>
         {% endfor %}
