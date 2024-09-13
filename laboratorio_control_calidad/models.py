@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from catalogos.models import Cabezal, Planta, Producto, Maquina, Silo, Turno, Proveedor
+from catalogos.models import Cabezal, Planta, Producto, Maquina, Silo, Turno, Proveedor, Ruta
 from usuarios.models import Usuario
 
 # Create your models here.
@@ -146,4 +146,6 @@ class producto_terminado(models.Model):
     def __str__(self):
         return f"Encabezado_Id: {self.encabezado}, Hora: {self.hora}, Producto: {self.producto}, Volumen: {self.volumen}"
 
- 
+
+
+    
