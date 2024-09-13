@@ -15,7 +15,7 @@ from django.forms import inlineformset_factory
 #             self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
 
-#Enabezado ara formularios simples(noformset)
+#Enabezado para formularios simples de pesoneto(noformset) Modulo1------#
 class EncabR49V2Form(forms.ModelForm):
     class Meta:
         model = EncabR49V2
@@ -26,7 +26,6 @@ class EncabR49V2Form(forms.ModelForm):
         
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class' : 'form-control'})
-
 
 
 class DensidadptForm(forms.ModelForm):
@@ -150,3 +149,4 @@ class permisosForm(forms.ModelForm):
         
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False) 
 LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
+
