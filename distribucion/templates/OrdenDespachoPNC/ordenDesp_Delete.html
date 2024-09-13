@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Borrar registro Orden de Despacho{% endblock %}
+{% block principal %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <form action="" method="post">
+        {% csrf_token %}
+        <h2>Seguro de eliminar el registro : {{ ordenDespContext.id}}?</h2>
+        <button type="submit" class="btn btn-danger">Si, eliminar</button>
+        <a href="{% url 'distribucion:ordenDesp_List' %}" class="btn btn-success">No, Cancelar</a>
+    </form>
+</div>
+
+    
+{% endblock %}
+{% endblock %}

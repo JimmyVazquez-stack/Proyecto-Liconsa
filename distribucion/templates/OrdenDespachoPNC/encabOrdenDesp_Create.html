@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Modificar Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" name="submit-encab-form" class="btn btn-success">Guardar</button>
+          <a href="{% url 'distribucion:encabOrdenDesp_List' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-body bg-light">
+      <div class="col-xl-12 mt-3 p-3">
+        <div class="table-responsive">
+          <div class="d-flex justify-content-start mb-3">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modal-OrdDesp">
+              Nuevo Registro
+            </button>
+            <div id="example_filter"></div>
+          </div>
+          <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="tableOrDesp" aria-describedby="tableOrDesp_info">
+            <thead class="thead-light" style="font-size: 14px">
+              <tr>
+                <th>Responsable de Ruta</th>
+                <th>Ruta</th>
+                <th>Num. economico de la Unidad</th>
+                <th>Temp. Inicial</th>
+                <th>Dotación</th>
+                <th>Canastillas</th>
+                <th>Usuario que registra</th>
+                <th>Encabezado</th>
+
+                
+              </tr>
+            </thead>
+            <tbody style="font-size: 14px">
+              {% for item in ordenDespContext %}
+              <tr>
+                <td>{{ item.responsRuta }}</td>
+                <td>{{ item.ruta }}</td>
+                <td>{{ item.numEcoUnidad }}</td>
+                <td>{{ item.tempInicial }}</td>
+                <td>{{ item.dotacion }}</td>
+                <td>{{ item.canastillas }}</td>
+                <td>
+                    {% if user_info %}
+                    {{ user_info.username }} <!-- Nombre del usuario -->
+                    {% if user_groups %}
+                    /
+                    {% for group in user_groups %}
+                    {{ group.name }} <!-- Nombre del grupo -->
+                    {% endfor %}
+                    {% endif %}
+                    {% else %}
+                    Usuario no autenticado
+                    {% endif %}
+                </td>
+                <td>{{ item.encabezado }}</td>
+                <td>
+                  <a href="?ordenDespContext_id={{ item.id }}" class="btn btn-warning"><i class="fa fa-pencil"></i></a>        
+                  <a class="btn btn-danger" href="{% url 'distribucion:ordenDesp_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para agregar/editar registro -->
+<div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-OrdDesp">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% if edit_mode %}Editar Registro{% else %}Nuevo Registro{% endif %}</h4>
+        <a href="{{ request.path }}" class="close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        {% if edit_mode %}
+            <input type="hidden" name="ordenDespContext_id" value="{{ nuevo_form.instance.id }}">
+        {% endif %}
+        <div class="modal-body">
+          {% if nuevo_form.errors %}
+            <div class="alert alert-danger">
+              <ul>
+                {% for field in nuevo_form %}
+                  {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in nuevo_form.non_field_errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.responsRuta.label_tag }}
+                {{ nuevo_form.responsRuta }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.ruta.label_tag }}
+                {{ nuevo_form.ruta }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.numEcoUnidad.label_tag }}
+                {{ nuevo_form.numEcoUnidad }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.tempInicial.label_tag }}
+                {{ nuevo_form.tempInicial }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.dotacion.label_tag }}
+                {{ nuevo_form.dotacion }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.canastillas.label_tag }}
+                {{ nuevo_form.canastillas }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.encabezado.label_tag }}
+                {{ nuevo_form.encabezado }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="submit" class="btn btn-primary" name="submit-nuevo-form">Guardar</button>
+          <a href="{{ request.path }}" class="btn btn-default" data-dismiss="modal">Cerrar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
+
+<!--datatables-->
+<script src="{% static 'js/datatables/external-libraries.js' %}"></script>
+<script src="{% static 'js/datatables/datatables-config.js' %}"></script>
+<!--Tabs estilos-->
+<script src="{% static 'css/styles.css' %}"></script>
+{% endblock %}

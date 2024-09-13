@@ -1,0 +1,187 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{%block title %} Formatos R49 {% endblock %}
+{% block principal %} 
+{% block informacion% %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información: En esta sección se muestran datos del encabezado que contendra las capturas
+                        de Orden de Despacho, correspondiente al formato TX-HP-854-02-R01
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+               
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</div>
+{% endblock %} 
+{%block datatable%}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title"></h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-1 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-between mb-3">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-nuevoRegistro">
+                                    Nuevo Registro
+                                </button>
+
+                                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modal-reporteFechas">
+                                        Reporte Diario/Semanal
+                                      </button>
+                                
+                                    
+
+                                <div id="example_filter"></div>
+                            </div>
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="tablaencab2" aria-describedby="tablaencab2_info">
+                                <thead class="thead-light" style="font-size: 14px">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha Hora</th>
+                                        <th>Observaciones</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px">
+                                    {% for item in encabOrdenDespContext %}
+                                    <tr>
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.fecha}}</td>
+                                        <td>{{item.observaciones}}</td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'distribucion:encabOrdenDesp_Update' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'distribucion:encabOrdenDesp_Delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                            
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
+
+
+<!-- /.modal encabezado -->
+<div class="modal fade" id="modal-nuevoRegistro">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agrega un nuevo registro</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Mostrar errores del formulario -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in encab %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in encab.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}                                       
+                            <div class="form-group">
+                                {{ form.fecha.label_tag }}
+                                {{ form.fecha }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form.observaciones.label_tag }}
+                                {{ form.observaciones }}
+                            </div>
+                        
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- /.modal -->
+<div class="modal fade" id="modal-reporteFechas">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Selecciona el rango de fechas del reporte</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="post" action="{% url 'reportes:diario_Semanal_Data' %}" id="form-fechas">
+        <div class="modal-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="fecha-inicial">Fecha Inicial</label>
+                <input type="date" class="form-control" id="fecha-inicial" name="fecha-inicial" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha-final">Fecha Final</label>
+                <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+{%endblock%} 
+{% endblock %} 
+<!-- Para traducir opciones del datatable -->
+<script src="{% static 'js/datatables/datatables_opcion_es.js'%}"></script>
+<!-- SweetAlert2 -->
+<script src="{% static 'plugins/sweetalert2/sweetalert2.min.js'%}"></script>
+<!-- Toastr -->
+<script src="{% static 'plugins/toastr/toastr.min.js'%}"></script>
+<script src="{% static 'js/datatables/datatable_init.js' %}"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+
+<!--Solicitud AJAX al endpoint de la vista -->
+<script src="{% static 'js/reporte-fechas.js' %}"></script>
+
+<!-- Page specific script datatable -->  
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<!--Para mostrar opciones en datatable static de la app-->
+<script src="{% static 'js/datatables-config.js' %}"></script>
