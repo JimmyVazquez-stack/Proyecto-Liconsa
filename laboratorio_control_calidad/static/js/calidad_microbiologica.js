@@ -56,10 +56,12 @@ $(document).ready(function () {
                 "data": null,
                 "render": function(data, type, row) {
                     var detalleUrl = `/control_calidad/calidad-microbiologica/detalle/${row.id}/`;
+                    var pdfUrl = `/reportes/calidad-microbiologica/pdf/${row.id}`;
 
                     return `
                         <div class="d-flex justify-content-between">
                             <a href="${detalleUrl}" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></a>
+                            <a href="${pdfUrl}" class="btn btn-info btn-sm"><i class="fas fa-file-pdf"></i></a>
                             <button class="btn btn-danger btn-sm btn-delete" data-id="${row.id}"><i class="fa fa-trash"></i></button>
                         </div>
                     `;

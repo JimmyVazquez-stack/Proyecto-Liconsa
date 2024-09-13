@@ -12,6 +12,7 @@ urlpatterns = [
     path('reporte-mensual-lab/pdf/', views.PDFGeneratorView.as_view(), name='reporte_mensual_pdf'),
     path('api/composicion_fisicoquimica/', views.ComposicionFisicoquimicaDataView.as_view(), name='composicion_fisioquimica_api'),
     path('api/tipos_productos/', views.TipoPorductoDataView.as_view(), name='tipos_productos_api'),
+    path('calidad-microbiologica/pdf/<int:encabezado_id>', views.PDFGeneratorCalidadMicrobiologicaView.as_view(), name='calidad_microbiologica_pdf'),
         #URLS para reporte R49 JuanCarlosM
     path('reporte-volumen-neto/', views.VolumenNetoView.as_view(), name='reporte_Volumen_Neto'),
     path('densidad-Ponderada-Data/', views.CalculosR49DataView.as_view(), name='densidad_Ponderada_Data'),

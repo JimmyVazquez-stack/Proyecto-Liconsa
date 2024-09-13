@@ -12,6 +12,8 @@ import requests
 import statistics
 from django.urls import reverse_lazy
 from django.http import HttpResponse
+from datetime import datetime
+
 
 
 #Importaciones de REPORTLAB
@@ -214,7 +216,216 @@ class TipoPorductoDataView(APIView):
     
 
 class PDFGeneratorCalidadMicrobiologicaView(View):
-    pass
+    def get(self , request, encabezado_id):
+        encabezado = CalidadMicrobiologicaEncabezado.objects.get(pk=encabezado_id)
+        calidad_microbiologica = CalidadMicrobiologica.objects.filter(encabezado=encabezado)
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="calidad_microbiologica_{encabezado.folio}.pdf"'
+
+        # Crear el objeto PDF con márgenes personalizados
+        doc = SimpleDocTemplate(
+            response,
+            pagesize=landscape(letter),
+            topMargin=0.5 * inch,    # Ajusta el margen superior según sea necesario
+            bottomMargin=0.5 * inch, # Ajusta el margen inferior según sea necesario
+            leftMargin=0.5 * inch,   # Ajusta el margen izquierdo según sea necesario
+            rightMargin=0.5 * inch   # Ajusta el margen derecho según sea necesario
+        )
+
+        imagen = Image("static/img/Liconsa.png", width=100, height=15)
+
+        
+        # Función para manejar valores None
+        def safe_value(value, default="N/A"):
+            return default if value is None else value
+        
+        # Obtener las fechas mínima y máxima
+        fecha_minima = calidad_microbiologica.aggregate(Min('fechaHora'))['fechaHora__min']
+        fecha_maxima = calidad_microbiologica.aggregate(Max('fechaHora'))['fechaHora__max']
+
+        # Formatear las fechas
+        fecha_minima_formateada = fecha_minima.strftime('%d/%m/%Y') if fecha_minima else 'N/A'
+        fecha_maxima_formateada = fecha_maxima.strftime('%d/%m/%Y') if fecha_maxima else 'N/A'
+        #Tabla de encabezado - Inicio
+        # Actualizar la tabla del encabezado con las fechas
+        datos_encabezado_table1 = [
+            ['LICONSA PLANTA TLAXCALA S.A DE C.V', '', ''],
+            ['PERIODO REPORTADO:', f'{fecha_minima_formateada} - {fecha_maxima_formateada}'],
+        ]
+
+        #Datos de encabezado tabla 1
+
+        tabla_encabezado1 = Table(datos_encabezado_table1)
+        tabla_encabezado1.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.white),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+            ('SPAN', (0, 0), (2, 0)),  # Fusionar la primera fila
+        ]))
+
+        # Obtener el producto desde la primera instancia de CalidadMicrobiologica
+        if calidad_microbiologica.exists():
+            producto = calidad_microbiologica.first().producto  # Asegúrate de que el campo sea 'producto'
+        else:
+            producto = "Producto no disponible"
+        # Obtener la fecha actual y formatearla
+        fecha_actual = datetime.now().strftime('%d/%m/%Y')  # Formato DD/MM/AAAA
+        datos_encabezado_table2 = [
+            ['PRODUCTO:', producto],
+            ['FECHA DE EMISION:', fecha_actual],
+        ]
+
+        #Datos de encabezado tabla 2
+
+        tabla_encabezado2 = Table(datos_encabezado_table2)
+        tabla_encabezado2.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.white),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        tabla_contenedora_encabezado = Table([
+            [tabla_encabezado1, tabla_encabezado2, imagen]
+        ])
+        tabla_contenedora_encabezado.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+            ('ALIGN', (2, 0), (2, 0), 'RIGHT'),
+            ('VALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),# Eliminar padding a la izquierda para alinear al máximo
+            ('RIGHTPADDING', (0, 0), (-1, -1), 0),# Eliminar padding a la derecha
+            ('TOPPADDING', (0, 0), (-1, -1), 0), # Eliminar padding en la parte superior
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 0)# Eliminar padding en la parte inferior
+        ]))
+
+        #Tabla de encabezado - Fin
+
+        #Tabla de calidad microbiológica - Inicio
+        calidad_microbiologica_data = [
+            ['Calidad Microbiológica', '','',''],
+            ['Fecha y hora', 'planta','producto', 'Organismos Coliformes'],
+        ]
+
+        for calidad in calidad_microbiologica:
+            fecha_hora = safe_value(calidad.fechaHora)
+            planta = safe_value(calidad.planta)
+            producto = safe_value(calidad.producto)
+            organismos_coliformes = safe_value(calidad.organismos_coliformes)
+            calidad_microbiologica_data.append([fecha_hora, planta, producto, organismos_coliformes])
+
+        tabla_calidad_microbiologica = Table(calidad_microbiologica_data)
+        tabla_calidad_microbiologica.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('SPAN', (0, 0), (3, 0)),  # Fusionar la primera fila
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        tabla_calidad_microbiologica._argW = [180, 181, 181, 180]
+
+        observaciones = encabezado.observaciones
+        folio = encabezado.folio
+
+        calidad_microbiologica_obesrvaciones_data = [
+            ['Folio', 'Observaciones'],
+            [folio, observaciones]
+        ]
+
+        tabla_calidad_microbiologica_observaciones = Table(calidad_microbiologica_obesrvaciones_data)
+        tabla_calidad_microbiologica_observaciones.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.white),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        tabla_calidad_microbiologica_observaciones._argW = [60, 662]
+
+
+        # Tabla individual para "Elaboró"
+        tabla_elaboro = Table([
+            ['Elaboró'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_elaboro.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla individual para "Revisó"
+        tabla_reviso = Table([
+            ['Revisó'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_reviso.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla individual para "Autorizó"
+        tabla_autorizo = Table([
+            ['Autorizó'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_autorizo.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla contenedora de las tres tablas
+        tabla_firmas = Table([
+            [tabla_elaboro, tabla_reviso, tabla_autorizo]
+        ])
+        tabla_firmas.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 10),  # Relleno para separar las tablas
+            ('RIGHTPADDING', (0, 0), (-1, -1), 10), # Relleno para separar las tablas
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ]))
+
+        # Ancho de las columnas en la tabla grande
+        tabla_firmas._argW = [220, 220, 220]  # Ajusta los anchos de las columnas si es necesario
+
+
+        elementos = [
+            tabla_contenedora_encabezado, Spacer(35, 20),
+            tabla_calidad_microbiologica, Spacer(35, 20),
+            tabla_calidad_microbiologica_observaciones, Spacer(35, 20),
+            tabla_firmas
+        ]
+
+        doc.build(elementos)
+        return response
+
+
 
 class PDFGeneratorPesoEnvaseVacioView(View):
     pass
@@ -275,10 +486,16 @@ class PDFGeneratorView(View):
         datos_encabezado = datos.get('datos_encabezado', [])
         
 
-        #Tabla de encabezado - Inicio
+        # Convertir las cadenas a objetos datetime
+        fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+        fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
+        # Formatear las fechas en el formato dd/mm/yy
+        fecha_inicio_formateada = fecha_inicio.strftime('%d/%m/%y')
+        fecha_fin_formateada = fecha_fin.strftime('%d/%m/%y')
+        # Tabla de encabezado - Inicio
         datos_encabezado_table1 = [
             ['LICONSA PLANTA TLAXCALA S.A DE C.V', '', ''],
-            ['PERIODO REPORTADO:','HOY', 'HOY'],
+            ['PERIODO REPORTADO:', f'{fecha_inicio_formateada} - {fecha_fin_formateada}'],
         ]
 
         #Datos de encabezado tabla 1
@@ -294,10 +511,16 @@ class PDFGeneratorView(View):
             ('SPAN', (0, 0), (2, 0)),  # Fusionar la primera fila
         ]))
 
+        # Obtener la fecha actual y formatearla en dd/mm/yy
+        fecha_actual = datetime.now().strftime('%d/%m/%y')
 
+        # Suponiendo que obtienes el producto desde un modelo basado en el producto_id
+        producto = Producto.objects.get(id=producto_id).nombre  # Ajusta según tu model
+
+        # Actualizar la tabla del encabezado con la fecha de emisión actual
         datos_encabezado_table2 = [
-            ['PRODUCTO:', 'LPD'],
-            ['FECHA DE EMISION:', 'HOY'],
+            ['PRODUCTO:', producto],  # Aquí usas el nombre del producto obtenido
+            ['FECHA DE EMISION:', fecha_actual],  # Fecha actual en formato dd/mm/yy
         ]
 
         #Datos de encabezado tabla 2
@@ -666,12 +889,74 @@ class PDFGeneratorView(View):
         
         tabla_contenedora_contenido2._argW = [361, 361]
 
+                # Tabla individual para "Elaboró"
+        tabla_elaboro = Table([
+            ['Elaboró'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_elaboro.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla individual para "Revisó"
+        tabla_reviso = Table([
+            ['Revisó'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_reviso.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla individual para "Autorizó"
+        tabla_autorizo = Table([
+            ['Autorizó'],
+            [''],
+            ['Nombre y Firma']
+        ])
+        tabla_autorizo.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LINEABOVE', (0, 2), (0, 2), 1, colors.black),  # Línea para la firma
+            ('BOTTOMPADDING', (0, 2), (0, 2), 10),  # Separación debajo de la línea
+            ('TOPPADDING', (0, 2), (0, 2), 10),     # Separación arriba de la línea
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ]))
+
+        # Tabla contenedora de las tres tablas
+        tabla_firmas = Table([
+            [tabla_elaboro, tabla_reviso, tabla_autorizo]
+        ])
+        tabla_firmas.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 10),  # Relleno para separar las tablas
+            ('RIGHTPADDING', (0, 0), (-1, -1), 10), # Relleno para separar las tablas
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ]))
+
+        # Ancho de las columnas en la tabla grande
+        tabla_firmas._argW = [220, 220, 220]  # Ajusta los anchos de las columnas si es necesario
+
+
         elementos = [
             tabla_contenedora_encabezado, Spacer(0, 10),
             tabla_fisicoquimica, Spacer(0, 10),
             tabla_contenedora_contenido, Spacer(0, 10),
             tabla_contenedora_contenido2, Spacer(0, 10),
             tabla_observaciones, Spacer(0, 10),
+            tabla_firmas
         ]
         doc.build(elementos)
         return response
