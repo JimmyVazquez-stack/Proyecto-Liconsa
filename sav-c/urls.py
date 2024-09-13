@@ -29,5 +29,6 @@ urlpatterns = [
     path('catalogos/', include('catalogos.urls')),
     path('reportes/', include('reportes.urls', namespace='reportes')),
     path('api/', include('reportes.urls', namespace='api')),
+    path('distribucion/', include('distribucion.urls',namespace='distribucion')),
     path('admin/', admin.site.urls),
 ]
