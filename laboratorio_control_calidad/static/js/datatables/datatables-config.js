@@ -28,6 +28,7 @@ $(document).ready(function() {
             "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
         }
     });
+    
 
     $('#tablaPesoEnvVacio').DataTable({
         "pageLength": 10,
@@ -41,4 +42,6 @@ $(document).ready(function() {
             "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
         }
     });
+
+    
 });
