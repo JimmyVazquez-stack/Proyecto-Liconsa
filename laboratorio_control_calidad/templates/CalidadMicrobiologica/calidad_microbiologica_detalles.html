@@ -42,7 +42,7 @@
                     </div>
                     <div class="card-body bg-light">
                         <div class="table-responsive">
-                            
+                            <input type="hidden" id="hiddenEncabezadoId" value="{{ encabezado.id }}">
 
                        
                             <form id="editEncabezadoForm" method="post" action="{% url 'laboratorio_control_calidad:calidad_microbiologica_editar_encabezado' encabezado.id %}">

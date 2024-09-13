@@ -699,14 +699,20 @@ def add_calidad_microbiologica(request, encabezado_id):
 @api_view(['GET'])
 def calidad_microbiologica_list(request):
     encabezado_id = request.query_params.get('encabezado_id', None)
-    if encabezado_id is not None:
-        try:
-            encabezado_id = int(encabezado_id)
-        except ValueError:
-            return Response({'error': 'Invalid encabezado_id'}, status=400)
-        queryset = CalidadMicrobiologica.objects.filter(encabezado_id=encabezado_id)
-    else:
-        queryset = CalidadMicrobiologica.objects.all()
+    
+    if encabezado_id is None:
+        return Response({'error': 'El parámetro encabezado_id es requerido'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        encabezado_id = int(encabezado_id)
+    except ValueError:
+        return Response({'error': 'ID de encabezado inválido'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    queryset = CalidadMicrobiologica.objects.filter(encabezado_id=encabezado_id)
+    
+    if not queryset.exists():
+        return Response({'error': 'No se encontraron registros con el encabezado_id proporcionado'}, status=status.HTTP_404_NOT_FOUND)
+    
     serializer = CalidadMicrobiologicaSerializer(queryset, many=True)
     return Response(serializer.data)
 

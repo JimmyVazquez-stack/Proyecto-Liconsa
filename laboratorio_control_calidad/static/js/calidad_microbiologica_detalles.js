@@ -1,5 +1,13 @@
 $(document).ready(function() {
+
+        // Obtener el valor del campo oculto
+    var encabezadoId = $('#hiddenEncabezadoId').val();
     var csrftoken = '{{ csrf_token }}';
+    // Verifica si el encabezadoId se ha obtenido correctamente
+    if (!encabezadoId) {
+        console.error('No se ha proporcionado encabezado_id.');
+        return; // Salir si no hay encabezadoId
+    }
 
     // Obtener el token CSRF de las cookies
 function getCookie(name) {
@@ -35,66 +43,69 @@ var csrftoken = getCookie("csrftoken");
       return new Date(dateString).toLocaleDateString('es-ES', options);
   }
 
-  var table = $('#calidadMicrobiologicaTable').DataTable({
-    ajax: {
-        url: '/control_calidad/api/calidad-microbiologica/',
-        dataSrc: ''
-    },
-    columns: [
-        { 
-            data: 'fechaHora',
-            render: function(data, type, row) {
-                // Assuming the date is in ISO format, e.g., "2024-08-20T14:30:00Z"
-                var date = new Date(data);
-                var options = {
-                    year: 'numeric', 
-                    month: '2-digit', 
-                    day: '2-digit', 
-                    hour: '2-digit', 
-                    minute: '2-digit', 
-                    second: '2-digit',
-                    hour12: false // Use 24-hour time
-                };
-                return date.toLocaleString('es-ES', options);
-            }
-        },
-        { data: 'planta.nombre' },
-        { data: 'producto.nombre' },
-        { data: 'organismos_coliformes' },
-        {
-            data: null,
-            orderable: false,
-            searchable: false,
-            render: function(data, type, row) {
-                return `
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-warning edit-btn" data-id="${row.id}" data-url="${data.edit_url}">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                    <button class="btn btn-danger delete-btn" data-id="${row.id}" data-url="${data.delete_url}">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </div>
-                `;
-            }
-        }
-    ],
 
-    language: {
-        lengthMenu: "Mostrar _MENU_ entradas",
-        zeroRecords: "No se encontraron resultados",
-        info: "Mostrando entradas _START_ a _END_ de _TOTAL_",
-        infoEmpty: "Mostrando entradas 0 a 0 de 0",
-        infoFiltered: "(filtrado de _MAX_ entradas totales)",
-        search: "Buscar:",
-        paginate: {
-          first: "Primero",
-          last: "Último",
-          next: "Siguiente",
-          previous: "Anterior",
-        },
+  var table = $('#calidadMicrobiologicaTable').DataTable({
+      ajax: {
+          url: '/control_calidad/api/calidad-microbiologica/',
+          data: function(d) {
+              d.encabezado_id = encabezadoId; // Agregar el parámetro encabezado_id
+          },
+          dataSrc: ''
       },
-});
+      columns: [
+          { 
+              data: 'fechaHora',
+              render: function(data, type, row) {
+                  var date = new Date(data);
+                  var options = {
+                      year: 'numeric', 
+                      month: '2-digit', 
+                      day: '2-digit', 
+                      hour: '2-digit', 
+                      minute: '2-digit', 
+                      second: '2-digit',
+                      hour12: false // Use 24-hour time
+                  };
+                  return date.toLocaleString('es-ES', options);
+              }
+          },
+          { data: 'planta.nombre' },
+          { data: 'producto.nombre' },
+          { data: 'organismos_coliformes' },
+          {
+              data: null,
+              orderable: false,
+              searchable: false,
+              render: function(data, type, row) {
+                  return `
+                  <div class="d-flex justify-content-between">
+                      <button class="btn btn-warning edit-btn" data-id="${row.id}" data-url="${data.edit_url}">
+                          <i class="fa fa-pencil"></i>
+                      </button>
+                      <button class="btn btn-danger delete-btn" data-id="${row.id}" data-url="${data.delete_url}">
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </div>
+                  `;
+              }
+          }
+      ],
+      language: {
+          lengthMenu: "Mostrar _MENU_ entradas",
+          zeroRecords: "No se encontraron resultados",
+          info: "Mostrando entradas _START_ a _END_ de _TOTAL_",
+          infoEmpty: "Mostrando entradas 0 a 0 de 0",
+          infoFiltered: "(filtrado de _MAX_ entradas totales)",
+          search: "Buscar:",
+          paginate: {
+            first: "Primero",
+            last: "Último",
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+      },
+  });
+
 
 // Obtén el encabezado_id desde la URL actual (ej. http://127.0.0.1:8002/control_calidad/calidad-microbiologica/detalle/1/)
 var urlParams = new URLSearchParams(window.location.search);
