@@ -10,7 +10,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 #Otras importaciones
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 #Otras importaciones
 from django.shortcuts import get_object_or_404
@@ -19,7 +19,7 @@ from django.http import JsonResponse
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.db.utils import IntegrityError
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 #uso en modelo createSilos
 from django.db import transaction
 #importacion para modelo turno
@@ -33,10 +33,10 @@ from django.http import QueryDict
 
 
 # Create your views here.
-class LecheriaListView(LoginRequiredMixin, TemplateView):
+class LecheriaListView(LoginRequiredMixin, TemplateView, PermissionRequiredMixin):
     template_name = 'lecherias/lecherias_list.html'
     login_url = reverse_lazy('usuarios:login')
-
+    permission_required = 'catalogos.view_lecheria'
 
 
 
@@ -64,9 +64,10 @@ class LecheriaDataView(LoginRequiredMixin, View):
         lecherias_list = list(lecherias)
         return JsonResponse(lecherias_list, safe=False)
 
-class LecheriaCreateView(LoginRequiredMixin, View):
+class LecheriaCreateView(LoginRequiredMixin, View, PermissionRequiredMixin):
     login_url = reverse_lazy('usuarios:login')
-
+    permission_required = 'catalogos.add_lecheria'
+    
     def post(self, request, *args, **kwargs):
         data = request.POST
         numero = data.get('numero')
@@ -117,9 +118,10 @@ class LecheriaCreateView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'error': f'Error desconocido: {str(e)}'}, status=500)
         
-class LecheriaUpdateView(LoginRequiredMixin, View):
+class LecheriaUpdateView(LoginRequiredMixin, View, PermissionRequiredMixin):
     login_url = reverse_lazy('usuarios:login')
-
+    permission_required = 'catalogos.change_lecheria'
+    
     def post(self, request, pk, *args, **kwargs):
         lecheria = get_object_or_404(Lecheria, pk=pk)
         data = request.POST
@@ -152,7 +154,10 @@ class LecheriaUpdateView(LoginRequiredMixin, View):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         
-class LecheriaDeleteView(LoginRequiredMixin, View):
+class LecheriaDeleteView(LoginRequiredMixin, View, PermissionRequiredMixin):
+    login_url = reverse_lazy('usuarios:login')
+    permission_required = 'catalogos.delete_lecheria'
+    
     def delete(self, request, id, *args, **kwargs):
         try:
             lecheria = Lecheria.objects.get(pk=id)
@@ -1150,3 +1155,8 @@ class RutaDeleteView(LoginRequiredMixin, View):
         ruta = Ruta.objects.get(pk=id)
         ruta.delete()  # Asegúrate de que esto elimine la ruta de la base de datos
         return JsonResponse({'status': 'success', 'message': 'Ruta eliminada'})
+    
+    
+    
+    
+
