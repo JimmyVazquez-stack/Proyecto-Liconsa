@@ -73,11 +73,14 @@
                                         <td>{{item.fecha}}</td>
                                         <td>{{item.observaciones}}</td>
                                         <td>
-                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:pesonetor49_list'%}"><i class="fa fa-balance-scale"></i></a>
+                                            <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:pesonetor49_list' pk=item.id%}"><i class="fa fa-balance-scale"></i></a>
                                         </td>
                                         <td>
+                                            <a class="btn btn-warning" href="{% url 'reportes:reporte_Diario' item.id %}">
+                                                <i class="fa fa-file-alt"></i>
+                                            </a>
                                             <a class="btn btn-warning" href="{% url 'laboratorio_control_calidad:encabezador49_update' item.id %}"><i class="fa fa-pencil"></i></a>
-                                            <a class="btn btn-warning" href="{% url 'reportes:reporte_Volumen_Neto' %}"><i class="fa fa-file-alt"></i></a>
+                                            <!-- <a class="btn btn-warning" href="{% url 'reportes:reporte_Volumen_Neto' %}"><i class="fa fa-file-alt"></i></a> -->
                                             <a class="btn btn-danger" href="{% url 'laboratorio_control_calidad:encabezador49_delete' item.id %}"><i class="fa fa-trash"></i></a>
                                             
                                         </td>
