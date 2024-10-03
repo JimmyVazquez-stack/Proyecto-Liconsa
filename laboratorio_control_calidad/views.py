@@ -309,12 +309,27 @@ class TerminadoEncabCreate(View):
 
 # START--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|
 
+
 class MostrarPesosView(LoginRequiredMixin, TemplateView):
-    # model = Pesobruto  #borrar locomentado si no hay errores
-    # queryset = Pesobruto.objects.all()
     template_name = 'pesonetor49_list.html'
     login_url = reverse_lazy('usuarios:login')
-    # context_object_name = 'pesos'       
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        
+        # Obtener el encabezado usando el pk
+        encabezado = get_object_or_404(EncabR49V2, pk=pk)
+        
+        # Filtrar los datos de Pesobruto según el encabezado
+        datos_pesobruto = Pesobruto.objects.filter(encabezado=encabezado)
+        
+        # Pasar los datos filtrados al contexto
+        context['pesos'] = datos_pesobruto
+        context['encabezado'] = encabezado
+        
+        return context
+     
 # END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
 
 # START--PRUEBAS VISTA PESO NETO  ---------------------------------------------------------|
