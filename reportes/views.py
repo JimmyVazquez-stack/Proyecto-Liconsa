@@ -2,19 +2,21 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
 import os
 from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, Avg, StdDev
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from laboratorio_control_calidad.models import *
 from catalogos.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
-from laboratorio_control_calidad.models import LecheReconsSilos, Pesoenvvacio,Densidadpt, Pesobruto
+from laboratorio_control_calidad.models import LecheReconsSilos, Pesoenvvacio,Densidadpt, Pesobruto, EncabR49V2
 from django.conf import settings
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls  import reverse_lazy
 import statistics
+from statistics import mean, stdev
 from django.utils.dateparse import parse_date
+import json
 
 #Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4
@@ -528,11 +530,8 @@ class VolumenNetoView(View):
         return render(request, ['reporte_VolumenNetoR49.html','pesonetor49_list.html'], context)
 
 
+#----START PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO------------------------------------|
 
-
-
-
-#----START PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-------------------------------------------------|
 class CalculosR49DataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
 
@@ -542,14 +541,13 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
             pesoPromedio=Avg('peso'),
         )
-        
 
         # Filtrar los datos para densidad ponderada
         datosDensidad = Densidadpt.objects.all()
-        
+
         # Calcular la suma ponderada de densidad por volumen
         producto_sum = datosDensidad.aggregate(
-            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=FloatField(max_digits=10, decimal_places=4))
         )
 
         # Calcular la suma de volumen
@@ -558,33 +556,82 @@ class CalculosR49DataView(LoginRequiredMixin, View):
         )
 
         # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
-        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
-        
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] and producto_sum['densidad_volumen_sum'] else None
+
         # Obtener los datos de Pesobruto
         datosPesoBruto = Pesobruto.objects.all()
 
-        #Realizar el cálculo de peso neto y agregar datos importantes: cabezal, id, valor peso bruto para renderizar al temmplate
+        # Realizar el cálculo de peso neto y agregar datos importantes: cabezal, id, valor peso bruto para renderizar al template
         resultadosPesoNeto = [
             { 
                 'id': dato.id,
-                'cabezal':dato.cabezal.nombre,
+                'cabezal': dato.cabezal.nombre,
+                'maquina': dato.maquina.numero,
                 'valorPesoBruto': dato.valor,
                 'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
             }
             for dato in datosPesoBruto
         ]
 
-        
+         # Depuración: imprimir resultados intermedios (temp borrar luego)
+        print("Resultados Peso Neto:")
+        for r in resultadosPesoNeto:
+            print(f"ID: {r['id']}, Máquina: {r['maquina']}, Cabezal: {r['cabezal']}, Valor Peso Bruto: {r['valorPesoBruto']}, Resultado: {r['resultado']}")
+
+        #[INICIO]Se repite esto en la vista mostrardiario borrar luego-------------
+        # Cálculos para cada combinación de máquina y cabezal
+        combinaciones = [
+            ('1', 'A'),
+            ('1', 'B'),
+            ('2', 'C'),
+            ('2', 'D'),
+            ('3', 'E'),
+            ('3', 'F')
+        ]
+
+        calculos_diarios = {}
+        for maquina, cabezal in combinaciones:
+            # Filtrar los datos para la combinación específica de máquina y cabezal
+            datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['maquina'] == maquina and dato['cabezal'] == cabezal]
+
+            if datos_maquina_cabezal:
+                # Obtener los valores de resultados para los cálculos
+                valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
+
+                # Depuración: verificar valores obtenidos (temp borrar luego)
+                print(f"Máquina: {maquina}, Cabezal: {cabezal}, Valores: {valores}")
+
+                # Realizar los cálculos
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': len(valores),
+                    'promedio': sum(valores) / len(valores) if valores else None,
+                    'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
+                    'maximo': max(valores) if valores else None,
+                    'minimo': min(valores) if valores else None,
+                }
+            else:
+                # Si no hay datos, dejar los cálculos vacíos
+                calculos_diarios[f"{maquina}-{cabezal}"] = {
+                    'numero_Datos': 0,
+                    'promedio': None,
+                    'desviacion_Estandar': None,
+                    'maximo': None,
+                    'minimo': None,
+                }
+        #[FIN]Se repite esto en la vista mostrardiario borrar luego-------------
+
 
         # Crear el diccionario de resultados para la respuesta JSON
         resultados = {
             'pesoPromedio': calculosPesoEnvVacio['pesoPromedio'],
             'densidadPonderada': densidadPonderada,
-            'resultadosPesoNeto': resultadosPesoNeto   #agregado prueba resultado para peso neto
+            'resultadosPesoNeto': resultadosPesoNeto,  # Agregado para mostrar peso neto por dato
+            'calculosDiarios': calculos_diarios        # Agregado los cálculos diarios por combinación de máquina y cabezal
         }
 
         # Retornar la respuesta en formato JSON
         return JsonResponse(resultados)
+
     
 #----END PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-----------------------------------------------|
         
@@ -698,9 +745,174 @@ class ReporteR49RangoFechaView(LoginRequiredMixin, View):
 
         return JsonResponse(resultadosporfecha)
 
-    
-class MostrarDiarioSemanalView(LoginRequiredMixin, TemplateView):
-    # model = Pesobruto  #borrar locomentado si no hay errores
-    # queryset = Pesobruto.objects.all()
-    template_name = 'reporte_R49_DiarioSemanal.html'
+
+
+
+    # login_url = reverse_lazy('usuarios:login')
+
+    # def get(self, request, id, *args, **kwargs):
+    #     # Obtener el registro basado en el ID del modelo EncabR49V2
+    #     registro = get_object_or_404(EncabR49V2, id=id)
+
+    #     # Obtener los datos asociados al registro desde Pesobruto
+    #     datosPesoBruto = Pesobruto.objects.filter(encabezado_id=registro.id)
+
+    #     # Suponiendo que los datos relacionados están en Pesobruto
+    #     if datosPesoBruto.exists():
+    #         maquina = datosPesoBruto.first().maquina  # Obtener la primera instancia para obtener la máquina
+    #         cabezal = datosPesoBruto.first().cabezal  # Obtener la primera instancia para obtener el cabezal
+    #     else:
+    #         maquina, cabezal = None, None  # Si no hay datos, se asigna None
+
+    #     # Realizar los cálculos con los datos asociados
+    #     resultadosPesoNeto = [
+    #         {
+    #             'id': dato.id,
+    #             'valor': dato.valor,
+    #             'resultado': dato.valor  # Aquí puedes ajustar la lógica de cálculo
+    #         }
+    #         for dato in datosPesoBruto
+    #     ]
+
+    #     # Cálculos para el reporte diario
+    #     valores = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
+    #     calculos_diarios = {
+    #         'numero_Datos': len(valores),
+    #         'promedio': sum(valores) / len(valores) if valores else None,
+    #         'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
+    #         'maximo': max(valores) if valores else None,
+    #         'minimo': min(valores) if valores else None,
+    #     }
+
+    #     # Pasar los datos calculados al contexto
+    #     context = {
+    #         'calculos_diarios': calculos_diarios,
+    #         'registro': registro,
+    #         'maquina': maquina,  # Pasar la máquina al contexto
+    #         'cabezal': cabezal   # Pasar el cabezal al contexto
+    #     }
+
+    #     # Renderizar el template con el contexto
+    #     return render(request, 'reporte_R49_Diario.html', context)
+
+
+class MostrarDiarioView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('id')
+        print(f"Encabezado pk: {pk}")
+
+        # Calcular el peso promedio
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(encabezado=pk)
+        print(f"Datos de Peso Env Vacio: {datosPesoEnvVacio}") 
+        calculosPesoEnvVacio = datosPesoEnvVacio.aggregate(
+            pesoPromedio=Avg('peso'),
+        )
+
+        # Filtrar los datos para densidad ponderada
+        datosDensidad = Densidadpt.objects.filter(encabezado=pk)
+        producto_sum = datosDensidad.aggregate(
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=DecimalField(max_digits=10, decimal_places=4))
+        )
+        volumen_sum = datosDensidad.aggregate(
+            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+        )
+        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] else None
+
+        # Obtener los datos de Pesobruto
+        datosPesoBruto = Pesobruto.objects.filter(encabezado=pk)
+
+        # Realizar el cálculo de peso neto
+        resultadosPesoNeto = []
+        for dato in datosPesoBruto:
+            resultado = int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
+            resultadosPesoNeto.append({
+                'id': dato.id,
+                'cabezal': dato.cabezal.nombre,
+                'maquina': dato.maquina.numero,
+                'valorPesoBruto': dato.valor,
+                'resultado': resultado
+            })
+
+        # Cálculos por combinación de máquina y cabezal
+        calculos_diarios = {}
+        for dato in resultadosPesoNeto:
+            maquina = dato['maquina']
+            cabezal = dato['cabezal']
+            resultado = dato['resultado']
+
+            key = f"{maquina}-{cabezal}"
+            if key not in calculos_diarios:
+                calculos_diarios[key] = {
+                    'numero_Datos': 0,
+                    'valores': []
+                }
+            calculos_diarios[key]['numero_Datos'] += 1
+            calculos_diarios[key]['valores'].append(resultado)
+
+        # Procesar cálculos
+        calculos_diarios_procesados = []
+        for key, data in calculos_diarios.items():
+            maquina, cabezal = key.split('-')
+            valores = data['valores']
+
+            if valores:
+                promedio = sum(valores) / len(valores)
+                desviacion_estandar = stdev(valores) if len(valores) > 1 else None
+                maximo = max(valores)
+                minimo = min(valores)
+            else:
+                promedio = desviacion_estandar = maximo = minimo = None
+
+            calculos_diarios_procesados.append({
+                'maquina': maquina,
+                'cabezal': cabezal,
+                'datos': {
+                    'numero_Datos': data['numero_Datos'],
+                    'promedio': promedio,
+                    'desviacion_Estandar': desviacion_estandar,
+                    'maximo': maximo,
+                    'minimo': minimo,
+                },
+            })
+
+        print(f"Calculos Diarios: {calculos_diarios_procesados}")
+
+        #[INICIO]---------------------- Cálculos globales------------------
+        valores_globales = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
+
+        # Número de datos globales
+        numero_Datos_Globales = len(valores_globales)
+
+        # Promedio global
+        promedio_Global = sum(valores_globales) / numero_Datos_Globales if numero_Datos_Globales > 0 else None
+
+        # Desviación estándar global
+        desviacion_Estandar_Global = stdev(valores_globales) if len(valores_globales) > 1 else None
+
+        # Máximo y mínimo globales
+        maximo_Global = max(valores_globales) if valores_globales else None
+        minimo_Global = min(valores_globales) if valores_globales else None
+        #[FIN]---------------------- Cálculos globales------------------
+
+        # Crear el contexto para el template
+        context = {
+            'pesoPromedio': calculosPesoEnvVacio['pesoPromedio'],
+            'densidadPonderada': densidadPonderada,
+            'resultadosPesoNeto': resultadosPesoNeto,
+            'calculosDiariosProcesados': calculos_diarios_procesados,
+            'encabezado_datos': EncabR49V2.objects.filter(id=pk),
+
+            #Globales diarios
+            'numero_Datos_Globales': numero_Datos_Globales,
+            'promedio_Global': promedio_Global,
+            'desviacion_Estandar_Global': desviacion_Estandar_Global,
+            'maximo_Global': maximo_Global,
+            'minimo_Global': minimo_Global,
+        }
+
+        return render(request, 'reporte_R49_Diario.html', context)
+
+
+  
