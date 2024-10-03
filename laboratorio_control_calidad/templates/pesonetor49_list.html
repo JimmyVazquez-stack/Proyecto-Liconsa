@@ -48,28 +48,28 @@
 
 <!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
 <script>
-    $(document).ready(function() {
-        $.ajax({
-            url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                var tableData = data.resultadosPesoNeto.map(function(item) {
-                    return [item.id, item.cabezal, item.valorPesoBruto, item.resultado];
-                });
-                
-                $('#reportTable').DataTable({
-                    data: tableData,
-                    columns: [
-                        { title: "Id" },
-                        { title: "Cabezal" },
-                        { title: "Valor Peso Bruto" },
-                        { title: "Resultado Operación" }
-                    ]
-                });
-            }
-        });
+$(document).ready(function() {
+    $.ajax({
+        url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var tableData = data.resultadosPesoNeto.map(function(item) {
+                return [item.id, item.cabezal, item.valorPesoBruto, item.resultado];
+            });
+            
+            $('#reportTable').DataTable({
+                data: tableData,
+                columns: [
+                    { title: "Id" },
+                    { title: "Cabezal" },
+                    { title: "Valor Peso Bruto" },
+                    { title: "Resultado Operación" }
+                ]
+            });
+        }
     });
+});
 </script>
 </body>
 </html>
