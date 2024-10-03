@@ -40,7 +40,7 @@ class Densidadpt(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.linea
+        return f"ID: {self.id}"
 
 
 class Pesoenvvacio(models.Model):
@@ -54,7 +54,7 @@ class Pesoenvvacio(models.Model):
     encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        pass
+        return f"ID: {self.id}"
     
 class Pesobruto(models.Model):
     fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
@@ -67,7 +67,7 @@ class Pesobruto(models.Model):
     encabezado = models.ForeignKey(EncabR49V2, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        pass
+        return f"ID: {self.id}"
 
 
 
