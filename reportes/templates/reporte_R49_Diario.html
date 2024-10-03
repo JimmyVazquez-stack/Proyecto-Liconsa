@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css'%}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css'%}">
+    <!-- Script para datos de json calculos R49 Juan Carlos -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> -->
+
+</head>
+<body>
+
+<table class="table table-bordered bg-light table-hover">
+    <thead>
+        <tr style="text-align: center;">
+            <th colspan="5" >
+                <div class="right-image mb-3" >
+                    <img src="{% static 'img/Liconsa.svg' %}" alt="Logo" width="100%;" height="100%;">
+                </div>
+            </th>
+            <th rowspan="3" colspan="5" align="center">
+                LICONSA S.A. DE C.V <br>
+                GERENCIA ESTATAL TLAXCALA <br>
+                LABORATORIO DE CONTROL DE CALIDAD <br>
+            </th>
+            <th rowspan="3" colspan="5" align="center">
+                Clave de Registro <br>
+                TX-HP-910-01-R49
+            </th>
+        </tr>
+    </thead>
+</table>
+
+<div class="contenedor-tablas">
+    <table class="table table-bordered bg-light table-hover" id="tablaReporteDiario">
+        <thead>
+            
+            {% for encabezado in encabezado_datos %}
+            <tr class="badge-success">
+                <th colspan="5">DATOS DE REPORTE DIARIO PESO NETO
+                </th>
+                <th colspan="5">FECHA: {{ encabezado.fecha }}
+                </th>   
+            </tr>
+            {% endfor %}
+
+            <!-- Aquí continúa el resto del encabezado -->
+        </thead>
+            
+            <tr style="text-align: center;">
+                <th>Maquina</th>
+                <th>Cabezal</th>
+                <th>No Datos</th>
+                <th>Promedio</th>
+                <th>Desviación Estandar</th>
+                <th>Maximo</th>
+                <th>Minimo</th>
+               
+            </tr>
+        </thead>
+
+        <tbody> 
+            {% for calculo in calculosDiariosProcesados %}
+            <tr>
+                <td>{{ calculo.maquina }}</td> <!-- Máquina -->
+                <td>{{ calculo.cabezal }}</td> <!-- Cabezal -->
+                <td>{{ calculo.datos.numero_Datos }}</td> <!-- Número de Datos -->
+                <td>{{ calculo.datos.promedio }}</td> <!-- Promedio -->
+                <td>{{ calculo.datos.desviacion_Estandar }}</td> <!-- Desviación Estándar -->
+                <td>{{ calculo.datos.maximo }}</td> <!-- Máximo -->
+                <td>{{ calculo.datos.minimo }}</td> <!-- Mínimo -->
+            </tr>
+            {% endfor %}   
+        </tbody>
+        <pre>{{ calculosDiariosProcesados|safe }}</pre>
+        
+  
+    </table>
+</div>
+
+<!--Tabla datos globales-->
+<div class="contenedor-tablas">
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr class="badge-success">
+                <th colspan="10">DATOS GLOBALES DIARIOS
+                </th>  
+            </tr>
+        
+            <!-- Aquí continúa el resto del encabezado -->
+        </thead>
+            
+        <tr style="text-align: center;"></tr>
+            <th>No Datos</th>
+            <th>Promedio</th>
+            <th>Desviación Estandar</th>
+            <th>Maximo</th>
+            <th>Minimo</th>
+            <th>&lt;1940 ml</th>
+            <th>% F L I </th>
+            <th> % F L S </th>
+            <th>DENSIDAD (g/mL) </th>
+            <th>PESO ENVASE VACIO (g)</th>
+        </tr>
+        </thead>   
+
+        <tbody>
+            
+            <tr>
+                <td>{{numero_Datos_Globales }}</td> <!-- Máquina -->
+                <td>{{ promedio_Global }}</td> <!--Cabezal -->
+                <td>{{ desviacion_Estandar_Global }}</td>
+                <td>{{ maximo_Global }}</td>
+                <td>{{ minimo_Global }}</td>
+                <td>0%</td>
+                <td>0%</td>
+                <td>0%</td>
+                <td>{{ densidadPonderada }}</td>
+                <td>{{pesoPromedio  }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+        
+
+
+<div class="contenedor-autorizacion">
+    <div class="seccion">
+        <p>Elaboró</p>
+        <hr>
+        <p>Nombre de la persona que elaboró</p>
+    </div>
+
+    <div class="seccion">
+        <p>Reviso</p>
+        <hr>
+        <p>Jefe de Sección y/o de Unidad</p>
+    </div>
+    
+    <div class="seccion">
+        <p>Vo. Bo</p>
+        <hr>
+        <p>Coordinador del Laboratorio de Control de Calidad</p>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
+<!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
+<!-- <script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var tableData = data.calculos_diarios.map(function(item) {
+                    return [item.numero_Datos, item.promedio, item.desviacion_Estandar, item.maximo, item.minimo];
+                });
+                
+                $('#tablaReporteDiario').DataTable({
+                    data: tableData,
+                    columns: [
+                        { title: "Num Datos" },
+                        { title: "Promedio" },
+                        { title: "Desviacion estandar" },
+                        { title: "Maximo" },
+                        { title: "Minimo" }
+                    ]
+                });
+            }
+        });
+    });
+    </script>
+    </body>
+    </html>
+     -->
