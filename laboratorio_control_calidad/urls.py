@@ -24,7 +24,7 @@ urlpatterns = [
     # path('encabezador49_update/<int:pk>', Encabezador49Update.as_view(), name='encabezador49_update'),
     
     #Para valores de peso Neto
-    path('pesonetor49_list/', MostrarPesosView.as_view(), name='pesonetor49_list'),
+    path('pesonetor49_list/<int:pk>', MostrarPesosView.as_view(), name='pesonetor49_list'),
 
     
     #Rutas para el CRUD de FormatoR49 V2------------------------------------------------------
