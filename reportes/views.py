@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import View, TemplateView
 import os
 from django.db.models import Min, Max, Count, Sum, F, FloatField, DecimalField, Avg, StdDev
+from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from laboratorio_control_calidad.models import *
@@ -532,6 +533,7 @@ class VolumenNetoView(View):
 
 #----START PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO------------------------------------|
 
+
 class CalculosR49DataView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
 
@@ -547,16 +549,19 @@ class CalculosR49DataView(LoginRequiredMixin, View):
 
         # Calcular la suma ponderada de densidad por volumen
         producto_sum = datosDensidad.aggregate(
-            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=FloatField(max_digits=10, decimal_places=4))
+            densidad_volumen_sum=Sum(F('densidad') * F('volumen'), output_field=FloatField())
         )
 
         # Calcular la suma de volumen
         volumen_sum = datosDensidad.aggregate(
-            volumen_sum=Sum('volumen', output_field=DecimalField(max_digits=5, decimal_places=4))
+            volumen_sum=Sum('volumen', output_field=FloatField())
         )
 
         # Dividir la suma del producto por la suma de volumen para obtener la densidad ponderada
-        densidadPonderada = producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'] if volumen_sum['volumen_sum'] and producto_sum['densidad_volumen_sum'] else None
+        densidadPonderada = (
+           round(producto_sum['densidad_volumen_sum'] / volumen_sum['volumen_sum'],4)
+            if volumen_sum['volumen_sum'] and producto_sum['densidad_volumen_sum'] else None
+        )
 
         # Obtener los datos de Pesobruto
         datosPesoBruto = Pesobruto.objects.all()
@@ -568,17 +573,23 @@ class CalculosR49DataView(LoginRequiredMixin, View):
                 'cabezal': dato.cabezal.nombre,
                 'maquina': dato.maquina.numero,
                 'valorPesoBruto': dato.valor,
-                'resultado': int((dato.valor - calculosPesoEnvVacio['pesoPromedio']) / densidadPonderada) if densidadPonderada else None
+                'resultado': int((float(dato.valor) - float(calculosPesoEnvVacio['pesoPromedio'])) / float(densidadPonderada)) if densidadPonderada else None
             }
             for dato in datosPesoBruto
         ]
 
-         # Depuración: imprimir resultados intermedios (temp borrar luego)
-        print("Resultados Peso Neto:")
-        for r in resultadosPesoNeto:
-            print(f"ID: {r['id']}, Máquina: {r['maquina']}, Cabezal: {r['cabezal']}, Valor Peso Bruto: {r['valorPesoBruto']}, Resultado: {r['resultado']}")
+        
+        # Depuración: imprimir resultados intermedios
+        print("Resultados de los Cálculos:")
+        print(f"Peso Promedio: {calculosPesoEnvVacio['pesoPromedio']}")
+        print(f"Densidad Ponderada: {densidadPonderada}")
 
-        #[INICIO]Se repite esto en la vista mostrardiario borrar luego-------------
+        
+
+        # print("Resultados Peso Neto:")
+        # for r in resultadosPesoNeto:
+        #     print(f"ID: {r['id']}, Máquina: {r['maquina']}, Cabezal: {r['cabezal']}, Valor Peso Bruto: {r['valorPesoBruto']}, Resultado: {r['resultado']}")
+
         # Cálculos para cada combinación de máquina y cabezal
         combinaciones = [
             ('1', 'A'),
@@ -598,9 +609,6 @@ class CalculosR49DataView(LoginRequiredMixin, View):
                 # Obtener los valores de resultados para los cálculos
                 valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
 
-                # Depuración: verificar valores obtenidos (temp borrar luego)
-                print(f"Máquina: {maquina}, Cabezal: {cabezal}, Valores: {valores}")
-
                 # Realizar los cálculos
                 calculos_diarios[f"{maquina}-{cabezal}"] = {
                     'numero_Datos': len(valores),
@@ -618,19 +626,19 @@ class CalculosR49DataView(LoginRequiredMixin, View):
                     'maximo': None,
                     'minimo': None,
                 }
-        #[FIN]Se repite esto en la vista mostrardiario borrar luego-------------
-
 
         # Crear el diccionario de resultados para la respuesta JSON
         resultados = {
-            'pesoPromedio': calculosPesoEnvVacio['pesoPromedio'],
-            'densidadPonderada': densidadPonderada,
-            'resultadosPesoNeto': resultadosPesoNeto,  # Agregado para mostrar peso neto por dato
-            'calculosDiarios': calculos_diarios        # Agregado los cálculos diarios por combinación de máquina y cabezal
+            'pesoPromedio': float(calculosPesoEnvVacio['pesoPromedio']),
+            'densidadPonderada': round(float(densidadPonderada), 4) if densidadPonderada is not None else None,
+            'resultadosPesoNeto': resultadosPesoNeto,
+            'calculosDiarios': calculos_diarios
         }
 
         # Retornar la respuesta en formato JSON
         return JsonResponse(resultados)
+
+
 
     
 #----END PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-----------------------------------------------|
