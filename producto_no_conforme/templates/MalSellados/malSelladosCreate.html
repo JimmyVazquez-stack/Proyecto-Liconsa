@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block principal %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title">Modificar Registro</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" action="">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" name="submit-encab-form" class="btn btn-success">Guardar</button>
+          <a href="{% url 'producto_no_conforme:ms_encabView' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-body bg-light">
+      <div class="col-xl-12 mt-3 p-3">
+        <div class="table-responsive">
+          <div class="d-flex justify-content-start mb-3">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#modal-xl">
+              Nuevo Registro
+            </button>
+            <div id="example_filter"></div>
+          </div>
+          <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+            <thead class="thead-light" style="font-size: 14px">
+              <tr>
+                <th>RUTA</th>
+                <th>NO. LECHERÍA</th>
+                <th>COLONIA O LOCALIDAD</th>
+                <th>ROTOS REPORTADOS</th>
+                <th>SELLADO</th>
+                <th>IMPUTABLES A LA FABRICACIÓN</th>
+                <th>IMPUTABLES A LA TRANSPORTACIÓN</th>
+                <th>CAUSAS INTENCIONALES</th>
+              </tr>
+            </thead>
+            <tbody style="font-size: 14px">
+              {% for item in term %}
+              <tr>
+                <td>{{ item.ruta }}</td>
+                <td>{{ item.lecheria }}</td>
+                <td>{{ item.colonia }}</td>
+                <td>{{ item.noRotos }}</td>
+                <td>{{ item.sellado }}</td>
+                <td>{{ item.imputFabricacion }}</td>
+                <td>{{ item.imputTransportacion }}</td>
+                <td>{{ item.causInt }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para agregar/editar registro -->
+<div class="modal fade {% if edit_mode %}show d-block{% endif %}" id="modal-xl">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{% if edit_mode %}Editar Registro{% else %}Nuevo Registro{% endif %}</h4>
+        <a href="{{ request.path }}" class="close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        {% if edit_mode %}
+            <input type="hidden" name="term_id" value="{{ nuevo_form.instance.id }}">
+        {% endif %}
+        <div class="modal-body">
+          {% if nuevo_form.errors %}
+            <div class="alert alert-danger">
+              <ul>
+                {% for field in nuevo_form %}
+                  {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in nuevo_form.non_field_errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.encabezado.label_tag }}
+                {{ nuevo_form.encabezado }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.ruta.label_tag }}
+                {{ nuevo_form.ruta }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.lecheria.label_tag }}
+                {{ nuevo_form.lecheria }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.colonia.label_tag }}
+                {{ nuevo_form.colonia }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.noRotos.label_tag }}
+                {{ nuevo_form.noRotos }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.sellado.label_tag }}
+                {{ nuevo_form.sellado }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.imputFabricacion.label_tag }}
+                {{ nuevo_form.imputFabricacion }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.imputTransportacion.label_tag }}
+                {{ nuevo_form.imputTransportacion }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                {{ nuevo_form.causInt.label_tag }}
+                {{ nuevo_form.causInt }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" name="submit-nuevo-form" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Devolución de envases mal sellados {% endblock %}
+{% block principal %}
+{% block informacion %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title">
+                        <i class="fas fa-bullhorn"></i>
+                        Información
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="callout callout-info">
+                        <h5>Devolución de envases mal sellados</h5>
+                        <p>
+                            En esta sección se presentan los resultados de envases mal sellados.
+                        </p>
+                        <p>
+                            Para ver los resultados de un análisis, seleccione el análisis
+                            deseado en el menú.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block datatable %}
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gray-dark">
+                    <h3 class="card-title"></h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="col-xl-12 mt-3 p-3">
+                        <div class="table-responsive">
+                            <div class="d-flex justify-content-start mb-3">
+                                <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modal-default2">
+                                    Nuevo Folio
+                                </button>
+                                <div id="example_filter"></div>
+                            </div>
+                            <table class="table table-hover text-nowrap dataTable no-footer dtr-inline collapsed" id="example1" aria-describedby="example1_info">
+                                <thead class="thead-light" style="font-size: 14px">
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Programa social</th>
+                                        <th>Fecha de venta</th>
+                                        <th>Fecha de evaluación</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px">
+                                    {% for item in encab %}
+                                    <tr>
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.programaSocial}}</td>
+                                        <td>{{item.fechaVenta}}</td>
+                                        <td>{{item.fechaEvaluacion}}</td>
+                                        <td>
+                                            <a class="btn btn-warning" href="{% url 'producto_no_conforme:ms_encabUpdate' item.id %}"><i class="fa fa-pencil"></i></a>
+                                            <a class="btn btn-danger" href="{% url 'producto_no_conforme:ms_delete' item.id %}"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear un nuevo registro -->
+<div class="modal fade" id="modal-default2">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Nuevo Folio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Mostrar errores del formulario -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in encab %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in encab.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.programaSocial.label_tag }}
+                                {{ form.programaSocial }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.fechaVenta.label_tag }}
+                                {{ form.fechaVenta }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.fechaEvaluacion.label_tag }}
+                                {{ form.fechaEvaluacion }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+{% endblock %}
+
+<!-- SweetAlert2 -->
+<script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
