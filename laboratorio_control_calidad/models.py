@@ -23,7 +23,7 @@ class EncabR49V2(models.Model):
 
     
 class Densidadpt(models.Model):
-    fechaHora = models.DateTimeField (default=timezone.now,verbose_name="Hora")
+    fechaHora = models.DateTimeField (default=timezone.now,verbose_name="Fecha/Hora")
     cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE)
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto,on_delete=models.CASCADE, null=True)
@@ -44,7 +44,7 @@ class Densidadpt(models.Model):
 
 
 class Pesoenvvacio(models.Model):
-    fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
+    fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Fecha/Hora")
     cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE)
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE) 
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE) 
@@ -57,7 +57,7 @@ class Pesoenvvacio(models.Model):
         return f"ID: {self.id}"
     
 class Pesobruto(models.Model):
-    fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Hora")
+    fechaHora = models.DateTimeField(default=timezone.now,verbose_name="Fecha/Hora")
     cabezal = models.ForeignKey(Cabezal, on_delete=models.CASCADE, null=True)
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE, null=True) 
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE, null=True)
