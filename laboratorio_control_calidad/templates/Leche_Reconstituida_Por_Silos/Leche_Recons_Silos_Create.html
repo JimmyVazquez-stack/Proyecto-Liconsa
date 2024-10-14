@@ -121,10 +121,11 @@
 
                             
                                 <!-- Botón para agregar un nuevo registro -->
+                                {% if perms.laboratorio_control_calidad.add_lechereconssilos %}
                                 <div>
                                     <a href="?silo_id=" class="btn btn-info mr-2" data-toggle="modal" data-target="#modal-xl">Agregar Registro</a>
                                 </div>
-
+                                {% endif %}
                             </div>
                         </div>
                     </div>

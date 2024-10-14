@@ -124,6 +124,7 @@
         <img src="{% static 'img/Liconsa_icono.png' %}" alt="SAV-C Logo"
           class="img brand-image elevation-3" style="opacity: .8">
 
+          
         <span class="brand-text font-weight-light"> SAV-C</span>
 
       </a>
@@ -325,8 +326,8 @@
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
                     <p>
-                      Muestrear, analizar y dictaminar
-                      <i class="fas fa-angle-left right"></i>
+                    FORMATO R49
+                    <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
@@ -355,6 +356,8 @@
                 </li>
               </ul>
               -->
+              {% if perms.laboratorio_control_calidad.view_lechereconssilosencab %}
+                                
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
@@ -364,7 +367,17 @@
                 </li>
               </ul>
 
-              <!-- Aun no elaborado 
+               
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_List' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Leche Reconstituida Por Silos Formulario Normal</p>
+                  </a>
+                </li>
+              </ul>
+              {% endif %}
+              <!--
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
