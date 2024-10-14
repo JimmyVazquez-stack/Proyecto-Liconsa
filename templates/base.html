@@ -469,7 +469,8 @@
                   </ul>
                 </li>
               </ul>
-              
+              {% if perms.laboratorio_control_calidad.view_lechereconssilosencab %}
+                                
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
@@ -487,7 +488,7 @@
                   </a>
                 </li>
               </ul>
-
+              {% endif %}
 
               <ul class="nav nav-treeview">
                 <li class="nav-item">

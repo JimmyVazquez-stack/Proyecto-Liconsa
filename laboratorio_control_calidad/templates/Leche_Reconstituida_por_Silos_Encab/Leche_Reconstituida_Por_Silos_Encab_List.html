@@ -47,9 +47,11 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex mb-3">
+                                {% if perms.laboratorio_control_calidad.add_lechereconssilosencab %}
                                 <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_Create' %}" class="btn btn-primary">Nuevo
                                     Registro</a>
-
+                                {% endif %}
+                                
                                     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-default">
                                         Generar Reporte Rango de Fechas
                                     </button>

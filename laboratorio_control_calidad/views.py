@@ -84,16 +84,19 @@ class verificacion_documentos(LoginRequiredMixin, TemplateView):
 #=========================[Start] Leche Reconstituida por silos encab [Start]==============================#
 
 
-class LecheReconsSilosEncabView(generic.ListView):
+class LecheReconsSilosEncabView(LoginRequiredMixin, generic.ListView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     queryset = LecheReconsSilosEncab.objects.all()
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_List.html'
     context_object_name = 'LecheReconsSilosEncab'
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab')
  
 
-
-class LecheReconsSilosEncabCreate(View):
+class LecheReconsSilosEncabCreate(LoginRequiredMixin, View, PermissionRequiredMixin):
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.change_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get(self, request, *args, **kwargs):
         encab_form = LecheReconsSilosEncabForm()
@@ -142,8 +145,11 @@ class LecheReconsSilosEncabCreate(View):
         return False
 
 
-class LecheReconsSilosEncabUpdate(View):
+class LecheReconsSilosEncabUpdate(LoginRequiredMixin, View, PermissionRequiredMixin):
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get(self, request, *args, **kwargs):
         encab = get_object_or_404(LecheReconsSilosEncab, pk=kwargs['pk'])
@@ -173,13 +179,13 @@ class LecheReconsSilosEncabUpdate(View):
             'silos_formset': silos_formset,
         })
 
-   
 
-class LecheReconsSilosEncabDelete(DeleteView):
+class LecheReconsSilosEncabDelete(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Delete.html'
     context_object_name = 'LecheReconsSilosEncab'
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.delete_lechereconssilosencab')
     
  
 
@@ -187,11 +193,12 @@ class LecheReconsSilosEncabDelete(DeleteView):
 
 #=========================[Start] Leche Reconstituida por silos  [Start]==============================#
 
-class LecheReconsSilosView(generic.ListView):
+class LecheReconsSilosView(LoginRequiredMixin, generic.ListView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     queryset = LecheReconsSilosEncab.objects.all()
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_List.html'
     context_object_name = 'LecheReconsSilosEncab'
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -208,33 +215,41 @@ class LecheReconsSilosView(generic.ListView):
         return self.get(request, *args, **kwargs)
 
     
-class LecheReconsSilosUpdate(generic.UpdateView):
+class LecheReconsSilosUpdate(LoginRequiredMixin, generic.UpdateView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Create.html'
     context_object_name = 'LecheReconsSilosEncab'
     form_class = LecheReconsSilosEncabForm
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         encab_object = self.get_object()
         context['silos'] = LecheReconsSilos.objects.filter(encabezado=encab_object)
 
-        # Obtener el ID del silo desde los parámetros GET para edición
         silo_id = self.request.GET.get('silo_id')
+        delete_silo_id = self.request.GET.get('delete_silo_id')
         if silo_id:
             try:
                 nuevo_form = LecheReconsSilosForm(instance=LecheReconsSilos.objects.get(id=silo_id))
                 context['edit_mode'] = True
             except LecheReconsSilos.DoesNotExist:
-                # Si el ID no existe, inicializar el formulario para un nuevo registro
                 nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
                 context['edit_mode'] = False
         else:
             nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
             context['edit_mode'] = False
 
-        # Desactivar edición del encabezado
+        if delete_silo_id:
+            try:
+                silo_to_delete = LecheReconsSilos.objects.get(id=delete_silo_id)
+                context['silo_to_delete'] = silo_to_delete
+            except LecheReconsSilos.DoesNotExist:
+                context['silo_to_delete'] = None
+
         nuevo_form.fields['encabezado'].widget.attrs['readonly'] = True
         context['form'] = self.get_form()
         context['nuevo_form'] = nuevo_form
@@ -243,10 +258,22 @@ class LecheReconsSilosUpdate(generic.UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        silo_id = request.POST.get('silo_id')
 
-        # Asegurarse de que el formulario esté correctamente ligado a la instancia existente
-        if silo_id and silo_id.isdigit():
+        # Manejo de eliminación
+        if 'delete-silo' in request.POST:
+            silo_id = request.POST.get('silo_id')
+            if silo_id:  # Asegúrate de que silo_id no esté vacío
+                try:
+                    silo_instance = LecheReconsSilos.objects.get(id=silo_id)
+                    silo_instance.delete()
+                    return redirect(request.path)
+                except LecheReconsSilos.DoesNotExist:
+                    # Manejar el caso si el silo no existe
+                    pass
+
+        # Manejo de la actualización
+        silo_id = request.POST.get('silo_id')
+        if silo_id:
             try:
                 silo_instance = LecheReconsSilos.objects.get(id=silo_id)
                 nuevo_form = LecheReconsSilosForm(request.POST, instance=silo_instance)
@@ -255,36 +282,35 @@ class LecheReconsSilosUpdate(generic.UpdateView):
         else:
             nuevo_form = LecheReconsSilosForm(request.POST)
 
-        # Guardar el formulario de encabezado si se presionó su botón de guardar
         if 'submit-encab-form' in request.POST and form.is_valid():
             form.save()
             return redirect(self.success_url)
 
-        # Guardar o actualizar el formulario de silo si se presionó su botón de guardar
         if 'submit-nuevo-form' in request.POST and nuevo_form.is_valid():
             nuevo_form.save()
             return redirect(request.path)
 
-        # En caso de errores, renderizar los formularios con los datos ya ingresados
         context = self.get_context_data()
         context['form'] = form
         context['nuevo_form'] = nuevo_form
         return self.render_to_response(context)
 
 
-
-class LecheReconsSilosDelete(DeleteView):
+class LecheReconsSilosDelete(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete.html'
     context_object_name = 'LecheReconsSilosEncab'
     success_url = reverse_lazy('Leche_Recons_Silos_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.delete_lechereconssilosencab')
 
-class LecheReconsSilosDeleteSilo(DeleteView):
+
+class LecheReconsSilosDeleteSilo(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilos
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete_Silo.html'
     context_object_name = 'LecheReconsSilos'
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
-    
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilos','laboratorio_control_calidad.delete_lechereconssilos')
+
  
 
 #==========================[End] Leche Reconstituida por silos  [End]==============================#
@@ -413,7 +439,6 @@ class EncabCreate(generic.CreateView):
     form_class = TerminadoEncabForm
     success_url = reverse_lazy('laboratorio_control_calidad:pt_encabView')
     
-
 
 class EncabUpdate(generic.UpdateView):
     model = terminadoEncab
