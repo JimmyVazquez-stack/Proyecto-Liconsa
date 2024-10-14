@@ -687,57 +687,57 @@ class ReporteR49RangoFechaView(LoginRequiredMixin, View):
         ]
 
         # Cálculos para cada combinación de máquina y cabezal
-        combinaciones = [
-            ('1', 'A'),
-            ('1', 'B'),
-            ('2', 'C'),
-            ('2', 'D'),
-            ('3', 'E'),
-            ('3', 'F')
-        ]
+        # combinaciones = [
+        #     ('1', 'A'),
+        #     ('1', 'B'),
+        #     ('2', 'C'),
+        #     ('2', 'D'),
+        #     ('3', 'E'),
+        #     ('3', 'F')
+        # ]
 
-        calculos_diarios = {}
-        for maquina, cabezal in combinaciones:
-            datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['cabezal'] == cabezal]
+        # calculos_diarios = {}
+        # for maquina, cabezal in combinaciones:
+        #     datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['cabezal'] == cabezal]
 
-            if datos_maquina_cabezal:
-                valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
-                calculos_diarios[f"{maquina}-{cabezal}"] = {
-                    'numero_Datos': len(valores),
-                    'promedio': sum(valores) / len(valores) if valores else None,
-                    'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
-                    'maximo': max(valores) if valores else None,
-                    'minimo': min(valores) if valores else None,
-                }
-            else:
-                calculos_diarios[f"{maquina}-{cabezal}"] = {
-                    'numero_Datos': 0,
-                    'desviacion_Estandar': None,
-                    'maximo': None,
-                    'minimo': None,
-                }
+        #     if datos_maquina_cabezal:
+        #         valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
+        #         calculos_diarios[f"{maquina}-{cabezal}"] = {
+        #             'numero_Datos': len(valores),
+        #             'promedio': sum(valores) / len(valores) if valores else None,
+        #             'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
+        #             'maximo': max(valores) if valores else None,
+        #             'minimo': min(valores) if valores else None,
+        #         }
+        #     else:
+        #         calculos_diarios[f"{maquina}-{cabezal}"] = {
+        #             'numero_Datos': 0,
+        #             'desviacion_Estandar': None,
+        #             'maximo': None,
+        #             'minimo': None,
+        #         }
 
-        # Cálculos semanales
-        total_datos_semanales = len(resultadosPesoNeto)
+        # Cálculos por rango de fecha
+        totalDatosPorFecha = len(resultadosPesoNeto)
         valores_ponderados = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
 
-        promedio_total_ponderado = sum(valores_ponderados) / total_datos_semanales if total_datos_semanales else None
+        promedio_total_ponderado = sum(valores_ponderados) / totalDatosPorFecha if totalDatosPorFecha else None
         desviacion_total_ponderada = statistics.stdev(valores_ponderados) if len(valores_ponderados) > 1 else None
-        maximo_semanal = max(valores_ponderados) if valores_ponderados else None
-        minimo_semanal = min(valores_ponderados) if valores_ponderados else None
+        maximoPorFecha = max(valores_ponderados) if valores_ponderados else None
+        minimoPorFecha = min(valores_ponderados) if valores_ponderados else None
 
         # Peso promedio
         pesoPromedio = calculosPesoEnvVacio['pesoPromedio']
 
         # Generar el JSON de resultados
         resultadosporfecha = {
-            'diarios': calculos_diarios,
+            # 'diarios': calculos_diarios,
             'semanales': {
-                'total_Datos': total_datos_semanales,
+                'total_Datos': totalDatosPorFecha,
                 'promedio_Total_Ponderado': promedio_total_ponderado,
                 'desviacion_Total_Ponderada': desviacion_total_ponderada,
-                'maximo_Semanal': maximo_semanal,
-                'minimo_Semanal': minimo_semanal,
+                'maximo_Por_Fecha': maximoPorFecha,
+                'minimo_Por_Fecha': minimoPorFecha,
                 'densidadPonderada': densidadPonderada,
                 'pesoPromedio': pesoPromedio,
             },
