@@ -16,36 +16,21 @@ urlpatterns = [
     path('calibracion_verificacion_equipo/', calibracion_verificacion_equipo.as_view(), name='calibracion_verificacion_equipo'),    
     path('verificacion_documentos/', verificacion_documentos.as_view(), name='verificacion_documentos'),
 
-    #Rutas para el CRUD de FormatoR49
-    path('registror49_create/', registror49_create.as_view(), name='registror49_create'),
-    path('registror49_list/', registror49_list.as_view(), name='registror49_list'),
-    path('registror49_delete/<int:pk>', registror49_delete.as_view(), name='registror49_delete'),
-    path('registror49_update/<int:pk>', registror49_update.as_view(), name='registror49_update'),
-
-    #complementarias Densidad
-    path('densidadr49_create/', densidadr49_create.as_view(), name='densidadr49_create'),
-    path('densidadr49_list/', densidadr49_list.as_view(), name='densidadr49_list'),
-    path('densidadr49_delete/<int:pk>', densidadr49_delete.as_view(), name='densidadr49_delete'),
-    path('densidadr49_update/<int:pk>', densidadr49_update.as_view(), name='densidadr49_update'),
-
-    #complementarias Peso vacio
-    path('pesoenvvacior49_create/', pesoenvvacior49_create.as_view(), name='pesoenvvacior49_create'),
-    path('pesoenvvacior49_list/', pesoenvvacior49_list.as_view(), name='pesoenvvacior49_list'),
-    path('pesoenvvacior49_delete/<int:pk>', pesoenvvacior49_delete.as_view(), name='pesoenvvacior49_delete'),
-    path('pesoenvvacior49_update/<int:pk>', pesoenvvacior49_update.as_view(), name='pesoenvvacior49_update'),
-
-    #complementarias Peso bruto
-    path('pesobrutor49_create/', pesobrutor49_create.as_view(), name='pesobrutor49_create'),
-    path('pesobrutor49_list/', pesobrutor49_list.as_view(), name='pesobrutor49_list'),
-    path('pesobrutor49_delete/<int:pk>', pesobrutor49_delete.as_view(), name='pesobrutor49_delete'),
-    path('pesobrutor49_update/<int:pk>', pesobrutor49_update.as_view(), name='pesobrutor49_update'),
-
     # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilosEncab - [Start] - #
     path('Leche_Reconstituida_Por_Silos_Encab/list', LecheReconsSilosEncabView.as_view(), name='Leche_Recons_Silos_Encab_List'),
     path('Leche_Reconstituida_Por_Silos_Encab/create', LecheReconsSilosEncabCreate.as_view(), name='Leche_Recons_Silos_Encab_Create'),
     path('Leche_Reconstituida_Por_Silos_Encab/delete/<int:pk>', LecheReconsSilosEncabDelete.as_view(), name='Leche_Recons_Silos_Encab_Delete'),
     path('Leche_Reconstituida_Por_Silos_Encab/update/<int:pk>', LecheReconsSilosEncabUpdate.as_view(), name='Leche_Recons_Silos_Encab_Update'),   
     # - [End] - rutas para el CRUD de LecheReconstituidaPorSilos - [End] - #
+    
+      # - [Start] - rutas para el CRUD de LecheReconstituidaPorSilos - [Start] - #
+
+    path('Leche_Reconstituida_Por_Silos/list', LecheReconsSilosView.as_view(), name='Leche_Recons_Silos_List'),
+    path('Leche_Reconstituida_Por_Silos/delete/<int:pk>', LecheReconsSilosDelete.as_view(), name='Leche_Recons_Silos_Delete'),
+    path('Leche_Reconstituida_Por_Silos/update/<int:pk>', LecheReconsSilosUpdate.as_view(), name='Leche_Recons_Silos_Update'),
+    path('Leche_Reconstituida_Por_Silos/Silo/delete/<int:pk>', LecheReconsSilosDeleteSilo.as_view(), name='Leche_Recons_Silos_Delete_Silo'),
+
+    # - [End] - rutas para el CRUD de LecheReconstituidaPor - [End] - #
 
     path('producto_terminadoList/', TerminadoEncabView.as_view(), name='TerminadoList'),
     path('producto_terminadoCreate/', TerminadoEncabCreate.as_view(), name='producto_terminadoCreate'),
@@ -65,5 +50,44 @@ urlpatterns = [
     path('pt_Update/<int:pk>', TerminadoUpdate.as_view(), name='pt_Update'),
     path('pt_Delete/<int:pk>', PTerminadoDelete.as_view(), name='pt_Delete'),
 
+    #Juan Carlos URLS
+        #Formato con encabezado
+    # path('encabezador49V2_Create/', EncabR49CreateView.as_view(), name='encabezador49_create'),
+    path('encabezador49V2_list/', EncabR49ListView.as_view(), name='encabezador49_list'),
+    path('encabezador49V2_delete/<int:pk>/', EncabR49DeleteView.as_view(), name='encabezador49_delete'),
+    path('encabezador49V2_update/<int:pk>/', EncabR49UpdateView.as_view(), name='encabezador49_update'),
+        #Para valores de peso Neto
+    path('pesonetor49_list/', MostrarPesosView.as_view(), name='pesonetor49_list'),
+    #Rutas para el CRUD de FormatoR49 V2------------------------------------------------------
+    path('densidadr49_Create/', Densidadr49CreateView.as_view(), name='densidadr49_Create'),
+    path('densidadr49_List/', Densidadr49ListView.as_view(), name='densidadr49_List'),
+    path('densidadr49_Delete/<int:pk>', Densidadr49DeleteView.as_view(), name='densidadr49_Delete'),
+    path('densidadr49_Update/<int:pk>', Densidadr49UpdateView.as_view(), name='densidadr49_Update'),
+    #complementarias Peso vacio
+    path('pesoEnvVacior49_Create/', PesoEnvVacior49CreateView.as_view(), name='pesoEnvVacior49_Create'),
+    path('pesoEnvVacior49_List/', PesoEnvVacior49ListView.as_view(), name='pesoEnvVacior49_List'),
+    path('pesoEnvVacior49_Delete/<int:pk>', PesoEnvVacior49DeleteView.as_view(), name='pesoEnvVacior49_Delete'),
+    path('pesoEnvVacior49_Update/<int:pk>', PesoEnvVacior49UpdateView.as_view(), name='pesoEnvVacior49_Update'),
+    #complementarias Peso bruto
+    path('pesoBrutor49_Create/', PesoBrutor49CreateView.as_view(), name='pesoBrutor49_Create'),
+    path('pesoBrutor49_List/', PesoBrutor49ListView.as_view(), name='pesoBrutor49_List'),
+    path('pesoBrutor49_Delete/<int:pk>', PesoBrutor49DeleteView.as_view(), name='pesoBrutor49_Delete'),
+    path('pesoBrutor49_Update/<int:pk>', PesoBrutor49UpdateView.as_view(), name='pesoBrutor49_Update'),
+
+
+    #Calidad microbiologica
+    path('api/planta/', planta_list, name='planta_list'),
+    path('api/producto/', producto_list, name='producto_list'),
+    path('api/encabezados/', encabezados_list, name='encabezados_list_api'),      
+    path('api/calidad-microbiologica/add/<int:encabezado_id>/', add_calidad_microbiologica, name='calidad_microbiologica_add'),
+    path('api/calidad-microbiologica/', calidad_microbiologica_list, name='calidad_microbiologica_list'),
+    path('api/calidad-microbiologica/edit/<int:pk>/', calidad_microbiologica_edit, name='calidad_microbiologica_edit'),
+    path('api/calidad-microbiologica/update/', calidad_microbiologica_update, name='calidad_microbiologica_update'),    
+    path('api/calidad-microbiologica/delete/<int:pk>/', calidad_microbiologica_delete, name='calidad_microbiologica_delete'),
+    path('calidad-microbiologica/', CalidadMicrobiologicaView.as_view(), name='calidad_microbiologica'),
+    path('calidad-microbiologica/update/<int:encabezado_id>/', CalidadMicrobiologicaView.as_view(), name='calidad_microbiologica_edit_encabezado'),
+    path('calidad-microbiologica/delete/<int:encabezado_id>/', CalidadMicrobiologicaDeleteEncabezadoView.as_view(), name='calidad_microbiologica_delete_encabezado'),
+    path('calidad-microbiologica/detalle/<int:encabezado_id>/', CalidadMicrobiologicaDetalleView.as_view(), name='calidad_microbiologica_detalle'),
+    path('calidad-microbiologica/editar-encabezado/<int:pk>/', CalidadMicrobiologicaEncabezadoUpdateView.as_view(), name='calidad_microbiologica_editar_encabezado'),
 ]
 

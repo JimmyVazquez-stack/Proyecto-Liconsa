@@ -27,7 +27,17 @@ from django.contrib.auth.models import Permission #Importamos el modelo Permissi
 
 
 
-from django.views.generic import DetailView
+from django.views.generic import UpdateView
+from rest_framework.decorators import api_view
+from .serializers import *
+from rest_framework.response import Response
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework import status
+import json
+
+
 
 
 # Create your views here.
@@ -107,129 +117,21 @@ class index(LoginRequiredMixin,TemplateView, PermissionRequiredMixin):
                         self.request.user.groups.filter(permissions__codename=permiso_nombre.split('.')[1]).exists()
         context['puede_agregar_usuario'] = tiene_permiso
         return context
-
-#CRUD FormatoR49 Juan Carlos M.
-class registror49_list(generic.ListView):
-     model = TablaR49
-     queryset = TablaR49.objects.all ()
-     template_name = 'registror49_list.html'
-     context_object_name = 'tablar49'
-
-class registror49_create(generic.CreateView):
-    model = TablaR49
-    template_name = 'registror49_create.html'
-    context_object_name = 'tablar49'
-    form_class = TablaR49Form
-    success_url = reverse_lazy("laboratorio_control_calidad:registror49_list")
-
-class registror49_update(generic.UpdateView):
-    model = TablaR49
-    template_name = 'registror49_create.html' 
-    form_class = TablaR49Form
-    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
-    context_object_name = 'tablar49'
-
-class registror49_delete(generic.DeleteView):
-    model = TablaR49
-    template_name = 'registror49_delete.html'
-    context_object_name = 'tablar49'
-    success_url = reverse_lazy('laboratorio_control_calidad:registror49_list')
-
-### complementarias a formato R49 DENSIDAD
-class densidadr49_list(generic.ListView):
-    model = Densidadpt
-    queryset = Densidadpt.objects.all ()
-    template_name = 'complementariasR49/densidadr49_list.html'
-    context_object_name = 'densidadr49'
-
-class densidadr49_create(generic.CreateView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html'
-    context_object_name = 'densidadr49'
-    form_class = DensidadptForm
-    success_url = reverse_lazy("laboratorio_control_calidad:densidadr49_list")
-
-class densidadr49_update(generic.UpdateView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_create.html' 
-    form_class = DensidadptForm
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
-    context_object_name = 'densidadr49'
-
-class densidadr49_delete(generic.DeleteView):
-    model = Densidadpt
-    template_name = 'complementariasR49/densidadr49_delete.html'
-    context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:densidadr49_list')
-
-
-### complementarias a formato R49 PESO ENVASE VACIO# 
-class pesoenvvacior49_list(generic.ListView):
-    model = Pesoenvvacio
-    queryset = Pesoenvvacio.objects.all ()
-    template_name = 'complementariasR49/pesoenvvacior49_list.html'
-    context_object_name = 'pesoenvvacior49'
-
-class pesoenvvacior49_create(generic.CreateView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html'
-    context_object_name = 'pesoenvvacior49'
-    form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-
-class pesoenvvacior49_update(generic.UpdateView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_create.html' 
-    form_class = PesoenvvacioForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-    context_object_name = 'pesoenvvacior49'
-
-class pesoenvvacior49_delete(generic.DeleteView):
-    model = Pesoenvvacio
-    template_name = 'complementariasR49/pesoenvvacior49_delete.html'
-    context_object_name = 'densidadr49'
-    success_url = reverse_lazy('laboratorio_control_calidad:pesoenvvacior49_list')
-
-### complementarias a formato R49 PESO BRUTO
-class pesobrutor49_list(generic.ListView):
-    model = Pesobruto
-    queryset = Pesobruto.objects.all ()
-    template_name = 'complementariasR49/pesobrutor49_list.html'
-    context_object_name = 'pesobrutor49'
-
-class pesobrutor49_create(generic.CreateView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html'
-    context_object_name = 'pesobrutor49'
-    form_class = PesobrutoForm
-    success_url = reverse_lazy("laboratorio_control_calidad:pesobrutor49_list")
-
-class pesobrutor49_update(generic.UpdateView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_create.html' 
-    form_class = PesobrutoForm
-    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
-    context_object_name = 'pesobrutor49'
-
-class pesobrutor49_delete(generic.DeleteView):
-    model = Pesobruto
-    template_name = 'complementariasR49/pesobrutor49_delete.html'
-    context_object_name = 'pesobrutor49'
-    success_url = reverse_lazy('laboratorio_control_calidad:pesobrutor49_list')
-
-    login_url = reverse_lazy('usuarios:login')
     
 
-class LecheReconsSilosEncabView(generic.ListView):
+class LecheReconsSilosEncabView(LoginRequiredMixin, generic.ListView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     queryset = LecheReconsSilosEncab.objects.all()
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_List.html'
     context_object_name = 'LecheReconsSilosEncab'
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab')
  
 
-
-class LecheReconsSilosEncabCreate(View):
+class LecheReconsSilosEncabCreate(LoginRequiredMixin, View, PermissionRequiredMixin):
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.change_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get(self, request, *args, **kwargs):
         encab_form = LecheReconsSilosEncabForm()
@@ -278,8 +180,11 @@ class LecheReconsSilosEncabCreate(View):
         return False
 
 
-class LecheReconsSilosEncabUpdate(View):
+class LecheReconsSilosEncabUpdate(LoginRequiredMixin, View, PermissionRequiredMixin):
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get(self, request, *args, **kwargs):
         encab = get_object_or_404(LecheReconsSilosEncab, pk=kwargs['pk'])
@@ -309,13 +214,13 @@ class LecheReconsSilosEncabUpdate(View):
             'silos_formset': silos_formset,
         })
 
-   
 
-class LecheReconsSilosEncabDelete(DeleteView):
+class LecheReconsSilosEncabDelete(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos_Encab/Leche_Reconstituida_Por_Silos_Encab_Delete.html'
     context_object_name = 'LecheReconsSilosEncab'
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_Encab_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.delete_lechereconssilosencab')
     
  
 class TerminadoEncabView(generic.ListView):
@@ -329,11 +234,12 @@ class TerminadoEncabCreate(View):
 
 #=========================[Start] Leche Reconstituida por silos  [Start]==============================#
 
-class LecheReconsSilosView(generic.ListView):
+class LecheReconsSilosView(LoginRequiredMixin, generic.ListView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     queryset = LecheReconsSilosEncab.objects.all()
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_List.html'
     context_object_name = 'LecheReconsSilosEncab'
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -350,33 +256,41 @@ class LecheReconsSilosView(generic.ListView):
         return self.get(request, *args, **kwargs)
 
     
-class LecheReconsSilosUpdate(generic.UpdateView):
+class LecheReconsSilosUpdate(LoginRequiredMixin, generic.UpdateView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Create.html'
     context_object_name = 'LecheReconsSilosEncab'
     form_class = LecheReconsSilosEncabForm
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.add_lechereconssilosencab'
+                           ,'laboratorio_control_calidad.add_lechereconssilos','laboratorio_control_calidad.change_lechereconssilos'
+                           'laboratorio_control_calidad.delete_lechereconssilos','laboratorio_control_calidad.view_lechereconssilos')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         encab_object = self.get_object()
         context['silos'] = LecheReconsSilos.objects.filter(encabezado=encab_object)
 
-        # Obtener el ID del silo desde los parámetros GET para edición
         silo_id = self.request.GET.get('silo_id')
+        delete_silo_id = self.request.GET.get('delete_silo_id')
         if silo_id:
             try:
                 nuevo_form = LecheReconsSilosForm(instance=LecheReconsSilos.objects.get(id=silo_id))
                 context['edit_mode'] = True
             except LecheReconsSilos.DoesNotExist:
-                # Si el ID no existe, inicializar el formulario para un nuevo registro
                 nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
                 context['edit_mode'] = False
         else:
             nuevo_form = LecheReconsSilosForm(initial={'encabezado': encab_object})
             context['edit_mode'] = False
 
-        # Desactivar edición del encabezado
+        if delete_silo_id:
+            try:
+                silo_to_delete = LecheReconsSilos.objects.get(id=delete_silo_id)
+                context['silo_to_delete'] = silo_to_delete
+            except LecheReconsSilos.DoesNotExist:
+                context['silo_to_delete'] = None
+
         nuevo_form.fields['encabezado'].widget.attrs['readonly'] = True
         context['form'] = self.get_form()
         context['nuevo_form'] = nuevo_form
@@ -385,10 +299,22 @@ class LecheReconsSilosUpdate(generic.UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        silo_id = request.POST.get('silo_id')
 
-        # Asegurarse de que el formulario esté correctamente ligado a la instancia existente
-        if silo_id and silo_id.isdigit():
+        # Manejo de eliminación
+        if 'delete-silo' in request.POST:
+            silo_id = request.POST.get('silo_id')
+            if silo_id:  # Asegúrate de que silo_id no esté vacío
+                try:
+                    silo_instance = LecheReconsSilos.objects.get(id=silo_id)
+                    silo_instance.delete()
+                    return redirect(request.path)
+                except LecheReconsSilos.DoesNotExist:
+                    # Manejar el caso si el silo no existe
+                    pass
+
+        # Manejo de la actualización
+        silo_id = request.POST.get('silo_id')
+        if silo_id:
             try:
                 silo_instance = LecheReconsSilos.objects.get(id=silo_id)
                 nuevo_form = LecheReconsSilosForm(request.POST, instance=silo_instance)
@@ -397,36 +323,35 @@ class LecheReconsSilosUpdate(generic.UpdateView):
         else:
             nuevo_form = LecheReconsSilosForm(request.POST)
 
-        # Guardar el formulario de encabezado si se presionó su botón de guardar
         if 'submit-encab-form' in request.POST and form.is_valid():
             form.save()
             return redirect(self.success_url)
 
-        # Guardar o actualizar el formulario de silo si se presionó su botón de guardar
         if 'submit-nuevo-form' in request.POST and nuevo_form.is_valid():
             nuevo_form.save()
             return redirect(request.path)
 
-        # En caso de errores, renderizar los formularios con los datos ya ingresados
         context = self.get_context_data()
         context['form'] = form
         context['nuevo_form'] = nuevo_form
         return self.render_to_response(context)
 
 
-
-class LecheReconsSilosDelete(DeleteView):
+class LecheReconsSilosDelete(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilosEncab
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete.html'
     context_object_name = 'LecheReconsSilosEncab'
     success_url = reverse_lazy('Leche_Recons_Silos_List')
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilosencab','laboratorio_control_calidad.delete_lechereconssilosencab')
 
-class LecheReconsSilosDeleteSilo(DeleteView):
+
+class LecheReconsSilosDeleteSilo(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
     model = LecheReconsSilos
     template_name = 'Leche_Reconstituida_Por_Silos/Leche_Recons_Silos_Delete_Silo.html'
     context_object_name = 'LecheReconsSilos'
     success_url = reverse_lazy('laboratorio_control_calidad:Leche_Recons_Silos_List')
-    
+    permission_required = ('laboratorio_control_calidad.view_lechereconssilos','laboratorio_control_calidad.delete_lechereconssilos')
+
  
 
 #==========================[End] Leche Reconstituida por silos  [End]==============================#
@@ -556,7 +481,6 @@ class EncabCreate(generic.CreateView):
     success_url = reverse_lazy('laboratorio_control_calidad:pt_encabView')
     
 
-
 class EncabUpdate(generic.UpdateView):
     model = terminadoEncab
     template_name = 'producto_terminado2.0/encabCreate.html'
@@ -678,3 +602,437 @@ class PTerminadoDelete(generic.DeleteView):
    
 
     
+#Calidad Microbiológica ---------------------------------------
+
+@api_view(['GET'])
+def encabezados_list(request):
+    encabezados = CalidadMicrobiologicaEncabezado.objects.all()
+    serializer = CalidadMicrobiologicaEncabezadoSerializer(encabezados, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def planta_list(request):
+    plantas = Planta.objects.all()
+    serializer = PlantaSerializer(plantas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def producto_list(request):
+    productos = Producto.objects.all()
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
+
+class CalidadMicrobiologicaView(LoginRequiredMixin, TemplateView):
+    template_name = 'CalidadMicrobiologica/calidad_microbiologica.html'
+    login_url = reverse_lazy('usuarios:login')
+
+    def post(self, request, *args, **kwargs):
+        # Manejar la creación de un nuevo encabezado
+        if 'crear_encabezado' in request.POST:
+            folio = request.POST.get('folio')
+            if folio:  # Verifica que folio no esté vacío
+                CalidadMicrobiologicaEncabezado.objects.create(
+                    folio=folio
+                )
+            return redirect('laboratorio_control_calidad:calidad_microbiologica')
+
+        # Manejar la eliminación de un encabezado
+        elif 'delete_encabezado' in request.POST:
+            encabezado_id = request.POST.get('encabezado_id')
+            encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+            encabezado.delete()
+            return redirect('laboratorio_control_calidad:calidad_microbiologica')
+
+        return self.get(request, *args, **kwargs)
+    
+
+class CalidadMicrobiologicaEncabezadoUpdateView(UpdateView):
+    model = CalidadMicrobiologicaEncabezado
+    fields = ['folio', 'observaciones']
+    template_name = 'calidad_microbiologica_encabezado_form.html'
+    success_url = reverse_lazy('laboratorio_control_calidad:calidad_microbiologica')  # Redirige a la vista de calidad microbiológica
+
+    def form_valid(self, form):
+        # Puedes agregar lógica adicional aquí si es necesario
+        return super().form_valid(form)
+
+    
+class CalidadMicrobiologicaDeleteEncabezadoView(View):
+    def delete(self, request, *args, **kwargs):
+        encabezado_id = kwargs.get('encabezado_id')
+        encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+        encabezado.delete()
+        return JsonResponse({'status': 'success'})
+    
+class CalidadMicrobiologicaDetalleView(View):
+    def get(self, request, encabezado_id):
+        encabezado = get_object_or_404(CalidadMicrobiologicaEncabezado, id=encabezado_id)
+        calidad_microbiologica = CalidadMicrobiologica.objects.filter(encabezado=encabezado)
+        context = {
+            'encabezado': encabezado,
+            'calidad_microbiologica': calidad_microbiologica
+        }
+        return render(request, 'CalidadMicrobiologica/calidad_microbiologica_detalles.html', context)
+    
+@csrf_exempt
+def add_calidad_microbiologica(request, encabezado_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            # Obtiene los datos del cuerpo de la solicitud
+            fechaHora = data.get('fechaHora')
+            planta = data.get('planta')
+            producto = data.get('producto')
+            organismos_coliformes = data.get('organismos_coliformes')
+            encabezado_id = data.get('encabezado_id')
+
+            # Verifica que todos los campos requeridos estén presentes
+            if not all([fechaHora, planta, producto, organismos_coliformes, encabezado_id]):
+                return JsonResponse({'success': False, 'error': 'Missing required fields'}, status=400)
+
+            # Procesa y guarda los datos en la base de datos
+            # Aquí debes agregar la lógica para guardar los datos en la base de datos
+            # Ejemplo:
+            from .models import CalidadMicrobiologica
+
+            # Asumiendo que planta_id y producto_id son IDs que se deben convertir
+            try:
+                from .models import Planta, Producto
+                planta_instance = Planta.objects.get(id=planta)
+                producto_instance = Producto.objects.get(id=producto)
+            except Planta.DoesNotExist or Producto.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Invalid planta or producto ID'}, status=400)
+
+            # Crea una nueva instancia del modelo
+            calidad = CalidadMicrobiologica(
+                fechaHora=fechaHora,
+                planta=planta_instance,
+                producto=producto_instance,
+                organismos_coliformes=organismos_coliformes,
+                encabezado_id=encabezado_id
+            )
+            calidad.save()
+
+            return JsonResponse({'success': True})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def calidad_microbiologica_list(request):
+    encabezado_id = request.query_params.get('encabezado_id', None)
+    
+    if encabezado_id is None:
+        return Response({'error': 'El parámetro encabezado_id es requerido'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        encabezado_id = int(encabezado_id)
+    except ValueError:
+        return Response({'error': 'ID de encabezado inválido'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    queryset = CalidadMicrobiologica.objects.filter(encabezado_id=encabezado_id)
+    
+    if not queryset.exists():
+        return Response({'error': 'No se encontraron registros con el encabezado_id proporcionado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CalidadMicrobiologicaSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def calidad_microbiologica_delete(request, pk):
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    registro.delete()
+    return Response({'success': True})
+
+@api_view(['GET'])
+def calidad_microbiologica_edit(request, pk):
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CalidadMicrobiologicaSerializer(registro)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def calidad_microbiologica_update(request):
+    pk = request.data.get('id')
+    try:
+        registro = CalidadMicrobiologica.objects.get(pk=pk)
+    except CalidadMicrobiologica.DoesNotExist:
+        return Response({'error': 'Registro no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CalidadMicrobiologicaSerializer(registro, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success': True})
+    return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+#Calidad Microbiológica ---------------------------------------
+
+#Juan Carlos M. Peso Bruto, Peso Envase Vacio
+
+# START--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|
+
+class MostrarPesosView(LoginRequiredMixin, TemplateView):
+    # model = Pesobruto  #borrar locomentado si no hay errores
+    # queryset = Pesobruto.objects.all()
+    template_name = 'pesonetor49_list.html'
+    login_url = reverse_lazy('usuarios:login')
+    # context_object_name = 'pesos'       
+# END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
+
+# START--PRUEBAS VISTA PESO NETO  ---------------------------------------------------------|
+#DENSIDAD(
+class Densidadr49ListView(generic.ListView):
+     model = Densidadpt
+     queryset = Densidadpt.objects.all ()
+     template_name = 'crud_VolumenNetoR49/densidad_List.html'
+     context_object_name = 'densidadr49'
+
+class Densidadr49CreateView(TemplateView):
+    template_name = 'crud_VolumenNetoR49/densidad_Create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = DensidadptForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = DensidadptForm(request.POST)
+        if form.is_valid():
+            densidad = form.save()
+            # Aquí capturas el pk del objeto recién guardado o relacionado
+            return HttpResponseRedirect(reverse_lazy('laboratorio_control_calidad:encabezador49_update', kwargs={'pk': densidad.pk}))
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+               
+class Densidadr49UpdateView(generic.UpdateView):
+    model = Densidadpt
+    template_name = 'crud_VolumenNetoR49/densidad_Create.html' 
+    form_class = DensidadptForm
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+    context_object_name = 'densidadr49'
+
+class Densidadr49DeleteView(generic.DeleteView):
+    model = Densidadpt
+    template_name = 'crud_VolumenNetoR49/densidad_Delete.html'
+    context_object_name = 'densidadr49'
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+#)
+
+#PESO BRUTO (
+class PesoBrutor49ListView(generic.ListView):
+     model = Pesobruto
+     queryset = Pesobruto.objects.all ()
+     template_name = 'crud_VolumenNetoR49/pesoBruto_List.html'
+     context_object_name = 'pesoBrutor49'
+
+class PesoBrutor49CreateView(generic.CreateView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html'
+    context_object_name = 'pesoBrutor49'
+    form_class = PesobrutoForm
+    success_url = reverse_lazy("laboratorio_control_calidad:encabezador49_create")
+
+class PesoBrutor49UpdateView(generic.UpdateView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Create.html' 
+    form_class = PesobrutoForm
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+    context_object_name = 'pesoBrutor49'
+
+class PesoBrutor49DeleteView(generic.DeleteView):
+    model = Pesobruto
+    template_name = 'crud_VolumenNetoR49/pesoBruto_Delete.html'
+    context_object_name = 'pesoBrutor49'
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+#)
+
+#PESO ENVASE VACIO (
+class PesoEnvVacior49ListView(generic.ListView):
+     model = Pesoenvvacio
+     queryset = Pesoenvvacio.objects.all ()
+     template_name = 'crud_VolumenNetoR49/pesoEnvVacio_List.html'
+     context_object_name = 'pesoEnvVacior49'
+
+class PesoEnvVacior49CreateView(generic.CreateView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html'
+    context_object_name = 'pesoEnvVacior49'
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy("laboratorio_control_calidad:encabezador49_update")
+
+class PesoEnvVacior49UpdateView(generic.UpdateView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Create.html' 
+    form_class = PesoenvvacioForm
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+    context_object_name = 'pesoEnvVacior49'
+
+class PesoEnvVacior49DeleteView(generic.DeleteView):
+    model = Pesoenvvacio
+    template_name = 'crud_VolumenNetoR49/pesoEnvVacio_Delete.html'
+    context_object_name = 'pesoEnvVacior49'
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+#)
+
+#ENCABEZADO (
+class EncabR49ListView(generic.ListView):
+     model = EncabR49V2
+     queryset = EncabR49V2.objects.all ()
+     template_name = 'encabezador49V2_List.html'
+     context_object_name = 'EncabR49'
+
+     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['encab'] = EncabR49V2Form()
+        return context
+     
+     def post(self, request, *args, **kwargs):
+        form = EncabR49V2Form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('laboratorio_control_calidad:encabezador49_list')
+        else:
+            print("Form errors:", form.errors)  # Agrega esta línea para ver los errores del formulario
+        return self.get(request, *args, **kwargs)
+
+class EncabR49UpdateView(generic.UpdateView):
+    model = EncabR49V2
+    template_name = 'encabezador49V2_Create.html'
+    form_class = EncabR49V2Form
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        encab_object = self.get_object()
+        
+        # Filtrar los datos relacionados al encabezado actual
+        context['datosPesoBruto'] = Pesobruto.objects.filter(encabezado=encab_object)
+        context['datosDensidad'] = Densidadpt.objects.filter(encabezado=encab_object)
+        context['datosPesoEnvVacio'] = Pesoenvvacio.objects.filter(encabezado=encab_object)
+        
+        # Manejar los formularios de forma dinámica
+        context['form_peso_bruto'] = self._get_related_form(Pesobruto, PesobrutoForm, 'peso_bruto_id', encab_object)
+        context['form_densidad'] = self._get_related_form(Densidadpt, DensidadptForm, 'densidad_id', encab_object)
+        context['form_pesoEnvVacio'] = self._get_related_form(Pesoenvvacio, PesoenvvacioForm, 'pesoEnvVacio_id', encab_object)
+
+        context['form'] = self.get_form()  # Formulario principal
+
+        context['edit_mode'] = bool(self.request.GET.get('peso_bruto_id') or self.request.GET.get('densidad_id') or self.request.GET.get('pesoEnvVacio_id'))
+
+        return context
+
+    def _get_related_form(self, model, form_class, param_name, encab_object):
+        """Helper to generate form for related models."""
+        instance_id = self.request.GET.get(param_name)
+        if instance_id:
+            try:
+                return form_class(instance=model.objects.get(id=instance_id))
+            except model.DoesNotExist:
+                return form_class(initial={'encabezado': encab_object})
+        else:
+            return form_class(initial={'encabezado': encab_object})
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+
+        # Obtener formularios relacionados
+        form_peso_bruto = self._handle_related_form_post(Pesobruto, PesobrutoForm, 'peso_bruto_id')
+        form_densidad = self._handle_related_form_post(Densidadpt, DensidadptForm, 'densidad_id')
+        form_pesoEnvVacio = self._handle_related_form_post(Pesoenvvacio, PesoenvvacioForm, 'pesoEnvVacio_id')
+
+        # Guardar el formulario principal si se presionó su botón de guardar
+        if 'submit-encab-form' in request.POST and form.is_valid():
+            form.save()
+            return redirect(self.success_url)
+
+        # Guardar o actualizar los formularios relacionados
+        if 'submit-peso-bruto-form' in request.POST and form_peso_bruto.is_valid():
+            form_peso_bruto.save()
+            return redirect(request.path)
+
+        if 'submit-densidad-form' in request.POST and form_densidad.is_valid():
+            form_densidad.save()
+            return redirect(request.path)
+
+        if 'submit-pesoEnvVacio-form' in request.POST and form_pesoEnvVacio.is_valid():
+            form_pesoEnvVacio.save()
+            return redirect(request.path)
+
+        # En caso de errores, renderizar los formularios con los datos ya ingresados
+        context = self.get_context_data()
+        context['form'] = form
+        context['form_peso_bruto'] = form_peso_bruto
+        context['form_densidad'] = form_densidad
+        context['form_pesoEnvVacio'] = form_pesoEnvVacio
+        return self.render_to_response(context)
+
+    def _handle_related_form_post(self, model, form_class, param_name):
+        """Helper to handle POST for related models."""
+        instance_id = self.request.POST.get(param_name)
+        if instance_id and instance_id.isdigit():
+            try:
+                instance = model.objects.get(id=instance_id)
+                return form_class(self.request.POST, instance=instance)
+            except model.DoesNotExist:
+                return form_class(self.request.POST)
+        else:
+            return form_class(self.request.POST)
+
+class EncabR49DeleteView(generic.DeleteView):
+    model = EncabR49V2
+    template_name = 'encabezador49V2_Delete.html'
+    context_object_name = 'EncabR49'
+    success_url = reverse_lazy('laboratorio_control_calidad:encabezador49_list')
+#)
+# END--PRUEBAS VISTA PESO NETO  -----------------------------------------------------------|    
+
+#
+class TerminadoEncabUpdate(View):
+    success_url = reverse_lazy('laboratorio_control_calidad:TerminadoList')
+
+    def get(self, request, *args, **kwargs):
+        encab = get_object_or_404(terminadoEncab, pk=kwargs['pk'])
+        encab_form = TerminadoEncabForm(instance=encab)
+        terminado_formset = TerminadoFormSet(instance=encab)
+        return render(request, 'producto_terminado.html', {
+            'encab_form': encab_form,
+            'terminado_formset': terminado_formset,
+        })
+
+    def post(self, request, *args, **kwargs):
+        encab = get_object_or_404(terminadoEncab, pk=kwargs['pk'])
+        encab_form = TerminadoEncabForm(request.POST, instance=encab)
+        terminado_formset = TerminadoFormSet(request.POST, instance=encab)
+
+        # Validar y guardar los formularios
+        if encab_form.is_valid():
+            encab_form.save()
+
+        # Guardar formularios válidos del formset
+        valid_forms = True
+        for form in terminado_formset:
+            # Verificar si el formulario está vacío (todos los campos vacíos)
+            if not any(form.data.get(form.add_prefix(field)) for field in form.fields):
+                continue
+
+            if form.is_valid():
+                form.save()
+            else:
+                valid_forms = False
+
+        # Manejo de errores
+        if not encab_form.is_valid() or not valid_forms:
+             return redirect(self.success_url)
+        
+#Fin Juan Carlos M. Peso Bruto, Peso Envase Vacio

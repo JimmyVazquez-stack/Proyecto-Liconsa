@@ -1,0 +1,48 @@
+.table-scroll {
+    max-height: 400px; /* Ajusta esta altura según sea necesario */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+}
+
+/* Color de fondo de las pestañas */
+.custom-tabs {
+    background-color: #007bff; /* Color de fondo */
+    color: rgb(0, 0, 0); /* Color del texto */
+}
+
+/* Color de fondo y texto cuando la pestaña está activa */
+.custom-tab.active {
+    background-color: #0056b3; /* Color de fondo cuando está activa */
+    color: white; /* Color del texto cuando está activa */
+}
+
+/* Cambia el color al pasar el ratón sobre la pestaña */
+.custom-tab:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.tab-content {
+    background-color: #f8f9fa; /* Cambiar el color de fondo */
+    border: 1px solid #dee2e6; /* Agregar un borde */
+    padding: 20px; /* Agregar padding */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Cambiar el color del texto de las pestañas */
+.custom-tabs .nav-link {
+    color: #007bff; /* Cambia esto al color deseado */
+}
+
+/* Cambiar el color del texto de la pestaña activa */
+.custom-tabs .nav-link.active {
+    color: #ff5733; /* Cambia esto al color deseado para la pestaña activa */
+}
+
+/* Cambiar el color de fondo de las pestañas */
+.custom-tabs .nav-link {
+    background-color: #f8f9fa; /* Cambia esto al color de fondo deseado */
+}
+
+.custom-tabs .nav-link.active {
+    background-color: #e9ecef; /* Cambia esto al color de fondo deseado para la pestaña activa */
+}

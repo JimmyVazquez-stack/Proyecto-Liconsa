@@ -121,9 +121,10 @@
       <!-- Brand Logo -->
       <a href="{% url 'laboratorio_control_calidad:index'%}" class="brand-link">
 
-        <img src="/static/vendor/adminlte/img/AdminLTELogo.png" alt="SAV-C Logo"
-          class="img-circle brand-image elevation-3" style="opacity: .8">
+        <img src="{% static 'img/Liconsa_icono.png' %}" alt="SAV-C Logo"
+          class="img brand-image elevation-3" style="opacity: .8">
 
+          
         <span class="brand-text font-weight-light"> SAV-C</span>
 
       </a>
@@ -229,7 +230,7 @@
                 <li class="nav-item">
                   <a href="{% url 'catalogos:lecherias_list'%}" class="nav-link">
                     <i class="fas fa-circle-notch"></i>
-                    <p>Lecherias</p>
+                    <p>Lecherías</p>
                   </a>
                 </li>
 
@@ -325,8 +326,8 @@
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
                     <p>
-                      Muestrear, analizar y dictaminar
-                      <i class="fas fa-angle-left right"></i>
+                    FORMATO R49
+                    <i class="fas fa-angle-left right"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
@@ -355,6 +356,8 @@
                 </li>
               </ul>
               -->
+              {% if perms.laboratorio_control_calidad.view_lechereconssilosencab %}
+                                
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_Encab_List' %}" class="nav-link">
@@ -364,7 +367,17 @@
                 </li>
               </ul>
 
-              <!-- Aun no elaborado 
+               
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:Leche_Recons_Silos_List' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Leche Reconstituida Por Silos Formulario Normal</p>
+                  </a>
+                </li>
+              </ul>
+              {% endif %}
+              <!--
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'laboratorio_control_calidad:leche_polvo_fysf' %}" class="nav-link">
@@ -427,46 +440,66 @@
                   <a href="#" class="nav-link">
                     <i class="fas fa-circle"></i>
                     <p>
-                    Tablas de registros R49
+                    FORMATO R49
                     <i class="fas fa-angle-left right"></i>
                     </p>
                  </a>  
-              <!-- subseccion para tabla R49 
+              <!-- subseccion para tabla R49 -->
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="{% url 'laboratorio_control_calidad:registror49_list' %}" class="nav-link">
+                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="nav-link">
                       <i class="fas fa-circle-notch"></i>
-                      <p>Reporte Formato R49</p>
+                      <p>Captura Version1</p>
                     </a>
                   </li> 
+                </ul>
+
+                 <!-- <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'laboratorio_control_calidad:encabezador49_list' %}" class="nav-link">
+                      <i class="fas fa-circle-notch"></i>
+                      <p>Captura Version 2</p>
+                    </a>
+                  </li>
                 </ul> -->
-                  <!-- subseccion para tabla Peso Bruto -->
+                  <!-- subseccion para reporte peso neto -->
                   <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="{% url 'laboratorio_control_calidad:pesobrutor49_list' %}" class="nav-link">
+                    <a href="{% url 'reportes:reporte_Volumen_Neto' %}" class="nav-link">
                       <i class="fas fa-circle-notch"></i>
-                      <p>Peso bruto</p>
+                      <p>Reporte de Volumen Neto</p>
                     </a>
                   </li>
                   </ul>
-                 <!--subseccion para tabla Densidad-->
-                 <ul class="nav nav-treeview">
+                  <!--subseccion para tabla Peso Bruto-->
+                  <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="{% url 'laboratorio_control_calidad:densidadr49_list' %}" class="nav-link">
+                    <a href="{% url 'laboratorio_control_calidad:pesonetor49_list' %}" class="nav-link">
                       <i class="fas fa-circle-notch"></i>
-                      <p>Densidad</p>
+                      <p>Resultados Peso Neto</p>
                     </a>
                   </li>
                   </ul>
-                  <!--subseccion para tabla Peso de envase vacio-->
-                  <ul class="nav nav-treeview">
+                  <!--subseccion para tabla Densidad-->
+                  <!-- <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="{% url 'laboratorio_control_calidad:pesoenvvacior49_list' %}" class="nav-link">
+                      <a href="{% url 'laboratorio_control_calidad:densidadr49_List' %}" class="nav-link">
                         <i class="fas fa-circle-notch"></i>
-                        <p>Peso envase vacio</p>
+                        <p>Densidad</p>
                       </a>
                     </li>
-                    </ul>
+                    </ul> -->
+                    <!--subseccion pestañas-->
+                    <!-- <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="{% url 'laboratorio_control_calidad:pesoEnvVacior49_List' %}" class="nav-link">
+                          <i class="fas fa-circle-notch"></i>
+                          <p>Peso envase vacio</p>
+                        </a>
+                      </li>
+                    </ul> -->
+                  <!--subseccion para tabla Peso de envase vacio-->
+                  
                 </li>
               </ul>
               <!--Fin Seccion formato R49 Juan Carlos --> 
@@ -500,6 +533,16 @@
                   </a>
                 </li>
  
+              </ul>
+
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'laboratorio_control_calidad:calidad_microbiologica' %}" class="nav-link">
+                    <i class="fas fa-circle-notch"></i>
+                    <p>Calidad Microbiólogica</p>
+                  </a>
+                </li>
+
               </ul>
 
               <ul class="nav nav-treeview">
@@ -592,7 +635,7 @@
                 </li>
               </ul>
             </li>
-            -->
+            
 
             <!--
             menu lateral Produccion

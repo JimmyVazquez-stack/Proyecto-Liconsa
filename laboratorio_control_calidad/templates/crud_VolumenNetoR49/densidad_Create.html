@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Registro de densidad R49{% endblock %}
+{% block principal %}
+{% block informacion %}
+{%load static%}
+
+<div class="container-fluid p-4">
+    <div class="row">
+        <div class="col-xl-12 mt-1">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-info"></i>
+                        Registros densidad P.T. 
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Guardar</button>
+                    </form>
+                </div>    
+                <div class="callout callout-info">
+                      
+                        <p>En esta sección se realiza el registro de la densidad.</p>
+
+                        <p>Ingresa los datos y oprime guardar.</p>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Nuevo registro de densidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+Para llamar al archivo con alerta de campos vacios
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<!-- SCRIPT CALCULAR CAMPO LINEA -->
+<input type="hidden" id="id_linea" name="linea"> <!-- END -->
+
+<!-- Script autocompletar campo Linea -->
+<script>
+    function updateLinea() {
+        var planta = document.getElementById("id_planta").value;
+        var turno = document.getElementById("id_turno").value;
+        var silo = document.getElementById("id_silo").value;
+        var cabezal = document.getElementById("id_cabezal").value
+        var linea = planta + turno + silo + cabezal;
+        document.getElementById("id_linea").value = linea;
+    }
+</script>
+<!-- END -->
+
+
+<!-- SCRIPT CALCULAR CAMPO LINEA -->
+<script>
+document.getElementById("id_planta").addEventListener("input", updateLinea);
+document.getElementById("id_turno").addEventListener("input", updateLinea);
+document.getElementById("id_silo").addEventListener("input", updateLinea);
+document.getElementById("id_cabezal").addEventListener("input", updateLinea);
+</script>
+<!-- END -->
+
+
+
+{%endblock%}
+{% endblock %}

@@ -3,9 +3,9 @@ from .models import *
 from django.forms import inlineformset_factory
 
 
-class EncabTablaR49Form(forms.ModelForm):
+class EncabR49V2Form(forms.ModelForm):
     class Meta:
-        model = EncabTablaR49
+        model = EncabR49V2
         fields = '__all__'
     
     def __init__(self, *args, **kwargs):
@@ -14,23 +14,12 @@ class EncabTablaR49Form(forms.ModelForm):
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
-
-class TablaR49Form(forms.ModelForm):
-    class Meta:
-        model = TablaR49
-        fields = '__all__'
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        for field in iter(self.fields):
-            self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
 
 class DensidadptForm(forms.ModelForm):
     class Meta:
         model = Densidadpt
-        fields = '__all__'
+        fields = ['fechaHora','cabezal', 'planta', 'producto', 'silo', 'turno', 'linea', 'densidad','volumen','encabezado']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,7 +30,7 @@ class DensidadptForm(forms.ModelForm):
 class PesoenvvacioForm(forms.ModelForm):
     class Meta:
         model = Pesoenvvacio
-        fields = '__all__'
+        fields = ['fechaHora','cabezal','maquina','planta','producto','proveedor','peso','encabezado']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -52,16 +41,20 @@ class PesoenvvacioForm(forms.ModelForm):
 class PesobrutoForm(forms.ModelForm):
     class Meta:
         model = Pesobruto
-        fields = '__all__'
+        fields = ['fechaHora', 'cabezal', 'maquina', 'planta', 'producto', 'valor', 'usuario','encabezado']
+        
+    def clean_valor(self):
+        valor = self.cleaned_data.get('valor')
+        if valor <= 0:
+            raise forms.ValidationError("El valor debe ser mayor que cero.")
+        return valor
+        
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({'class' : 'form-control'})
-from django.forms import inlineformset_factory
-from .models import *
-from .models import producto_terminado
 
 class LecheReconsSilosEncabForm(forms.ModelForm):
     class Meta:
@@ -87,13 +80,6 @@ class LecheReconsSilosForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
 LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=6, can_delete=False)
-
-#FORMSET PAR LA TABLA R49 START
-DensidadptFormSet = inlineformset_factory(EncabTablaR49, Densidadpt, fields='__all__', extra=6, can_delete=False)
-PesoenvvacioFormSet = inlineformset_factory(EncabTablaR49, Pesoenvvacio, fields='__all__', extra=6, can_delete=False)
-PesobrutoFormSet = inlineformset_factory(EncabTablaR49, Pesobruto, fields='__all__', extra=6, can_delete=False)
-LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
-
 
 
 
@@ -150,3 +136,20 @@ class permisosForm(forms.ModelForm):
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False) 
 LecheReconsSilosFormSet = inlineformset_factory(LecheReconsSilosEncab, LecheReconsSilos, fields='__all__', extra=8, can_delete=False)
 TerminadoFormSet = inlineformset_factory(terminadoEncab, producto_terminado, fields='__all__', extra=3, can_delete=False)    
+
+
+
+
+
+
+
+#Formulario Calidad Microbiologica
+class CalidadMicrobiologicaEncabezadoForm(forms.ModelForm):
+    class Meta:
+        model = CalidadMicrobiologicaEncabezado
+        fields = ['folio']
+
+class CalidadMicrobiologicaForm(forms.ModelForm):
+    class Meta:
+        model = CalidadMicrobiologica
+        fields = ['fechaHora', 'planta', 'producto', 'organismos_coliformes', 'encabezado']
