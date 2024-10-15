@@ -1,64 +1,77 @@
- 
-{% load static %} 
-{% block title %}  {% endblock %}
-
-<!-- Bootstrap CSS DT-->
-<link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css' %}">
-<!-- Datatables bootstrap 4 CSS -->
-<link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css' %}">
-
-<!-- Script para datos de json calculos R49 Juan Carlos -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block title %}Listado de valores de peso neto{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/datatables-config.js' %}"></script>
 </head>
 <body>
 
-    <div class="header-container" style="display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 10px; color: white;">
-        <table>
-            <tr>
-                <th>LICONSA S.A DE C.V GERENCIA ESTATAL TLAXCALA TX-200-1-AA-R52</th>
+<!-- Encabezado -->
+<table class="table table-bordered bg-light table-hover">
+    <thead>
+        <tr style="text-align: center;">
+            <th colspan="5">
+                <div class="right-image mb-3">
+                    <img src="{% static 'img/Liconsa.svg' %}" alt="Logo" style="width: 100%; height: auto;">
+                </div>
+            </th>
+            <th rowspan="3" colspan="5" align="center">
+                LICONSA S.A. DE C.V <br>
+                GERENCIA ESTATAL TLAXCALA <br>
+                LABORATORIO DE CONTROL DE CALIDAD <br>
+            </th>
+            <th rowspan="3" colspan="5" align="center">
+                Clave de Registro <br>
+                TX-HP-910-01-R49
+            </th>
+        </tr>
+    </thead>
+</table>
+
+<!-- Tabla de datos del reporte -->
+<div class="contenedor-tablas">
+    <table class="table table-bordered bg-light table-hover" id="tablaReporteDiario">
+        <thead>
+            {% for encabezado in encabezado_datos %}
+            <tr class="badge-success">
+                <th colspan="5">DATOS DE REPORTE DIARIO PESO NETO</th>
+                <th colspan="5">FECHA: {{ encabezado.fecha }}</th>
             </tr>
-        </table>
-        <div class="right-image">
-            <img src="{% static 'img/liconsalogo.png' %}" alt="Logo" style="width: 30px; height: auto;">
-        </div>    
-    </div>
-    <hr>
-
-<h4>Listado de valores peso neto</h4>
-
-<div class="contenedor-tablas" style="display: flex;" >
-    <div class="table-responsive">
-        <table id="reportTable" class="table table-bordered bg-light table-hover">
-            <thead>
-                
-                <tr>
-                    <th>Id</th>
-                    <th>Cabezal</th>
-                    <th>Valor Peso Bruto</th>
-                    <th>Resultado Operación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Aquí irán los datos cargados dinámicamente -->
-            </tbody>
-        </table>
-    </div>
+            {% endfor %}
+            <tr>
+                <th>Id</th>
+                <th>Cabezal</th>
+                <th>Valor Peso Bruto</th>
+                <th>Resultado Operación</th>
+            </tr>
+        </thead>
+        <tbody>
+             <!-- Aquí irán los datos cargados dinámicamente -->
+        </tbody>
+    </table>
 </div>
 
-<!-- SCRIPT CALCULOS PARA PESO NETO valor peso bruto - Pesopromedio / densidad Ponderada -->
+
+
 <script>
 $(document).ready(function() {
     $.ajax({
-        url: '/reportes/densidad-Ponderada-Data/',  // La URL configurada para tu vista
+        url: '/reportes/densidad-Ponderada-Data/',
         method: 'GET',
         dataType: 'json',
         success: function(data) {
             var tableData = data.resultadosPesoNeto.map(function(item) {
                 return [item.id, item.cabezal, item.valorPesoBruto, item.resultado];
             });
-            
-            $('#reportTable').DataTable({
+
+            $('#tablaReporteDiario').DataTable({
                 data: tableData,
                 columns: [
                     { title: "Id" },
@@ -71,5 +84,6 @@ $(document).ready(function() {
     });
 });
 </script>
+
 </body>
 </html>
