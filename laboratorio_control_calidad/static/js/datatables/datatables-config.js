@@ -170,4 +170,58 @@ $(document).ready(function() {
 
     // Inicializar los botones
     tablaPesoEnvVacio.buttons().container().appendTo('#tablaPesoEnvVacio_wrapper .col-md-6:eq(0)');
+
+    // Repetir la configuración para las otras tablas
+    var reportTable = $('#reportTable').DataTable({
+        "pageLength": 10,
+        "responsive": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "dom": 'Bfrtip',
+        "buttons": [
+            {
+                extend: 'copy',
+                text: '<i class="bi bi-clipboard-fill"></i>',
+                titleAttr: 'Copiar',
+                className: 'btn btn-secondary',
+                title: function() { return getActiveTabTitle(); } // Título basado en la pestaña activa
+            },
+            {
+                extend: 'excel',
+                text: '<i class="bi bi-file-earmark-spreadsheet"></i>',
+                titleAttr: 'Exportar a excel',
+                className: 'btn btn-success',
+                title: function() { return getActiveTabTitle(); }, // Título basado en la pestaña activa
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="bi bi-file-earmark-pdf"></i>',
+                titleAttr: 'Exportar a pdf',
+                className: 'btn btn-danger',
+                title: function() { return getActiveTabTitle(); }, // Título basado en la pestaña activa
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="bi bi-printer"></i>',
+                titleAttr: 'Imprimir',
+                className: 'btn btn-secondary',
+                title: function() { return getActiveTabTitle(); }, // Título basado en la pestaña activa
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
+            },
+        ]
+    });
+
+    // Inicializar los botones
+    reportTable.buttons().container().appendTo('#reportTable_wrapper .col-md-6:eq(0)');
 });
