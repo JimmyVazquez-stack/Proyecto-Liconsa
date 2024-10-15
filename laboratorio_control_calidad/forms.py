@@ -3,19 +3,8 @@ from .models import *
 from django.forms import inlineformset_factory
 
 
-# class EncabTablaR49Form(forms.ModelForm):
-#     class Meta:
-#         model = EncabTablaR49
-#         fields = '__all__'
-    
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-        
-#         for field in iter(self.fields):
-#             self.fields[field].widget.attrs.update({'class' : 'form-control'})
 
-
-#Enabezado ara formularios simples(noformset)
+#Enabezado para formularios simples(noformset)
 class EncabR49V2Form(forms.ModelForm):
     class Meta:
         model = EncabR49V2
