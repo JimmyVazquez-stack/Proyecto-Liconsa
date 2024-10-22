@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css' %}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css' %}">
+</head>
+<body>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr style="text-align: center;">
+                <th colspan="5">
+                    <div class="right-image mb-3">
+                        <img src="{% static 'img/Liconsa.svg' %}" alt="Logo" width="100%;" height="100%;">
+                    </div>
+                </th>
+                <th rowspan="3" colspan="5" align="center">
+                    LICONSA S.A. DE C.V <br>
+                    GERENCIA ESTATAL TLAXCALA <br>
+                    LABORATORIO DE CONTROL DE CALIDAD <br>
+                </th>
+                <th rowspan="3" colspan="5" align="center">
+                    Clave de Registro <br>
+                    TX-HP-910-01-R49
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Nueva fila que abarca todas las columnas -->
+            <tr style="text-align: center;">
+                <td colspan="15">RESUMEN ESTADÍSTICO POR PROVEEDOR DEL PESO DE ENVASE VACIO (LECHE PARCIALMENTE 
+                    DESCREMADA Y/O MEZCLA DE LECHE CON GRASA VEGETAL 2 L)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="contenedor-tablas">
+        <table class="table table-bordered bg-light table-hover" id="tablaRepSemProv">
+            <thead>
+                <tr class="badge-success">
+                    <th colspan="7">DATOS POR PROVEEDOR</th>
+                </tr>
+                <tr style="text-align: center;">
+                    <th>Proveedor</th>
+                    <th>No Datos</th>
+                    <th>Promedio</th>
+                    <th>Valor Maximo</th>
+                    <th>Valor Minimo</th>
+                    <th>Dimension(Largo)</th>
+                    <th>Dimension(Ancho)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor, resultado in resultados_por_proveedor.items %}
+                <tr>
+                    <td>{{ proveedor }}</td>
+                    <td>{{ resultado.numero_datos }}</td>
+                    <td>{{ resultado.promedio }}</td>
+                    <td>{{ resultado.maximo }}</td>
+                    <td>{{ resultado.minimo }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center;">No hay datos disponibles para el rango de fechas seleccionado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tabla datos globales -->
+    <div class="contenedor-tablas">
+        <table class="table table-bordered bg-light table-hover">
+            <thead>
+                <tr class="badge-success">
+                    <th colspan="7">DATOS GLOBALES POR PROVEEDOR</th>
+                </tr>
+                <tr style="text-align: center;">
+                    <th></th>
+                    <th>No Datos</th>
+                    <th>Promedio</th>
+                    <th>Valor Maximo</th>
+                    <th>Valor Minimo</th>
+                    <th>Dimension(Largo)</th>
+                    <th>Dimension(Ancho)</th>  
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>==></td>
+                    <td>{{ numero_datos_global }}</td>
+                    <td>{{ promedio_global }}</td>
+                    <td>{{ maximo_global }}</td>
+                    <td>{{ minimo_global }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="contenedor-autorizacion">
+        <div class="seccion">
+            <p>Elaboró</p>
+            <hr>
+            <p>Nombre de la persona que elaboró</p>
+        </div>
+
+        <div class="seccion">
+            <p>Revisó</p>
+            <hr>
+            <p>Jefe de Sección y/o de Unidad</p>
+        </div>
+        
+        <div class="seccion">
+            <p>Vo. Bo</p>
+            <hr>
+            <p>Coordinador del Laboratorio de Control de Calidad</p>
+        </div>
+    </div>
+
+</body>
+</html>

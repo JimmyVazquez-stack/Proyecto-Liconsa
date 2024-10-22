@@ -149,38 +149,46 @@
 </div>
 <!-- /.modal -->
 
-<!-- /.modal -->
-<div class="modal fade" id="modal-reporteFechas">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Selecciona el rango de fechas del reporte</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form method="post" action="{% url 'reportes:diario_Semanal_Data' %}" id="form-fechas">
-        <div class="modal-body">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="fecha-inicial">Fecha Inicial</label>
-                <input type="date" class="form-control" id="fecha-inicial" name="fecha-inicial" required>
+
+<!-- Modal para Reporte Diario/Semanal -->
+<div class="modal fade" id="modal-reporteFechas" tabindex="-1" role="dialog" aria-labelledby="modal-reporteFechasLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-reporteFechasLabel">Generar Reporte</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label for="fecha-final">Fecha Final</label>
-                <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+            <div class="modal-body">
+                <form id="form-reporteFechas" method="post" action="{% url 'reportes:reporte_Semanal' 1%}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="fecha-inicial">Fecha Inicial</label>
+                        <input type="date" class="form-control" id="fecha-inicial" name="fecha-inicial" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-final">Fecha Final</label>
+                        <input type="date" class="form-control" id="fecha-final" name="fecha-final" required>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="reporte-por-proveedor" name="reporte-por-proveedor">
+                        <label class="form-check-label" for="reporte-por-proveedor">Reporte por Proveedor</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                </form>
             </div>
         </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Generar Reporte</button>
-        </div>
-        </form>
-      </div>
-      <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
+
+
+<!-- -->
+
+<!-- /Script -->
+
+
+
 
 {%endblock%} 
 {% endblock %} 

@@ -13,6 +13,10 @@ urlpatterns = [
     path('densidad-Ponderada-Data/', views.CalculosR49DataView.as_view(), name='densidad_Ponderada_Data'), #calculos para tabla peso neto
     path('diario-Semanal-Data/', views.ReporteR49RangoFechaView.as_view(), name='diario_Semanal_Data'), #no se muestran los datos directo en la url, pero si desde el modal con rango de fecha
     path('reporte-Diario/<int:id>', views.MostrarDiarioView.as_view(), name='reporte_Diario'), #Para reporte diario por maquinas, peso neto
+    path('reporte-Por-Fechas/<int:pk>', views.Reporte49RangoFechaView2.as_view(), name='reporte_Semanal'), #Para reporte semanal por dias
+    path('reporte-Por-Fechas-Prov/', views.ReportePorProveedorView.as_view(), name='reporte_Por_Fechas_Prov'),#Para reporte semanal por proveedeor
+
+    
     #URLS para reporte mensual
     path('reporte-mensual-lab/', views.ReporteMensualView.as_view(), name='reporte_mensual'),
     path('reporte-mensual-lab/pdf/', views.PDFGeneratorView.as_view(), name='reporte_mensual_pdf'),

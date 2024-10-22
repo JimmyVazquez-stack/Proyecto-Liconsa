@@ -18,6 +18,7 @@ import statistics
 from statistics import mean, stdev
 from django.utils.dateparse import parse_date
 import json
+from collections import defaultdict
 
 #Importaciones de REPORTLAB
 from reportlab.lib.pagesizes import landscape, A4
@@ -644,7 +645,7 @@ class CalculosR49DataView(LoginRequiredMixin, View):
 #----END PRUEBAS USANDO JSON RESPONSE EN CALCULOS PESO NETO-----------------------------------------------|
         
 
-#[--------------------------[START VISTA CALCULOS-R49-RANGOS DE FECHAS]--------------------------------]
+#[--------------------------[START VISTA CALCULOS-R49-RANGOS DE FECHAS JSON]--------------------------------]
 
 class ReporteR49RangoFechaView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')  # Redirige a la página de login si no está autenticado
@@ -694,36 +695,9 @@ class ReporteR49RangoFechaView(LoginRequiredMixin, View):
             for dato in datosPesoBruto
         ]
 
-        # Cálculos para cada combinación de máquina y cabezal
-        # combinaciones = [
-        #     ('1', 'A'),
-        #     ('1', 'B'),
-        #     ('2', 'C'),
-        #     ('2', 'D'),
-        #     ('3', 'E'),
-        #     ('3', 'F')
-        # ]
+        #
 
-        # calculos_diarios = {}
-        # for maquina, cabezal in combinaciones:
-        #     datos_maquina_cabezal = [dato for dato in resultadosPesoNeto if dato['cabezal'] == cabezal]
-
-        #     if datos_maquina_cabezal:
-        #         valores = [dato['resultado'] for dato in datos_maquina_cabezal if dato['resultado'] is not None]
-        #         calculos_diarios[f"{maquina}-{cabezal}"] = {
-        #             'numero_Datos': len(valores),
-        #             'promedio': sum(valores) / len(valores) if valores else None,
-        #             'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
-        #             'maximo': max(valores) if valores else None,
-        #             'minimo': min(valores) if valores else None,
-        #         }
-        #     else:
-        #         calculos_diarios[f"{maquina}-{cabezal}"] = {
-        #             'numero_Datos': 0,
-        #             'desviacion_Estandar': None,
-        #             'maximo': None,
-        #             'minimo': None,
-        #         }
+        #
 
         # Cálculos por rango de fecha
         totalDatosPorFecha = len(resultadosPesoNeto)
@@ -753,56 +727,149 @@ class ReporteR49RangoFechaView(LoginRequiredMixin, View):
 
         return JsonResponse(resultadosporfecha)
 
+#[--------------------------[START VISTA CALCULOS-R49-RANGOS DE FECHAS SIN-JSON]--------------------------------]
+class Reporte49RangoFechaView2(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Método GET no permitido en esta vista. Por favor, utiliza POST.", status=405)
+
+    def post(self, request, *args, **kwargs):
+        fecha_inicial = request.POST.get('fecha-inicial')
+        fecha_final = request.POST.get('fecha-final')
+
+        try:
+            fecha_inicial = parse_date(fecha_inicial)
+            fecha_final = parse_date(fecha_final)
+        except ValueError:
+            return HttpResponse("Fechas inválidas", status=400)
+
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosDensidad = Densidadpt.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+        datosPesoBruto = Pesobruto.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
+
+        datos_por_fecha = defaultdict(lambda: {
+            'densidades': [],
+            'pesos_env_vacio': [],
+            'pesos_neto': [],
+        })
+
+        for densidad in datosDensidad:
+            datos_por_fecha[densidad.fechaHora.date()]['densidades'].append(densidad.densidad)
+
+        for peso_env in datosPesoEnvVacio:
+            datos_por_fecha[peso_env.fechaHora.date()]['pesos_env_vacio'].append(peso_env.peso)
+
+        for peso_bruto in datosPesoBruto:
+            datos_por_fecha[peso_bruto.fechaHora.date()]['pesos_neto'].append(peso_bruto.valor)
+
+        resultados_diarios = []
+        todos_los_pesos_neto = []
+        todas_las_densidades = []
+        todos_los_pesos_env_vacio = []
+
+        for fecha, datos in datos_por_fecha.items():
+            densidades = datos['densidades']
+            pesos_env_vacio = datos['pesos_env_vacio']
+            pesos_neto = datos['pesos_neto']
+
+            numero_datos = len(pesos_neto)
+            promedio = sum(pesos_neto) / numero_datos if numero_datos else None
+            desviacion_estandar = statistics.stdev(pesos_neto) if numero_datos > 1 else None
+            maximo = max(pesos_neto) if pesos_neto else None
+            minimo = min(pesos_neto) if pesos_neto else None
+            densidad_promedio = sum(densidades) / len(densidades) if densidades else None
+            peso_env_vacio_promedio = sum(pesos_env_vacio) / len(pesos_env_vacio) if pesos_env_vacio else None
+
+            resultados_diarios.append({
+                'fecha': fecha,
+                'densidad_promedio': densidad_promedio,
+                'peso_env_vacio_promedio': peso_env_vacio_promedio,
+                'numero_datos': numero_datos,
+                'promedio': promedio,
+                'desviacion_estandar': desviacion_estandar,
+                'maximo': maximo,
+                'minimo': minimo,
+            })
+
+            todos_los_pesos_neto.extend(pesos_neto)
+            todas_las_densidades.extend(densidades)
+            todos_los_pesos_env_vacio.extend(pesos_env_vacio)
+
+        # Calcular datos globales
+        densidad_promedio_global = sum(todas_las_densidades) / len(todas_las_densidades) if todas_las_densidades else None
+        peso_env_vacio_promedio_global = sum(todos_los_pesos_env_vacio) / len(todos_los_pesos_env_vacio) if todos_los_pesos_env_vacio else None
+        numero_datos_global = len(todos_los_pesos_neto)
+        promedio_global = sum(todos_los_pesos_neto) / numero_datos_global if numero_datos_global else None
+        maximo_global = max(todos_los_pesos_neto) if todos_los_pesos_neto else None
+        minimo_global = min(todos_los_pesos_neto) if todos_los_pesos_neto else None
+        desviacion_estandar_global = statistics.stdev(todos_los_pesos_neto) if numero_datos_global > 1 else None
+
+        contexto = {
+            'resultados_diarios': resultados_diarios,
+            'densidad_promedio_global': densidad_promedio_global,
+            'peso_env_vacio_promedio_global': peso_env_vacio_promedio_global,
+            'numero_datos_global': numero_datos_global,
+            'promedio_global': promedio_global,
+            'maximo_global': maximo_global,
+            'minimo_global': minimo_global,
+            'desviacion_estandar_global': desviacion_estandar_global,
+        }
+
+        return render(request, 'reporte_R49_RangoFechasVolNeto.html', contexto)
 
 
+class ReportePorProveedorView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Método GET no permitido en esta vista. Por favor, utiliza POST.", status=405)
 
-    # login_url = reverse_lazy('usuarios:login')
+    def post(self, request, *args, **kwargs):
+        fecha_inicial = request.POST.get('fecha-inicial')
+        fecha_final = request.POST.get('fecha-final')
 
-    # def get(self, request, id, *args, **kwargs):
-    #     # Obtener el registro basado en el ID del modelo EncabR49V2
-    #     registro = get_object_or_404(EncabR49V2, id=id)
+        try:
+            fecha_inicial = parse_date(fecha_inicial)
+            fecha_final = parse_date(fecha_final)
+        except ValueError:
+            return HttpResponse("Fechas inválidas", status=400)
 
-    #     # Obtener los datos asociados al registro desde Pesobruto
-    #     datosPesoBruto = Pesobruto.objects.filter(encabezado_id=registro.id)
+        datosPesoEnvVacio = Pesoenvvacio.objects.filter(fechaHora__date__range=[fecha_inicial, fecha_final])
 
-    #     # Suponiendo que los datos relacionados están en Pesobruto
-    #     if datosPesoBruto.exists():
-    #         maquina = datosPesoBruto.first().maquina  # Obtener la primera instancia para obtener la máquina
-    #         cabezal = datosPesoBruto.first().cabezal  # Obtener la primera instancia para obtener el cabezal
-    #     else:
-    #         maquina, cabezal = None, None  # Si no hay datos, se asigna None
+        datos_por_proveedor = defaultdict(list)
+        for peso_env in datosPesoEnvVacio:
+            datos_por_proveedor[peso_env.proveedor].append(peso_env.peso)
 
-    #     # Realizar los cálculos con los datos asociados
-    #     resultadosPesoNeto = [
-    #         {
-    #             'id': dato.id,
-    #             'valor': dato.valor,
-    #             'resultado': dato.valor  # Aquí puedes ajustar la lógica de cálculo
-    #         }
-    #         for dato in datosPesoBruto
-    #     ]
+        resultados_por_proveedor = {}
+        todos_los_pesos = []
 
-    #     # Cálculos para el reporte diario
-    #     valores = [dato['resultado'] for dato in resultadosPesoNeto if dato['resultado'] is not None]
-    #     calculos_diarios = {
-    #         'numero_Datos': len(valores),
-    #         'promedio': sum(valores) / len(valores) if valores else None,
-    #         'desviacion_Estandar': statistics.stdev(valores) if len(valores) > 1 else None,
-    #         'maximo': max(valores) if valores else None,
-    #         'minimo': min(valores) if valores else None,
-    #     }
+        for proveedor, pesos in datos_por_proveedor.items():
+            numero_datos = len(pesos)
+            promedio = sum(pesos) / numero_datos if numero_datos else None
+            maximo = max(pesos) if pesos else None
+            minimo = min(pesos) if pesos else None
 
-    #     # Pasar los datos calculados al contexto
-    #     context = {
-    #         'calculos_diarios': calculos_diarios,
-    #         'registro': registro,
-    #         'maquina': maquina,  # Pasar la máquina al contexto
-    #         'cabezal': cabezal   # Pasar el cabezal al contexto
-    #     }
+            resultados_por_proveedor[proveedor] = {
+                'nombre':proveedor,
+                'numero_datos': numero_datos,
+                'promedio': promedio,
+                'maximo': maximo,
+                'minimo': minimo,
+            }
 
-    #     # Renderizar el template con el contexto
-    #     return render(request, 'reporte_R49_Diario.html', context)
+            todos_los_pesos.extend(pesos)
 
+        numero_datos_global = len(todos_los_pesos)
+        promedio_global = sum(todos_los_pesos) / numero_datos_global if numero_datos_global else None
+        maximo_global = max(todos_los_pesos) if todos_los_pesos else None
+        minimo_global = min(todos_los_pesos) if todos_los_pesos else None
+
+        contexto = {
+            'resultados_por_proveedor': resultados_por_proveedor,
+            'numero_datos_global': numero_datos_global,
+            'promedio_global': promedio_global,
+            'maximo_global': maximo_global,
+            'minimo_global': minimo_global,
+        }
+
+        return render(request, 'reporte_R49_RangoFechasProveedor.html', contexto)
 
 class MostrarDiarioView(LoginRequiredMixin, View):
     login_url = reverse_lazy('usuarios:login')

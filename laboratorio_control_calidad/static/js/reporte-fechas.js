@@ -23,8 +23,18 @@
                 }
             });
         });
-    });
+    
 
+    //Script para el rango por fecha y proveedor de acuerdo al check del modal
+    document.getElementById('reporte-por-proveedor').addEventListener('change', function() {
+        var form = document.getElementById('form-reporteFechas');
+        if (this.checked) {
+            form.action = "{% url 'reportes:reporte_Por_Fechas_Prov' %}";
+        } else {
+            form.action = "{% url 'reportes:reporte_Semanal' 1%}";
+        }
+    });
+});
 
     // $(function() {
     //     // Manejar el envío del formulario del modal

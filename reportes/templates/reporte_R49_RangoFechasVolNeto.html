@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/reportes.css' %}">
+    <!-- Bootstrap CSS DT-->
+    <link rel="stylesheet" href="{% static 'css/datatables/bootstrap.css' %}">
+    <!-- Datatables bootstrap 4 CSS -->
+    <link rel="stylesheet" href="{% static 'css/datatables/dataTables.bootstrap4.css' %}">
+</head>
+<body>
+
+    <table class="table table-bordered bg-light table-hover">
+        <thead>
+            <tr style="text-align: center;">
+                <th colspan="5">
+                    <div class="right-image mb-3">
+                        <img src="{% static 'img/Liconsa.svg' %}" alt="Logo" width="100%;" height="100%;">
+                    </div>
+                </th>
+                <th rowspan="3" colspan="5" align="center">
+                    LICONSA S.A. DE C.V <br>
+                    GERENCIA ESTATAL TLAXCALA <br>
+                    LABORATORIO DE CONTROL DE CALIDAD <br>
+                </th>
+                <th rowspan="3" colspan="5" align="center">
+                    Clave de Registro <br>
+                    TX-HP-910-01-R49
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Nueva fila que abarca todas las columnas -->
+            <tr style="text-align: center;">
+                <td colspan="15">RESUMEN ESTADÍSTICO DE VOLUMEN NETO (LECHE 
+                    PARCIALMENTE DESCREMADA Y/O MEZCLA DE LECHE CON GRASA VEGETAL 2 L)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="contenedor-tablas">
+        <table class="table table-bordered bg-light table-hover" id="tablaReporteSemanal">
+            <thead>
+                <tr class="badge-success">
+                    <th colspan="11">DATOS POR FECHAS</th>
+                </tr>
+                <tr style="text-align: center;">
+                    <th>Fecha</th>
+                    <th>Densidad</th>
+                    <th>Peso envase vacío</th>
+                    <th>Número de datos</th>
+                    <th>Promedio</th>
+                    <th>Máximo</th>
+                    <th>Mínimo</th>
+                    <th>Desviación Estándar</th>
+                    <th>% F L S</th>
+                    <th>% F L I</th>
+                    <th>&lt;1940 ml</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for resultado in resultados_diarios %}
+                <tr>
+                    <td>{{ resultado.fecha }}</td>
+                    <td>{{ resultado.densidad_promedio|default:"-" }}</td>
+                    <td>{{ resultado.peso_env_vacio_promedio|default:"-" }}</td>
+                    <td>{{ resultado.numero_datos|default:"-" }}</td>
+                    <td>{{ resultado.promedio|default:"-" }}</td>
+                    <td>{{ resultado.maximo|default:"-" }}</td>
+                    <td>{{ resultado.minimo|default:"-" }}</td>
+                    <td>{{ resultado.desviacion_estandar|default:"-" }}</td>
+                    <td>0%</td>
+                    <td>0%</td>
+                    <td>0</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center;">No hay datos disponibles para el rango de fechas seleccionado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tabla datos globales -->
+    <div class="contenedor-tablas">
+        <table class="table table-bordered bg-light table-hover">
+            <thead>
+                <tr class="badge-success">
+                    <th colspan="11">DATOS GLOBALES POR FECHA</th>
+                </tr>
+                <tr style="text-align: center;">
+                    <th></th>
+                    <th>DENSIDAD (g/mL)</th>
+                    <th>PESO ENVASE VACÍO (g)</th>
+                    <th>No Datos</th>
+                    <th>Promedio</th>
+                    <th>Máximo</th>
+                    <th>Mínimo</th>
+                    <th>Desviación Estándar</th>
+                    <th>% F L I</th>
+                    <th>% F L S</th>
+                    <th>&lt;1940 ml</th>  
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>==></td>
+                    <td>{{densidad_promedio_global }}</td>
+                    <td>{{peso_env_vacio_promedio_global }}</td>
+                    <td>{{ numero_datos_global}}</td>
+                    <td>{{ promedio_global }}</td>
+                    <td>{{maximo_global }}</td>
+                    <td>{{minimo_global }}</td>
+                    <td>{{ desviacion_estandar_global}}</td>
+                    <td>0%</td>
+                    <td>0%</td>
+                    <td>0</td>
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="contenedor-autorizacion">
+        <div class="seccion">
+            <p>Elaboró</p>
+            <hr>
+            <p>Nombre de la persona que elaboró</p>
+        </div>
+
+        <div class="seccion">
+            <p>Revisó</p>
+            <hr>
+            <p>Jefe de Sección y/o de Unidad</p>
+        </div>
+        
+        <div class="seccion">
+            <p>Vo. Bo</p>
+            <hr>
+            <p>Coordinador del Laboratorio de Control de Calidad</p>
+        </div>
+    </div>
+
+</body>
+</html>
