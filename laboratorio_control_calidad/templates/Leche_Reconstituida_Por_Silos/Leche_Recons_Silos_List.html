@@ -45,9 +45,12 @@
                     <div class="col-xl-12 mt-3 p-3">
                         <div class="table-responsive">
                             <div class="d-flex justify-content-start mb-3">
+                                {% if perms.laboratorio_control_calidad.add_lechereconssilosencab %}
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default">
                                     Nuevo Registro
                                 </button>
+                                {% endif %}
+                                
 
                                 
 

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Permission
 from .models import *
 
 # Register your models here.
@@ -12,3 +13,4 @@ admin.site.register(Densidadpt)
 admin.site.register(Pesoenvvacio)
 admin.site.register(Pesobruto)
 admin.site.register(EncabTablaR49)
+admin.site.register(Permission)
